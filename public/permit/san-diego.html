@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,6 +25,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FF6B4A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"GovernmentService","name":"San Diego County MEHKO Permit","serviceType":"Microenterprise Home Kitchen Operation permit","areaServed":{"@type":"AdministrativeArea","name":"San Diego County"},"provider":{"@type":"GovernmentOrganization","name":"San Diego County Department of Environmental Health and Quality","url":"https://www.sandiegocounty.gov/content/sdc/deh/fhd/food/mehko.html"},"audience":{"@type":"Audience","audienceType":"California home cooks"},"termsOfService":"https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201720180AB626"}</script>
+
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does San Diego MEHKO approval take?","acceptedAnswer":{"@type":"Answer","text":"Typically 2–4 weeks from submission to approved permit, assuming you pass inspection on the first visit. DEHQ aims to schedule inspections within 10 business days of receiving a complete packet."}},{"@type":"Question","name":"When will the fee waiver end?","acceptedAnswer":{"@type":"Answer","text":"The current waiver runs through May 2025 per the County ordinance. After that, expect the full annual fee (~$601) to apply. If you plan to apply, the waiver window is the cheapest entry point."}},{"@type":"Question","name":"Do I need to be a San Diego County resident?","acceptedAnswer":{"@type":"Answer","text":"Yes. Your MEHKO permit is tied to the physical residence where you cook. It has to be inside San Diego County limits and be your primary private home."}}]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,6 +200,7 @@ img { max-width: 100%; display: block; }
 
 .serif-italic { font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; color: var(--coral); }
 </style>
+
 </head>
 <body>
 
@@ -225,27 +228,30 @@ img { max-width: 100%; display: block; }
     <h1 class="hero-title">The <em>San Diego</em> MEHKO permit, in plain English.</h1>
     <p class="hero-sub">Permanent program. Fees waived through May 2025. Stoveside's free wizard builds your complete submission packet in 10 minutes — SOP, menu, floor plan, checklist — formatted exactly how DEHQ wants to receive it.</p>
 
-    <a href="/app?county=san-diego" class="hero-cta">Start my San Diego application →</a>
-    <span class="hero-cta-note">Free · No credit card</span>
+```
+<a href="/app?county=san-diego" class="hero-cta">Start my San Diego application →</a>
+<span class="hero-cta-note">Free · No credit card</span>
 
-    <div class="facts" role="list">
-      <div role="listitem">
-        <div class="fact-label">Status</div>
-        <div class="fact-val accent">Open · Permanent</div>
-      </div>
-      <div role="listitem">
-        <div class="fact-label">Annual fee</div>
-        <div class="fact-val">Waived</div>
-      </div>
-      <div role="listitem">
-        <div class="fact-label">Approval time</div>
-        <div class="fact-val">2–4 weeks</div>
-      </div>
-      <div role="listitem">
-        <div class="fact-label">Meals allowed</div>
-        <div class="fact-val">30/day · 60/wk</div>
-      </div>
-    </div>
+<div class="facts" role="list">
+  <div role="listitem">
+    <div class="fact-label">Status</div>
+    <div class="fact-val accent">Open · Permanent</div>
+  </div>
+  <div role="listitem">
+    <div class="fact-label">Annual fee</div>
+    <div class="fact-val">Waived</div>
+  </div>
+  <div role="listitem">
+    <div class="fact-label">Approval time</div>
+    <div class="fact-val">2–4 weeks</div>
+  </div>
+  <div role="listitem">
+    <div class="fact-label">Meals allowed</div>
+    <div class="fact-val">30/day · 90/wk</div>
+  </div>
+</div>
+```
+
   </div>
 </section>
 
@@ -255,14 +261,17 @@ img { max-width: 100%; display: block; }
     <h2 class="section-title">Requirements for a <em>San Diego MEHKO</em>.</h2>
     <p class="section-sub">Every California county shares the AB 626 baseline. Here's what DEHQ specifically looks for.</p>
 
-    <div class="req-list">
-      <div class="req-card"><div class="req-icon">📋</div><div class="req-body"><h4>Standard Operating Procedures</h4><p>A written document covering menu, sourcing, cooking, cooling, storage, and handwashing. Stoveside's wizard generates this for you.</p></div></div>
-      <div class="req-card"><div class="req-icon">🧑‍🍳</div><div class="req-body"><h4>Food Manager Certification</h4><p>ServSafe Food Manager (~$15, online). One person per operation. Good for 5 years.</p></div></div>
-      <div class="req-card"><div class="req-icon">💧</div><div class="req-body"><h4>Water source verification</h4><p>Required if on private well (~$45, state-certified lab).</p></div></div>
-      <div class="req-card"><div class="req-icon">🏠</div><div class="req-body"><h4>Home kitchen inspection</h4><p>DEHQ inspects your kitchen once per year. The first inspection is part of approval.</p></div></div>
-      <div class="req-card"><div class="req-icon">📄</div><div class="req-body"><h4>Sample menu</h4><p>A representative list of dishes you'll sell. Can be updated later without re-applying.</p></div></div>
-      <div class="req-card"><div class="req-icon">🧾</div><div class="req-body"><h4>Permit fee</h4><p>Waived through May 2025 (normally ~$601/yr). Paid once your packet is accepted.</p></div></div>
-    </div>
+```
+<div class="req-list">
+  <div class="req-card"><div class="req-icon">📋</div><div class="req-body"><h4>Standard Operating Procedures</h4><p>A written document covering menu, sourcing, cooking, cooling, storage, and handwashing. Stoveside's wizard generates this for you.</p></div></div>
+  <div class="req-card"><div class="req-icon">🧑‍🍳</div><div class="req-body"><h4>Food Manager Certification</h4><p>ServSafe Food Manager (~$15, online). One person per operation. Good for 5 years.</p></div></div>
+  <div class="req-card"><div class="req-icon">💧</div><div class="req-body"><h4>Water source verification</h4><p>Required if on private well (~$45, state-certified lab).</p></div></div>
+  <div class="req-card"><div class="req-icon">🏠</div><div class="req-body"><h4>Home kitchen inspection</h4><p>DEHQ inspects your kitchen once per year. The first inspection is part of approval.</p></div></div>
+  <div class="req-card"><div class="req-icon">📄</div><div class="req-body"><h4>Sample menu</h4><p>A representative list of dishes you'll sell. Can be updated later without re-applying.</p></div></div>
+  <div class="req-card"><div class="req-icon">🧾</div><div class="req-body"><h4>Permit fee</h4><p>Waived through May 2025 (normally ~$601/yr). Paid once your packet is accepted.</p></div></div>
+</div>
+```
+
   </div>
 </section>
 
@@ -272,43 +281,46 @@ img { max-width: 100%; display: block; }
     <h2 class="section-title">How to apply in <em>San Diego</em>.</h2>
     <p class="section-sub">Five steps from wizard to live kitchen. Most cooks get through step 1 in about 10 minutes.</p>
 
-    <div class="steps-list">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h4>Complete the Stoveside wizard</h4>
-          <p>Answer 6 questions. We build your SOP, menu doc, and inspection checklist in the exact format DEHQ accepts.</p>
-        </div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h4>Get your Food Manager Certification</h4>
-          <p>ServSafe online — about $15 and 8 hours. Required before submission.</p>
-        </div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h4>Submit your packet to DEHQ</h4>
-          <p>Email or in-person drop-off. Your Stoveside packet is pre-formatted for their review.</p>
-        </div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <h4>Pass your in-home inspection</h4>
-          <p>DEHQ schedules within 1–2 weeks. We send you the exact checklist their inspectors use.</p>
-        </div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">5</div>
-        <div class="step-body">
-          <h4>Go live on Stoveside</h4>
-          <p>Your digital storefront activates the day your permit clears.</p>
-        </div>
-      </div>
+```
+<div class="steps-list">
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Complete the Stoveside wizard</h4>
+      <p>Answer 6 questions. We build your SOP, menu doc, and inspection checklist in the exact format DEHQ accepts.</p>
     </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Get your Food Manager Certification</h4>
+      <p>ServSafe online — about $15 and 8 hours. Required before submission.</p>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Submit your packet to DEHQ</h4>
+      <p>Email or in-person drop-off. Your Stoveside packet is pre-formatted for their review.</p>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Pass your in-home inspection</h4>
+      <p>DEHQ schedules within 1–2 weeks. We send you the exact checklist their inspectors use.</p>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>Go live on Stoveside</h4>
+      <p>Your digital storefront activates the day your permit clears.</p>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 </section>
 
@@ -317,21 +329,24 @@ img { max-width: 100%; display: block; }
     <div class="section-eyebrow">San Diego-specific notes</div>
     <h2 class="section-title">What's <em>different</em> about San Diego.</h2>
 
-    <div class="callout">
-      <ul>
-        <li>Permit fees waived through May 2025 — the single best window in California to apply.</li>
-        <li>San Diego was the first major metro to make MEHKO permanent (not a pilot).</li>
-        <li>Inspections typically scheduled within 10 business days of submission.</li>
-      </ul>
-    </div>
+```
+<div class="callout">
+  <ul>
+    <li>Permit fees waived through May 2025 — the single best window in California to apply.</li>
+    <li>San Diego was the first major metro to make MEHKO permanent (not a pilot).</li>
+    <li>Inspections typically scheduled within 10 business days of submission.</li>
+  </ul>
+</div>
 
-    <div style="margin-top: 32px;">
-      <div class="agency-card">
-        <h4>San Diego County Department of Environmental Health and Quality</h4>
-        <p>The agency that reviews, approves, and inspects your MEHKO permit in San Diego County.</p>
-        <a href="https://www.sandiegocounty.gov/content/sdc/deh/fhd/food/mehko.html" target="_blank" rel="noopener">https://www.sandiegocounty.gov/content/sdc/deh/fhd/food/mehko.html →</a>
-      </div>
-    </div>
+<div style="margin-top: 32px;">
+  <div class="agency-card">
+    <h4>San Diego County Department of Environmental Health and Quality</h4>
+    <p>The agency that reviews, approves, and inspects your MEHKO permit in San Diego County.</p>
+    <a href="https://www.sandiegocounty.gov/content/sdc/deh/fhd/food/mehko.html" target="_blank" rel="noopener">https://www.sandiegocounty.gov/content/sdc/deh/fhd/food/mehko.html →</a>
+  </div>
+</div>
+```
+
   </div>
 </section>
 
@@ -340,20 +355,23 @@ img { max-width: 100%; display: block; }
     <div class="section-eyebrow">Frequently asked</div>
     <h2 class="section-title">Questions about <em>San Diego</em> MEHKO.</h2>
 
-    <div class="faq-list">
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">How long does San Diego MEHKO approval take?</div>
-        <div class="faq-a"><p>Typically 2–4 weeks from submission to approved permit, assuming you pass inspection on the first visit. DEHQ aims to schedule inspections within 10 business days of receiving a complete packet.</p></div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">When will the fee waiver end?</div>
-        <div class="faq-a"><p>The current waiver runs through May 2025 per the County ordinance. After that, expect the full annual fee (~$601) to apply. If you plan to apply, the waiver window is the cheapest entry point.</p></div>
-      </div>
-      <div class="faq-item" onclick="this.classList.toggle('open')">
-        <div class="faq-q">Do I need to be a San Diego County resident?</div>
-        <div class="faq-a"><p>Yes. Your MEHKO permit is tied to the physical residence where you cook. It has to be inside San Diego County limits and be your primary private home.</p></div>
-      </div>
-    </div>
+```
+<div class="faq-list">
+  <div class="faq-item" onclick="this.classList.toggle('open')">
+    <div class="faq-q">How long does San Diego MEHKO approval take?</div>
+    <div class="faq-a"><p>Typically 2–4 weeks from submission to approved permit, assuming you pass inspection on the first visit. DEHQ aims to schedule inspections within 10 business days of receiving a complete packet.</p></div>
+  </div>
+  <div class="faq-item" onclick="this.classList.toggle('open')">
+    <div class="faq-q">When will the fee waiver end?</div>
+    <div class="faq-a"><p>The current waiver runs through May 2025 per the County ordinance. After that, expect the full annual fee (~$601) to apply. If you plan to apply, the waiver window is the cheapest entry point.</p></div>
+  </div>
+  <div class="faq-item" onclick="this.classList.toggle('open')">
+    <div class="faq-q">Do I need to be a San Diego County resident?</div>
+    <div class="faq-a"><p>Yes. Your MEHKO permit is tied to the physical residence where you cook. It has to be inside San Diego County limits and be your primary private home.</p></div>
+  </div>
+</div>
+```
+
   </div>
 </section>
 
