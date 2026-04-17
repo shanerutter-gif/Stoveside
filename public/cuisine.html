@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Home cooks near you — Stoveside</title>
+<meta name="description" content="Discover permitted home cooks selling food legally in your area. Real kitchens, real permits, real neighbors.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FF6B4A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#F5EFE6; --bg-soft:#EDE5D8; --card:#FFFFFF; --ink:#1A1208; --ink-50:rgba(26,18,8,.5); --ink-10:rgba(26,18,8,.08); --coral:#FF6B4A; --coral-deep:#E8553A; }
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; }
+h1,h2,h3 { font-family:'Fraunces',serif; font-weight:900; letter-spacing:-0.02em; margin:0; }
+a { color:var(--coral); text-decoration:none; }
+.container { max-width: 960px; margin: 0 auto; padding: 20px; }
+.top-bar { display:flex; justify-content:space-between; align-items:center; padding: 16px 20px; }
+.top-bar .brand { font-family:'Fraunces',serif; font-weight:900; font-size:22px; color:var(--ink);}
+.top-bar a.btn { padding:8px 14px; border-radius:999px; background:var(--ink); color:#fff; font-weight:600; font-size:13px; }
+.eyebrow { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-50); }
+.hero { padding: 40px 0 28px; }
+.hero h1 { font-size: clamp(36px, 6vw, 56px); line-height: 1; }
+.hero h1 em { color: var(--coral); font-style: italic; }
+.hero p { color: var(--ink-50); font-size: 17px; max-width: 640px; margin-top: 10px; }
+.kitchens { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+.kcard { background:var(--card); border:1px solid var(--ink-10); border-radius:18px; overflow:hidden; transition: transform .15s ease; }
+.kcard:hover { transform: translateY(-2px); }
+.kcard .cover { aspect-ratio: 16/9; background: var(--bg-soft) center/cover no-repeat; }
+.kcard .body { padding: 12px 14px 16px; }
+.kcard h3 { font-size: 18px; margin-bottom: 4px; }
+.kcard .meta { color: var(--ink-50); font-size: 13px; }
+.empty { text-align:center; padding: 40px 20px; color: var(--ink-50); }
+.filter-row { display:flex; gap:8px; overflow-x: auto; padding: 8px 0 16px; }
+.chip { display:inline-flex; align-items:center; padding: 8px 14px; background: var(--card); border:1px solid var(--ink-10); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+footer { padding: 40px 20px; text-align:center; color: var(--ink-50); font-size: 13px; border-top: 1px solid var(--ink-10); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="/" class="brand">Stoveside</a>
+  <a class="btn" href="/app">Open app</a>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="eyebrow" id="eyebrow">Home cooks, near you</div>
+    <h1 id="heroTitle">Real food, from the <em>kitchen next door</em>.</h1>
+    <p id="heroSub">Every cook here has an active California MEHKO permit — their home kitchen has been inspected and approved to sell food legally. No ghost kitchens, no markup layers.</p>
+  </div>
+
+  <div class="filter-row" id="cuisineChips"></div>
+  <div class="kitchens" id="kitchens"></div>
+  <div id="empty" class="empty" style="display:none;">No live kitchens in this view yet. Check back soon.</div>
+</div>
+
+<footer>
+  Stoveside — Built for California home cooks under AB 626. <a href="/app">Browse in the app</a>.
+</footer>
+
+<script id="ldjson" type="application/ld+json"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script>
+(async function () {
+  const CFG = window.STOVESIDE_CONFIG || {};
+  const path = window.location.pathname;
+  const search = new URLSearchParams(window.location.search);
+  const mode = path.includes('/neighborhood') ? 'neighborhood' : path.includes('/cuisine') ? 'cuisine' : 'all';
+  const filterValue = (search.get('c') || search.get('n') || path.split('/').filter(Boolean).pop() || '').toLowerCase().replace(/-/g, ' ').trim();
+
+  if (!CFG.supabaseUrl || !CFG.supabaseKey || !window.supabase) {
+    document.getElementById('empty').style.display = 'block'; return;
+  }
+  const sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+
+  let q = sb.from('kitchens').select('*').eq('is_live', true).order('rating', { ascending: false, nullsFirst: false });
+  if (mode === 'cuisine' && filterValue) q = q.ilike('cuisine', '%' + filterValue + '%');
+  if (mode === 'neighborhood' && filterValue) q = q.ilike('neighborhood', '%' + filterValue + '%');
+  const { data } = await q;
+  const kitchens = data || [];
+
+  // Title + copy variations
+  const cap = s => s ? s.replace(/\b\w/g, c => c.toUpperCase()) : '';
+  const pretty = cap(filterValue);
+  if (mode === 'cuisine' && pretty) {
+    document.getElementById('eyebrow').textContent = pretty + ' · home cooks';
+    document.getElementById('heroTitle').innerHTML = pretty + ' from <em>a real kitchen</em>.';
+    document.getElementById('heroSub').textContent = 'Permitted home cooks making ' + pretty + '. Pickup in your neighborhood, no app surcharges, no dark-kitchen middlemen.';
+    document.title = pretty + ' home cooks — Stoveside';
+  } else if (mode === 'neighborhood' && pretty) {
+    document.getElementById('eyebrow').textContent = pretty + ' · home cooks';
+    document.getElementById('heroTitle').innerHTML = 'Home cooks in <em>' + pretty + '</em>.';
+    document.getElementById('heroSub').textContent = 'Permitted MEHKO operators cooking in their own kitchens and selling directly to neighbors. Pickup only.';
+    document.title = pretty + ' home cooks — Stoveside';
+  }
+
+  // Cuisine chips: derive from live kitchens
+  const allCuisines = [...new Set((data || []).map(k => k.cuisine).filter(Boolean))].slice(0, 8);
+  if (mode !== 'neighborhood' && allCuisines.length) {
+    const row = document.getElementById('cuisineChips');
+    row.innerHTML = ['<a class="chip' + (!filterValue ? ' active' : '') + '" href="/cuisine">All</a>'].concat(
+      allCuisines.map(c => `<a class="chip ${filterValue && c.toLowerCase().includes(filterValue) ? 'active' : ''}" href="/cuisine/${encodeURIComponent(c.toLowerCase().replace(/\s+/g,'-'))}">${esc(c)}</a>`)
+    ).join('');
+  }
+
+  const host = document.getElementById('kitchens');
+  host.innerHTML = kitchens.map(k => `
+    <a class="kcard" href="/k/${encodeURIComponent(k.slug)}">
+      <div class="cover" style="${k.cover_url || k.photo_url ? `background-image:url('${k.cover_url || k.photo_url}');` : ''}"></div>
+      <div class="body">
+        <h3>${esc(k.name)}</h3>
+        <div class="meta">${esc(k.neighborhood || k.city || 'San Diego')} · ${esc(k.cuisine || '')}</div>
+        <div class="meta" style="margin-top:4px;">${k.rating ? Number(k.rating).toFixed(1) + ' ★ (' + (k.review_count||0) + ')' : 'New kitchen'}</div>
+      </div>
+    </a>
+  `).join('');
+  if (!kitchens.length) document.getElementById('empty').style.display = 'block';
+
+  // ItemList JSON-LD for SEO
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: document.title,
+    itemListElement: kitchens.slice(0, 20).map((k, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: 'https://stoveside.co/k/' + encodeURIComponent(k.slug),
+      name: k.name,
+    })),
+  };
+  document.getElementById('ldjson').textContent = JSON.stringify(ld);
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+})();
+</script>
+</body>
+</html>

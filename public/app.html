@@ -984,6 +984,107 @@ hr.editorial::before {
 }
 
 .icon-wrap svg { width: 100%; height: 100%; }
+
+/* Auth sheet — OAuth + email/password ------------------------------------- */
+.auth-oauth-row { display: grid; gap: 10px; }
+.btn-oauth {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  height: 48px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: 15px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1.5px solid var(--ink-10, rgba(26,18,8,.12));
+  background: #fff;
+  color: var(--ink, #1A1208);
+  transition: transform .1s ease, border-color .15s ease, background .15s ease;
+}
+.btn-oauth:hover { border-color: var(--ink-30, rgba(26,18,8,.25)); }
+.btn-oauth:active { transform: scale(0.98); }
+.btn-oauth-apple { background: #000; color: #fff; border-color: #000; }
+.btn-oauth-apple:hover { background: #111; border-color: #111; }
+
+.auth-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 18px 0 12px;
+  color: var(--ink-50, rgba(26,18,8,.5));
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--ink-10, rgba(26,18,8,.12));
+}
+
+.auth-tabs { display: flex; gap: 4px; margin-bottom: 14px; padding: 4px; background: var(--bg-soft, #EFE7D8); border-radius: 999px; }
+.auth-tab {
+  flex: 1; background: transparent; border: 0; cursor: pointer;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px;
+  color: var(--ink-70, rgba(26,18,8,.7));
+  border-radius: 999px;
+  transition: background .15s ease, color .15s ease;
+}
+.auth-tab.active { background: #fff; color: var(--ink, #1A1208); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+
+.field-hint { font-size: 12px; color: var(--ink-50, rgba(26,18,8,.5)); margin-top: 4px; font-family: 'DM Sans', sans-serif; }
+
+.link-btn {
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--coral, #FF6B4A); font-family: 'DM Sans', sans-serif; font-size: 13px;
+  text-decoration: underline; text-underline-offset: 3px;
+  padding: 4px 6px;
+}
+.link-btn:hover { color: var(--coral-dark, #E85533); }
+
+/* Photo upload tile ------------------------------------------------------- */
+.photo-upload {
+  position: relative;
+  width: 100%; aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  background: var(--bg-soft, #EFE7D8) center/cover no-repeat;
+  border: 2px dashed var(--ink-10, rgba(26,18,8,.15));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-50, rgba(26,18,8,.5));
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  cursor: pointer; overflow: hidden;
+}
+.photo-upload.has-image { border-style: solid; color: transparent; }
+.photo-upload input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.photo-upload .photo-upload-overlay {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 10px 12px; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.5) 100%);
+  color: #fff; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  opacity: 0; transition: opacity .15s ease; pointer-events: none;
+}
+.photo-upload.has-image .photo-upload-overlay { opacity: 1; }
+.photo-upload-sm { aspect-ratio: 1/1; }
+
+/* Stats tiles ------------------------------------------------------------- */
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-tile {
+  background: #fff; border-radius: 14px; padding: 14px;
+  border: 1px solid var(--ink-10, rgba(26,18,8,.08));
+}
+.stat-tile .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-50, rgba(26,18,8,.5)); }
+.stat-tile .stat-value { font-family: 'Fraunces', serif; font-weight: 900; font-size: 26px; color: var(--ink, #1A1208); margin-top: 2px; }
+.stat-tile .stat-delta { font-family: 'DM Sans', sans-serif; font-size: 12px; margin-top: 4px; }
+.stat-delta.up { color: #2e7d32; }
+.stat-delta.down { color: #c62828; }
+
+/* Admin page ------------------------------------------------------------- */
+.admin-row { display: flex; justify-content: space-between; gap: 12px; padding: 14px; border: 1px solid var(--ink-10, rgba(26,18,8,.08)); border-radius: 12px; background: #fff; margin-bottom: 10px; }
+.admin-row .admin-meta { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink-50, rgba(26,18,8,.55)); letter-spacing: .08em; text-transform: uppercase; }
+.admin-row h4 { font-family: 'Fraunces', serif; font-weight: 800; font-size: 17px; margin: 2px 0 6px; }
+.admin-row .btn-primary, .admin-row .btn-secondary { height: 34px; padding: 0 14px; font-size: 13px; }
+
+/* Public kitchen hero ----------------------------------------------------- */
+.kitchen-hero { width: 100%; aspect-ratio: 16/7; background: var(--bg-soft, #EFE7D8) center/cover no-repeat; border-radius: 0 0 24px 24px; position: relative; }
+.kitchen-hero .hero-meta { position: absolute; left: 20px; bottom: 20px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
+.kitchen-hero h1 { font-family: 'Fraunces', serif; font-weight: 900; font-size: 36px; line-height: 1; margin: 0 0 6px; }
+
+/* Express onboarding card ------------------------------------------------ */
+.express-card { background: #fff; border: 1px solid var(--ink-10, rgba(26,18,8,.08)); border-radius: 18px; padding: 18px; margin-bottom: 16px; }
+.express-card h3 { font-family: 'Fraunces', serif; font-weight: 800; font-size: 20px; margin-bottom: 4px; }
 </style>
 
 </head>
@@ -1028,8 +1129,6 @@ hr.editorial::before {
       <h1 class="hero-title">Real food, from the <em>kitchen next door</em>.</h1>
       <p class="hero-sub">Every cook below holds a MEHKO permit from San Diego County. Order direct, pick up warm.</p>
     </div>
-
-```
 <div class="feed-label">
   <span>🌶️ Open for Pre-Orders</span>
   <span style="color: var(--coral); font-weight: 600;">Tonight</span>
@@ -1058,8 +1157,6 @@ hr.editorial::before {
   <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">San Diego County approves MEHKO permits. We'll walk you through it in 10 minutes.</p>
   <button class="btn-secondary" onclick="setRole('new-cook')">Start permit application →</button>
 </div>
-```
-
   </div>
 </div>
 
@@ -1077,7 +1174,18 @@ hr.editorial::before {
       <p class="wizard-sub">10 questions. We'll build your SOP, menu, and application packet — ready to submit to San Diego County.</p>
     </div>
 
-```
+    <div class="express-card" id="expressCardPrompt" style="display:block;">
+      <div class="eyebrow" style="color: var(--coral);">Already have your MEHKO permit?</div>
+      <h3>Skip the wizard. Go live in ten minutes.</h3>
+      <p class="text-muted" style="margin: 6px 0 12px; font-size: 14px;">
+        Verified operators with an active permit can set up a storefront without generating a new packet. We'll still keep a record — you just won't run through the 6 steps.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn-primary" style="max-width:240px;" onclick="openExpress()">Use my existing permit</button>
+        <button class="btn-ghost" onclick="document.getElementById('expressCardPrompt').style.display='none'">No, I need the wizard</button>
+      </div>
+    </div>
+
 <div class="step-tracker" id="stepTracker"></div>
 
 <!-- Step 1: County -->
@@ -1387,8 +1495,6 @@ hr.editorial::before {
   <button class="btn-secondary" style="width:100%" onclick="enterDashboard()">Preview my dashboard →</button>
   <div class="spacer-lg"></div>
 </div>
-```
-
   </div>
 </div>
 
@@ -1405,8 +1511,6 @@ hr.editorial::before {
       <h1 class="dash-greeting" id="dashGreeting">Good evening, <em>Chef</em>.</h1>
       <p class="text-muted" id="dashStatusLine">Permit: <span style="color: var(--sage); font-weight:600;">● Approved</span> • San Diego County • Open tonight</p>
     </div>
-
-```
 <div class="dash-stats">
   <div class="stat-tile">
     <div class="stat-tile-label">Today</div>
@@ -1440,6 +1544,10 @@ hr.editorial::before {
   <button class="tab active" data-tab="orders" onclick="switchDashTab('orders')">Orders</button>
   <button class="tab" data-tab="menu" onclick="switchDashTab('menu')">Menu</button>
   <button class="tab" data-tab="hours" onclick="switchDashTab('hours')">Hours</button>
+  <button class="tab" data-tab="stats" onclick="switchDashTab('stats')">Stats</button>
+  <button class="tab" data-tab="reviews" onclick="switchDashTab('reviews')">Reviews</button>
+  <button class="tab" data-tab="promos" onclick="switchDashTab('promos')">Promos</button>
+  <button class="tab" data-tab="storefront" onclick="switchDashTab('storefront')">Storefront</button>
 </div>
 
 <div id="dashTabOrders">
@@ -1476,9 +1584,150 @@ hr.editorial::before {
   </p>
 </div>
 
-<div class="spacer-lg"></div>
-```
+<div id="dashTabStats" style="display:none;">
+  <div class="feed-label"><span>Last 7 days</span><span id="statsRange7" class="text-muted" style="font-size:12px;">—</span></div>
+  <div class="stats-grid" id="stats7"></div>
+  <div class="feed-label"><span>Last 30 days</span><span id="statsRange30" class="text-muted" style="font-size:12px;">—</span></div>
+  <div class="stats-grid" id="stats30"></div>
+  <div class="feed-label"><span>Top items (30 days)</span></div>
+  <div id="statsTopItems"></div>
+  <div class="feed-label"><span>Customers</span></div>
+  <div id="statsCustomers"></div>
+</div>
 
+<div id="dashTabReviews" style="display:none;">
+  <div class="feed-label"><span>What customers are saying</span><span id="reviewsAvg" class="text-muted" style="font-size:12px;">—</span></div>
+  <div id="reviewsList"></div>
+</div>
+
+<div id="dashTabPromos" style="display:none;">
+  <div class="feed-label">
+    <span>Active promos</span>
+    <button class="btn-ghost" onclick="openPromoEditor()">+ New promo</button>
+  </div>
+  <div id="promosList"></div>
+  <p class="text-muted" style="font-size:12px; margin-top:8px;">
+    Promos apply to direct orders placed through your Stoveside page. Use them for a launch week, a slow Tuesday, or loyal regulars.
+  </p>
+</div>
+
+<div id="dashTabStorefront" style="display:none;">
+  <div class="feed-label"><span>Storefront</span><span id="storefrontLink" class="text-muted" style="font-size:12px;"></span></div>
+  <div id="storefrontEditor"></div>
+</div>
+
+<div class="spacer-lg"></div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                         ADMIN APPROVAL PAGE                           -->
+<!-- ==================================================================== -->
+<div class="page" id="page-admin">
+  <div class="container">
+    <div class="eyebrow">Internal</div>
+    <h1 style="font-family:'Fraunces', serif; font-weight:900; font-size:32px; margin-bottom:4px;">Permit approval queue</h1>
+    <p class="text-muted" style="margin-bottom: 18px; font-size: 14px;">Every submission lands here. Approving flips <code>status</code> to <code>approved</code>, which triggers automatic kitchen creation.</p>
+    <div class="tab-bar" style="margin-bottom: 16px;">
+      <button class="tab active" data-admin-tab="submitted" onclick="switchAdminTab('submitted')">Submitted</button>
+      <button class="tab" data-admin-tab="draft" onclick="switchAdminTab('draft')">Drafts</button>
+      <button class="tab" data-admin-tab="approved" onclick="switchAdminTab('approved')">Approved</button>
+      <button class="tab" data-admin-tab="denied" onclick="switchAdminTab('denied')">Denied</button>
+    </div>
+    <div id="adminList"></div>
+    <div class="spacer-lg"></div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                    EXPRESS ONBOARDING MODAL                          -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="expressOverlay" onclick="closeExpress()"></div>
+<div class="sheet" id="expressSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="padding-top: 24px;">
+    <div class="eyebrow">Express onboarding</div>
+    <h2 class="sheet-title">You already have a permit.</h2>
+    <p class="text-muted" style="margin-bottom: 18px; font-size: 14px;">
+      Tell us the basics and we'll set up your storefront. You can edit everything later.
+    </p>
+    <div class="field">
+      <label>County</label>
+      <select id="exCounty">
+        <option value="san-diego">San Diego</option>
+        <option value="los-angeles">Los Angeles</option>
+        <option value="riverside">Riverside</option>
+        <option value="alameda">Alameda</option>
+        <option value="santa-clara">Santa Clara</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Permit number</label>
+      <input type="text" id="exPermit" placeholder="e.g. MEHKO-12345" autocomplete="off" />
+      <div class="field-hint">Exactly what's on your approval letter. We'll verify against your county later.</div>
+    </div>
+    <div class="field">
+      <label>Date issued</label>
+      <input type="date" id="exIssued" />
+    </div>
+    <div class="field">
+      <label>Kitchen name (what customers see)</label>
+      <input type="text" id="exKitchenName" placeholder="Ana's Tamales" />
+    </div>
+    <div class="field">
+      <label>Your full name</label>
+      <input type="text" id="exChefName" placeholder="Ana García" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label>Cuisine</label>
+      <input type="text" id="exCuisine" placeholder="Oaxacan, Italian, soul food…" />
+    </div>
+    <div class="field">
+      <label>Neighborhood</label>
+      <input type="text" id="exNeighborhood" placeholder="North Park" />
+    </div>
+    <button class="btn-primary" id="exSubmitBtn" onclick="submitExpress()">Create my storefront</button>
+    <p class="text-muted" style="font-size:12px; text-align:center; margin-top:10px;">
+      We won't publish it until you add a photo and turn it on.
+    </p>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                    PROMO EDITOR MODAL                                 -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="promoOverlay" onclick="closePromoEditor()"></div>
+<div class="sheet" id="promoSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="padding-top: 24px;">
+    <div class="eyebrow">New promo</div>
+    <h2 class="sheet-title" id="promoSheetTitle">Create a promo</h2>
+    <div class="field">
+      <label>Code</label>
+      <input type="text" id="promoCode" placeholder="WELCOME10" style="text-transform:uppercase;" />
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <select id="promoKind">
+        <option value="percent">Percent off subtotal</option>
+        <option value="amount">Fixed dollar amount off</option>
+        <option value="first_order">First order only (percent off)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Value</label>
+      <input type="number" id="promoValue" placeholder="10" min="0" step="1" />
+      <div class="field-hint" id="promoValueHint">For percent promos, 10 = 10% off.</div>
+    </div>
+    <div class="field">
+      <label>Minimum subtotal ($)</label>
+      <input type="number" id="promoMin" placeholder="0" min="0" step="1" />
+    </div>
+    <div class="field">
+      <label>Ends (optional)</label>
+      <input type="date" id="promoEnds" />
+    </div>
+    <button class="btn-primary" onclick="savePromo()">Save promo</button>
   </div>
 </div>
 
@@ -1529,8 +1778,6 @@ hr.editorial::before {
     <h2 class="sheet-title" id="sheetTitle"></h2>
     <div class="sheet-by" id="sheetBy"></div>
     <div class="sheet-story" id="sheetStory"></div>
-
-```
 <div class="sheet-section">
   <div class="sheet-label">Menu</div>
   <div id="sheetMenu"></div>
@@ -1555,8 +1802,6 @@ hr.editorial::before {
 <div class="text-muted" style="text-align:center; margin-top:12px; font-size:12px;">
   You'll pay the cook directly at pickup. No fees tonight.
 </div>
-```
-
   </div>
 </div>
 
@@ -1610,32 +1855,62 @@ hr.editorial::before {
   <div class="sheet-body" style="padding-top: 24px;">
     <div class="eyebrow" id="authEyebrow">Welcome to Stoveside</div>
     <h2 class="sheet-title" id="authTitle">Sign in</h2>
-    <p class="text-muted" id="authSub" style="margin-bottom: 20px; font-size: 14px;">
-      We'll email you a magic link. No password needed.
+    <p class="text-muted" id="authSub" style="margin-bottom: 18px; font-size: 14px;">
+      Pick whatever's easiest. Your permits, orders, and kitchen stay in sync either way.
     </p>
 
-```
-<div id="authForm">
-  <div class="field">
-    <label>Email</label>
-    <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" />
-  </div>
-  <button class="btn-primary" id="authSendBtn" onclick="submitAuth()">Send magic link</button>
-  <div class="text-muted" style="text-align:center; margin-top:14px; font-size:12px;">
-    By continuing, you agree to our Terms &amp; Privacy.
-  </div>
-</div>
+    <div id="authForm">
+      <div class="auth-oauth-row">
+        <button type="button" class="btn-oauth btn-oauth-google" onclick="authWithProvider('google')">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C33.6 6.1 29 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C33.6 6.1 29 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5 0 9.5-1.9 12.9-5l-6-5c-2 1.4-4.4 2.2-6.9 2.2-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.4l6 5C41 35.1 44 30 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>
+          Continue with Google
+        </button>
+        <button type="button" class="btn-oauth btn-oauth-apple" onclick="authWithProvider('apple')">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.365 1.43c0 1.14-.43 2.23-1.22 3.02-.83.87-2.16 1.55-3.28 1.46-.13-1.11.42-2.26 1.17-3 .83-.84 2.22-1.47 3.33-1.48zM20.7 17.16c-.57 1.24-.84 1.79-1.58 2.89-1.02 1.53-2.47 3.43-4.26 3.44-1.59.02-2-1.03-4.15-1.02-2.15.01-2.61 1.05-4.2 1.03-1.8-.01-3.16-1.72-4.18-3.25C.51 15.97-.04 11.1 1.74 8.19c1.27-2.07 3.28-3.28 5.17-3.28 1.93 0 3.14 1.06 4.74 1.06 1.55 0 2.49-1.06 4.73-1.06 1.69 0 3.48.92 4.76 2.51-4.18 2.29-3.5 8.27.56 9.74z"/></svg>
+          Continue with Apple
+        </button>
+      </div>
 
-<div id="authSent" style="display:none; text-align:center; padding: 14px 0 4px;">
-  <div style="font-size:48px; margin-bottom: 12px;">📬</div>
-  <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin-bottom: 8px;">Check your email</h3>
-  <p class="text-muted" style="font-size: 14px; margin-bottom: 18px;">
-    We sent a magic link to <strong id="authSentEmail"></strong>. Tap it to sign in.
-  </p>
-  <button class="btn-secondary" onclick="closeAuthSheet()" style="width:100%;">Got it</button>
-</div>
-```
+      <div class="auth-divider"><span>or use email</span></div>
 
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab active" role="tab" data-auth-tab="signin" onclick="switchAuthTab('signin')">Sign in</button>
+        <button type="button" class="auth-tab" role="tab" data-auth-tab="signup" onclick="switchAuthTab('signup')">Create account</button>
+      </div>
+
+      <div class="field" id="authNameField" style="display:none;">
+        <label>Full name</label>
+        <input type="text" id="authName" placeholder="Ana García" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="authPassword" placeholder="At least 8 characters" autocomplete="current-password" />
+        <div class="field-hint" id="authPwHint">We never see your password in the clear.</div>
+      </div>
+
+      <button class="btn-primary" id="authSubmitBtn" onclick="submitAuth()">Sign in</button>
+
+      <div style="text-align:center; margin-top:12px;">
+        <button type="button" class="link-btn" onclick="authMagicLinkFallback()">Email me a sign-in link instead</button>
+      </div>
+
+      <div class="text-muted" style="text-align:center; margin-top:16px; font-size:12px;">
+        By continuing, you agree to our Terms &amp; Privacy.
+      </div>
+    </div>
+
+    <div id="authSent" style="display:none; text-align:center; padding: 14px 0 4px;">
+      <div style="font-size:48px; margin-bottom: 12px;">📬</div>
+      <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin-bottom: 8px;">Check your email</h3>
+      <p class="text-muted" style="font-size: 14px; margin-bottom: 18px;">
+        We sent a sign-in link to <strong id="authSentEmail"></strong>. Tap it to continue.
+      </p>
+      <button class="btn-secondary" onclick="closeAuthSheet()" style="width:100%;">Got it</button>
+    </div>
   </div>
 </div>
 
@@ -2012,7 +2287,10 @@ const db = {
     try {
       const { data } = await sb.from('menu_items').select('*').eq('kitchen_id', state.myKitchen.id).order('sort_order');
       state.operatorMenu = (data || []).map(m => ({
-        id: m.id, name: m.name, desc: m.description || '', price: Number(m.price), emoji: m.emoji || '🍽️',
+        id: m.id, name: m.name, desc: m.description || '', description: m.description || '',
+        price: Number(m.price), emoji: m.emoji || '🍽️',
+        photo_url: m.photo_url || null, is_available: m.is_available !== false,
+        allergens: m.allergens || [],
       }));
       return state.operatorMenu;
     } catch (e) { console.error('[db.loadOperatorMenu]', e); return []; }
@@ -2092,6 +2370,198 @@ const db = {
       await sb.from('permit_applications').update({ status: 'submitted' }).eq('id', state.wizardAppId);
     } catch (e) { console.error('[db.submitPermitApp]', e); }
   },
+
+  /* ---------- Express onboarding: existing permit holder ---------- */
+  async createExpressKitchen(payload) {
+    if (!SUPABASE_ENABLED || !state.user) return { error: 'not-signed-in' };
+    const base = (payload.kitchen_name || 'my-kitchen').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    let slug = base;
+    for (let i = 0; i < 5; i++) {
+      const { data: existing } = await sb.from('kitchens').select('id').eq('slug', slug).maybeSingle();
+      if (!existing) break;
+      slug = base + '-' + Math.random().toString(36).slice(2,5);
+    }
+    try {
+      const { data: app, error: appErr } = await sb.from('permit_applications').insert({
+        user_id: state.user.id,
+        county: payload.county,
+        kitchen_name: payload.kitchen_name,
+        cuisine: payload.cuisine,
+        permit_number: payload.permit_number,
+        is_express: true,
+        status: 'approved',
+        approved_at: new Date().toISOString(),
+      }).select().single();
+      if (appErr) return { error: appErr };
+      const { data: kitchen, error: kErr } = await sb.from('kitchens').insert({
+        owner_id: state.user.id,
+        slug,
+        name: payload.kitchen_name,
+        chef_name: payload.chef_name,
+        cuisine: payload.cuisine,
+        county: payload.county,
+        neighborhood: payload.neighborhood || null,
+        permit_number: payload.permit_number,
+        last_inspected: payload.permit_issued_on || null,
+        is_live: false,
+      }).select().single();
+      if (kErr) return { error: kErr };
+      state.myKitchen = kitchen;
+      return { kitchen, app };
+    } catch (e) { return { error: e }; }
+  },
+
+  /* ---------- Storefront editor ---------- */
+  async updateMyKitchen(patch) {
+    if (!SUPABASE_ENABLED || !state.myKitchen) return { error: 'no-kitchen' };
+    const { data, error } = await sb.from('kitchens').update(patch).eq('id', state.myKitchen.id).select().single();
+    if (!error && data) state.myKitchen = data;
+    return { data, error };
+  },
+
+  async updateMenuItem(id, patch) {
+    if (!SUPABASE_ENABLED) return { error: 'no-supabase' };
+    const { error } = await sb.from('menu_items').update(patch).eq('id', id);
+    if (!error) await db.loadOperatorMenu();
+    return { error };
+  },
+
+  /* ---------- Photo uploads ---------- */
+  async uploadPhoto(bucket, file, prefix = '') {
+    if (!SUPABASE_ENABLED || !state.user) return { error: 'not-signed-in' };
+    const safeName = (file.name || 'upload').replace(/[^a-zA-Z0-9.-]+/g,'_');
+    const path = `${state.user.id}/${prefix}${Date.now()}-${safeName}`;
+    const { error } = await sb.storage.from(bucket).upload(path, file, {
+      cacheControl: '3600', upsert: false, contentType: file.type || 'image/jpeg',
+    });
+    if (error) return { error };
+    const { data } = sb.storage.from(bucket).getPublicUrl(path);
+    return { url: data.publicUrl, path };
+  },
+
+  /* ---------- Reviews ---------- */
+  async loadReviewsForKitchen(kitchenId) {
+    if (!SUPABASE_ENABLED || !kitchenId) return [];
+    try {
+      const { data } = await sb.from('reviews')
+        .select('*, customer:profiles!reviews_customer_id_fkey(full_name)')
+        .eq('kitchen_id', kitchenId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      return data || [];
+    } catch (e) { return []; }
+  },
+  async submitReview({ kitchenId, orderId, rating, body }) {
+    if (!SUPABASE_ENABLED || !state.user) return { error: 'not-signed-in' };
+    const { error } = await sb.from('reviews').insert({
+      kitchen_id: kitchenId, customer_id: state.user.id, order_id: orderId || null,
+      rating, body: body || null,
+    });
+    return { error };
+  },
+  async replyToReview(reviewId, reply) {
+    if (!SUPABASE_ENABLED) return { error: 'no-supabase' };
+    const { error } = await sb.from('reviews').update({
+      operator_reply: reply, operator_replied_at: new Date().toISOString(),
+    }).eq('id', reviewId);
+    return { error };
+  },
+
+  /* ---------- Follows / favorites ---------- */
+  async toggleFollow(kitchenId) {
+    if (!SUPABASE_ENABLED || !state.user) return { error: 'not-signed-in' };
+    const { data: existing } = await sb.from('kitchen_follows')
+      .select('*').eq('customer_id', state.user.id).eq('kitchen_id', kitchenId).maybeSingle();
+    if (existing) {
+      await sb.from('kitchen_follows').delete().eq('customer_id', state.user.id).eq('kitchen_id', kitchenId);
+      return { following: false };
+    }
+    await sb.from('kitchen_follows').insert({ customer_id: state.user.id, kitchen_id: kitchenId });
+    return { following: true };
+  },
+
+  /* ---------- Promos ---------- */
+  async loadPromos(kitchenId) {
+    if (!SUPABASE_ENABLED || !kitchenId) return [];
+    try {
+      const { data } = await sb.from('promos').select('*').eq('kitchen_id', kitchenId).order('created_at', { ascending: false });
+      return data || [];
+    } catch (e) { return []; }
+  },
+  async savePromo(payload) {
+    if (!SUPABASE_ENABLED || !state.myKitchen) return { error: 'no-kitchen' };
+    const row = { ...payload, kitchen_id: state.myKitchen.id, code: payload.code.toUpperCase() };
+    const { error } = await sb.from('promos').upsert(row, { onConflict: 'kitchen_id,code' });
+    return { error };
+  },
+  async togglePromoActive(id, is_active) {
+    if (!SUPABASE_ENABLED) return;
+    await sb.from('promos').update({ is_active }).eq('id', id);
+  },
+  async deletePromo(id) {
+    if (!SUPABASE_ENABLED) return;
+    await sb.from('promos').delete().eq('id', id);
+  },
+
+  /* ---------- Order messaging ---------- */
+  async loadOrderMessages(orderId) {
+    if (!SUPABASE_ENABLED) return [];
+    const { data } = await sb.from('order_messages')
+      .select('*, sender:profiles!order_messages_sender_id_fkey(full_name)')
+      .eq('order_id', orderId).order('created_at', { ascending: true });
+    return data || [];
+  },
+  async sendOrderMessage(orderId, body) {
+    if (!SUPABASE_ENABLED || !state.user) return { error: 'not-signed-in' };
+    const { error } = await sb.from('order_messages').insert({
+      order_id: orderId, sender_id: state.user.id, body,
+    });
+    return { error };
+  },
+
+  /* ---------- Admin (permit approval) ---------- */
+  async loadAdminQueue(status) {
+    if (!SUPABASE_ENABLED) return [];
+    const { data } = await sb.from('permit_applications')
+      .select('*, profiles:user_id (full_name, email, phone)')
+      .eq('status', status).order('created_at', { ascending: false });
+    return data || [];
+  },
+  async setApplicationStatus(id, status) {
+    if (!SUPABASE_ENABLED) return { error: 'no-supabase' };
+    const patch = { status };
+    if (status === 'approved') patch.approved_at = new Date().toISOString();
+    const { error } = await sb.from('permit_applications').update(patch).eq('id', id);
+    return { error };
+  },
+
+  /* ---------- Public kitchen profile (for /k/:slug page) ---------- */
+  async loadKitchenBySlug(slug) {
+    if (!SUPABASE_ENABLED) return null;
+    const { data: kitchen } = await sb.from('kitchens').select('*').eq('slug', slug).maybeSingle();
+    if (!kitchen) return null;
+    const [{ data: menu }, { data: availability }, reviews] = await Promise.all([
+      sb.from('menu_items').select('*').eq('kitchen_id', kitchen.id).eq('is_available', true).order('sort_order', { ascending: true }),
+      sb.from('availability').select('*').eq('kitchen_id', kitchen.id).gte('start_time', new Date().toISOString()).order('start_time', { ascending: true }).limit(14),
+      db.loadReviewsForKitchen(kitchen.id),
+    ]);
+    return { kitchen, menu: menu || [], availability: availability || [], reviews };
+  },
+
+  /* ---------- Stats aggregation ---------- */
+  async loadStatsRange(kitchenId, days) {
+    if (!SUPABASE_ENABLED || !kitchenId) return null;
+    const since = new Date(Date.now() - days * 86400000).toISOString();
+    const { data: orders } = await sb.from('orders')
+      .select('id, total, status, customer_id, created_at')
+      .eq('kitchen_id', kitchenId)
+      .gte('created_at', since);
+    const { data: items } = await sb.from('order_items')
+      .select('qty, price_snapshot, name_snapshot, order_id, orders:order_id!inner(kitchen_id, created_at)')
+      .eq('orders.kitchen_id', kitchenId)
+      .gte('orders.created_at', since);
+    return { orders: orders || [], items: items || [] };
+  },
 };
 
 function parsePickupTime(text) {
@@ -2139,6 +2609,29 @@ const auth = {
     if (!SUPABASE_ENABLED) { toast('Auth disabled — add Supabase keys to config.js'); return { error: 'disabled' }; }
     const redirectTo = window.location.origin + window.location.pathname;
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    return { error };
+  },
+  async signInWithPassword(email, password) {
+    if (!SUPABASE_ENABLED) { toast('Auth disabled — add Supabase keys to config.js'); return { error: 'disabled' }; }
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    return { error };
+  },
+  async signUpWithPassword(email, password, fullName) {
+    if (!SUPABASE_ENABLED) { toast('Auth disabled — add Supabase keys to config.js'); return { error: 'disabled' }; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await sb.auth.signUp({
+      email, password,
+      options: {
+        emailRedirectTo: redirectTo,
+        data: fullName ? { full_name: fullName } : undefined,
+      },
+    });
+    return { error };
+  },
+  async signInWithOAuth(provider) {
+    if (!SUPABASE_ENABLED) { toast('Auth disabled — add Supabase keys to config.js'); return { error: 'disabled' }; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo } });
     return { error };
   },
   async signOut() {
@@ -2235,6 +2728,7 @@ function navTo(page) {
   if (page === 'orders') renderMyOrders();
   if (page === 'dashboard') renderDashboard();
   if (page === 'profile') renderProfile();
+  if (page === 'admin') renderAdmin();
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -2638,6 +3132,15 @@ function renderWizardDone() {
 // mid-wizard and hit the sign-in gate, restore their answers, save the row
 // to Supabase (now that we have an auth.uid), and jump them to the done step.
 async function restoreWizardAfterAuth() {
+  // Express onboarding: if the user kicked off express signup, drop them
+  // back into the express sheet now that they're signed in.
+  if (store.get('ss_pending_express') === '1') {
+    store.remove('ss_pending_express');
+    closeAuthSheet();
+    setTimeout(() => openExpress(), 200);
+    return;
+  }
+
   const pending = store.get('ss_permit_pending_finish');
   const raw = store.get('ss_permit_app');
   if (!raw) return;
@@ -3593,17 +4096,32 @@ async function setOrderStatus(id, status) {
 
 function renderOpMenu() {
   const list = document.getElementById('opMenuList');
-  list.innerHTML = state.operatorMenu.map(m => `
-    <div class="menu-row">
-      <div class="menu-row-img">${m.emoji || '🍽️'}</div>
+  if (!state.operatorMenu.length) {
+    list.innerHTML = '<div class="text-muted" style="padding:12px;">No dishes yet. Tap + Add item to start your menu.</div>';
+    return;
+  }
+  list.innerHTML = state.operatorMenu.map(m => {
+    const imgStyle = m.photo_url ? `background-image:url('${_esc(m.photo_url)}'); background-size:cover; background-position:center;` : '';
+    const imgInner = m.photo_url ? '' : (m.emoji || '🍽️');
+    const desc = m.desc || m.description || '';
+    const available = m.is_available !== false;
+    return `
+    <div class="menu-row" style="${available ? '' : 'opacity:.55;'}">
+      <label class="menu-row-img" style="${imgStyle}; position:relative; cursor:pointer;">
+        ${imgInner}
+        <input type="file" accept="image/*" style="position:absolute; inset:0; opacity:0; cursor:pointer;" onchange="editMenuItemPhoto('${m.id}', this)" />
+      </label>
       <div class="menu-row-body">
-        <div class="menu-row-name">${m.name}</div>
-        <div class="menu-row-desc">${m.desc || ''}</div>
+        <div class="menu-row-name" onclick="editMenuItemInline('${m.id}', 'name')">${_esc(m.name)}</div>
+        <div class="menu-row-desc" onclick="editMenuItemInline('${m.id}', 'desc')">${_esc(desc) || '<span class="text-muted">+ add description</span>'}</div>
+        <div style="margin-top:6px;">
+          <button class="btn-ghost" onclick="toggleMenuItemAvailable('${m.id}', ${!available})" style="font-size:11px; padding: 4px 10px;">${available ? '86 it' : 'Re-enable'}</button>
+        </div>
       </div>
-      <div class="menu-row-price">$${m.price}</div>
+      <div class="menu-row-price" onclick="editMenuItemInline('${m.id}', 'price')">$${Number(m.price).toFixed(2)}</div>
       <button class="menu-row-del" onclick="removeMenuItem('${m.id}')">×</button>
     </div>
-  `).join('');
+  `;}).join('');
 }
 
 async function addMenuItem() {
@@ -3624,11 +4142,16 @@ async function removeMenuItem(id) {
 }
 
 function switchDashTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-  document.getElementById('dashTabOrders').style.display = tab === 'orders' ? 'block' : 'none';
-  document.getElementById('dashTabMenu').style.display = tab === 'menu' ? 'block' : 'none';
-  document.getElementById('dashTabHours').style.display = tab === 'hours' ? 'block' : 'none';
-  if (tab === 'hours') renderHoursTab();
+  document.querySelectorAll('.tab-bar .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  ['orders','menu','hours','stats','reviews','promos','storefront'].forEach(k => {
+    const el = document.getElementById('dashTab' + k[0].toUpperCase() + k.slice(1));
+    if (el) el.style.display = tab === k ? 'block' : 'none';
+  });
+  if (tab === 'hours')     renderHoursTab();
+  if (tab === 'stats')     renderStatsTab();
+  if (tab === 'reviews')   renderReviewsTab();
+  if (tab === 'promos')    renderPromosTab();
+  if (tab === 'storefront') renderStorefrontTab();
 }
 
 /* ---------- Availability scheduling (operator Hours tab) ---------- */
@@ -3843,12 +4366,374 @@ async function saveAvailability() {
   }
 }
 
+/* ---------- Stats tab ---------- */
+function _fmtUsd(n) { return '$' + (Math.round((n || 0) * 100) / 100).toLocaleString(undefined, { minimumFractionDigits: (n || 0) >= 1000 ? 0 : 2, maximumFractionDigits: 2 }); }
+function _aggregate(range) {
+  if (!range) return null;
+  const count = range.orders.length;
+  const revenue = range.orders.reduce((s, o) => s + Number(o.total || 0), 0);
+  const aov = count ? revenue / count : 0;
+  const byCustomer = {};
+  range.orders.forEach(o => { if (o.customer_id) byCustomer[o.customer_id] = (byCustomer[o.customer_id] || 0) + 1; });
+  const distinct = Object.keys(byCustomer).length;
+  const repeats = Object.values(byCustomer).filter(n => n > 1).length;
+  const repeatRate = distinct ? (repeats / distinct) : 0;
+  return { count, revenue, aov, distinct, repeats, repeatRate };
+}
+async function renderStatsTab() {
+  const host7 = document.getElementById('stats7');
+  const host30 = document.getElementById('stats30');
+  const top = document.getElementById('statsTopItems');
+  const cust = document.getElementById('statsCustomers');
+  if (!state.myKitchen) {
+    host7.innerHTML = host30.innerHTML = '';
+    top.innerHTML = cust.innerHTML = '<div class="text-muted" style="padding:12px;">Set up your kitchen to see stats.</div>';
+    return;
+  }
+  const [r7, r30] = await Promise.all([
+    db.loadStatsRange(state.myKitchen.id, 7),
+    db.loadStatsRange(state.myKitchen.id, 30),
+  ]);
+  const a7 = _aggregate(r7) || { count: 0, revenue: 0, aov: 0, repeatRate: 0 };
+  const a30 = _aggregate(r30) || { count: 0, revenue: 0, aov: 0, repeatRate: 0 };
+  document.getElementById('statsRange7').textContent = `${a7.count} orders`;
+  document.getElementById('statsRange30').textContent = `${a30.count} orders`;
+  host7.innerHTML = `
+    <div class="stat-tile"><div class="stat-label">Revenue</div><div class="stat-value">${_fmtUsd(a7.revenue)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Avg order</div><div class="stat-value">${_fmtUsd(a7.aov)}</div></div>
+  `;
+  host30.innerHTML = `
+    <div class="stat-tile"><div class="stat-label">Revenue</div><div class="stat-value">${_fmtUsd(a30.revenue)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Orders</div><div class="stat-value">${a30.count}</div></div>
+    <div class="stat-tile"><div class="stat-label">Avg order</div><div class="stat-value">${_fmtUsd(a30.aov)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Repeat rate</div><div class="stat-value">${Math.round(a30.repeatRate * 100)}%</div></div>
+  `;
+  // Top items by qty
+  const byItem = {};
+  (r30 && r30.items || []).forEach(it => {
+    const key = it.name_snapshot || 'Item';
+    byItem[key] = byItem[key] || { qty: 0, revenue: 0 };
+    byItem[key].qty += Number(it.qty || 0);
+    byItem[key].revenue += Number(it.qty || 0) * Number(it.price_snapshot || 0);
+  });
+  const topList = Object.entries(byItem).sort((a, b) => b[1].qty - a[1].qty).slice(0, 5);
+  top.innerHTML = topList.length
+    ? topList.map(([name, v]) => `<div class="admin-row"><div><h4>${_esc(name)}</h4><div class="admin-meta">${v.qty} sold · ${_fmtUsd(v.revenue)}</div></div></div>`).join('')
+    : '<div class="text-muted" style="padding:12px;">No orders in the last 30 days yet.</div>';
+  cust.innerHTML = `
+    <div class="admin-row"><div><h4>${a30.distinct} unique customers</h4><div class="admin-meta">${a30.repeats} came back</div></div></div>
+  `;
+}
+
+function _esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+/* ---------- Reviews tab (operator side) ---------- */
+async function renderReviewsTab() {
+  const host = document.getElementById('reviewsList');
+  const avgEl = document.getElementById('reviewsAvg');
+  if (!state.myKitchen) { host.innerHTML = '<div class="text-muted" style="padding:12px;">Set up your kitchen to see reviews.</div>'; avgEl.textContent = ''; return; }
+  const reviews = await db.loadReviewsForKitchen(state.myKitchen.id);
+  const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) : 0;
+  avgEl.textContent = reviews.length ? `${avg.toFixed(1)} ★ · ${reviews.length} reviews` : 'No reviews yet';
+  host.innerHTML = reviews.length ? reviews.map(r => {
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const name = r.customer?.full_name || 'A customer';
+    const reply = r.operator_reply ? `<div style="margin-top:8px; padding:10px; background: var(--bg-soft, #EFE7D8); border-radius: 10px;"><div class="admin-meta">Your reply</div>${_esc(r.operator_reply)}</div>` : `<button class="btn-ghost" style="margin-top:8px;" onclick="replyToReviewPrompt('${r.id}')">Reply</button>`;
+    return `<div class="admin-row"><div><div class="admin-meta">${_esc(name)} · ${stars}</div><h4 style="margin-top:4px;">${_esc(r.body || '')}</h4>${reply}</div></div>`;
+  }).join('') : '<div class="text-muted" style="padding:12px;">No reviews yet. Share your kitchen link to start collecting them.</div>';
+}
+
+async function replyToReviewPrompt(reviewId) {
+  const reply = prompt('Your reply (will be public):');
+  if (!reply) return;
+  const { error } = await db.replyToReview(reviewId, reply);
+  if (error) { toast('Could not reply'); return; }
+  toast('Reply posted');
+  await renderReviewsTab();
+}
+
+/* ---------- Promos tab ---------- */
+async function renderPromosTab() {
+  const host = document.getElementById('promosList');
+  if (!state.myKitchen) { host.innerHTML = '<div class="text-muted" style="padding:12px;">Set up your kitchen to create promos.</div>'; return; }
+  const promos = await db.loadPromos(state.myKitchen.id);
+  host.innerHTML = promos.length ? promos.map(p => {
+    const kind = p.kind === 'percent' ? `${p.value}% off` : p.kind === 'amount' ? `$${p.value} off` : p.kind === 'first_order' ? `${p.value}% off first order` : 'Free item';
+    return `
+      <div class="admin-row">
+        <div>
+          <h4>${_esc(p.code)}</h4>
+          <div class="admin-meta">${kind} · ${p.redemptions} redeemed${p.max_redemptions ? ' / ' + p.max_redemptions : ''}${p.min_subtotal ? ' · min $' + p.min_subtotal : ''}${p.ends_at ? ' · ends ' + new Date(p.ends_at).toLocaleDateString() : ''}</div>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <button class="btn-ghost" onclick="togglePromo('${p.id}', ${!p.is_active})">${p.is_active ? 'Pause' : 'Activate'}</button>
+          <button class="btn-ghost" onclick="deletePromo('${p.id}')">Delete</button>
+        </div>
+      </div>`;
+  }).join('') : '<div class="text-muted" style="padding:12px;">No promos yet.</div>';
+}
+
+async function togglePromo(id, is_active) { await db.togglePromoActive(id, is_active); await renderPromosTab(); }
+async function deletePromo(id) { if (!confirm('Delete this promo?')) return; await db.deletePromo(id); await renderPromosTab(); }
+
+function openPromoEditor() {
+  document.getElementById('promoCode').value = '';
+  document.getElementById('promoKind').value = 'percent';
+  document.getElementById('promoValue').value = '';
+  document.getElementById('promoMin').value = '';
+  document.getElementById('promoEnds').value = '';
+  document.getElementById('promoOverlay').classList.add('open');
+  document.getElementById('promoSheet').classList.add('open');
+}
+function closePromoEditor() {
+  document.getElementById('promoOverlay').classList.remove('open');
+  document.getElementById('promoSheet').classList.remove('open');
+}
+async function savePromo() {
+  const code = (document.getElementById('promoCode').value || '').trim();
+  const kind = document.getElementById('promoKind').value;
+  const value = Number(document.getElementById('promoValue').value || 0);
+  const min = Number(document.getElementById('promoMin').value || 0);
+  const ends = document.getElementById('promoEnds').value || null;
+  if (!code || !value) { toast('Code and value are required'); return; }
+  const { error } = await db.savePromo({ code, kind, value, min_subtotal: min, ends_at: ends ? new Date(ends).toISOString() : null });
+  if (error) { toast(error.message || 'Could not save promo'); return; }
+  closePromoEditor();
+  toast('Promo saved');
+  await renderPromosTab();
+}
+
+/* ---------- Storefront editor tab ---------- */
+async function renderStorefrontTab() {
+  const host = document.getElementById('storefrontEditor');
+  const link = document.getElementById('storefrontLink');
+  if (!state.myKitchen) {
+    host.innerHTML = '<div class="text-muted" style="padding:12px;">No storefront yet. Finish your permit or use express onboarding.</div>';
+    link.textContent = '';
+    return;
+  }
+  const k = state.myKitchen;
+  link.innerHTML = k.slug ? `<a href="/k/${k.slug}" target="_blank">stoveside.co/k/${k.slug}</a>` : '';
+  host.innerHTML = `
+    <div class="field">
+      <label>Cover photo (wide)</label>
+      <label class="photo-upload ${k.cover_url ? 'has-image' : ''}" style="background-image: url('${k.cover_url || ''}');">
+        ${k.cover_url ? '' : '<span>Tap to upload · 16:9 recommended</span>'}
+        <div class="photo-upload-overlay"><span>Change photo</span><span>${k.cover_url ? '' : ''}</span></div>
+        <input type="file" accept="image/*" onchange="onKitchenCoverChange(this)">
+      </label>
+    </div>
+    <div class="field">
+      <label>Avatar (square)</label>
+      <label class="photo-upload photo-upload-sm ${k.photo_url ? 'has-image' : ''}" style="background-image: url('${k.photo_url || ''}');">
+        ${k.photo_url ? '' : '<span>Upload</span>'}
+        <div class="photo-upload-overlay"><span>Change</span></div>
+        <input type="file" accept="image/*" onchange="onKitchenAvatarChange(this)">
+      </label>
+    </div>
+    <div class="field">
+      <label>Kitchen name</label>
+      <input type="text" id="sfName" value="${_esc(k.name || '')}" />
+    </div>
+    <div class="field">
+      <label>Chef name (public)</label>
+      <input type="text" id="sfChefName" value="${_esc(k.chef_name || '')}" />
+    </div>
+    <div class="field">
+      <label>Short bio (one line)</label>
+      <input type="text" id="sfBio" placeholder="Abuela's birria, Friday nights only." value="${_esc(k.bio || '')}" />
+    </div>
+    <div class="field">
+      <label>Story (longer)</label>
+      <textarea id="sfStory" rows="4" placeholder="Where you learned to cook, what you love making, what makes tonight special.">${_esc(k.story || '')}</textarea>
+    </div>
+    <div class="field">
+      <label>Neighborhood</label>
+      <input type="text" id="sfNeighborhood" value="${_esc(k.neighborhood || '')}" />
+    </div>
+    <div class="field">
+      <label>Cuisine</label>
+      <input type="text" id="sfCuisine" value="${_esc(k.cuisine || '')}" />
+    </div>
+    <div class="field">
+      <label>Tags (comma-separated, helps discovery)</label>
+      <input type="text" id="sfTags" placeholder="spicy, vegetarian, gluten-free" value="${_esc((k.tags || []).join(', '))}" />
+    </div>
+    <div class="field">
+      <label><input type="checkbox" id="sfIsLive" ${k.is_live ? 'checked' : ''} /> Live — visible to customers</label>
+    </div>
+    <button class="btn-primary" onclick="saveStorefront()">Save storefront</button>
+  `;
+}
+
+async function onKitchenCoverChange(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  toast('Uploading cover…');
+  const { url, error } = await db.uploadPhoto('kitchen-media', file, 'cover-');
+  if (error) { toast('Upload failed'); return; }
+  await db.updateMyKitchen({ cover_url: url });
+  toast('Cover updated');
+  await renderStorefrontTab();
+}
+async function onKitchenAvatarChange(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  toast('Uploading avatar…');
+  const { url, error } = await db.uploadPhoto('kitchen-media', file, 'avatar-');
+  if (error) { toast('Upload failed'); return; }
+  await db.updateMyKitchen({ photo_url: url });
+  toast('Avatar updated');
+  await renderStorefrontTab();
+}
+async function saveStorefront() {
+  const tags = (document.getElementById('sfTags').value || '').split(',').map(s => s.trim()).filter(Boolean);
+  const patch = {
+    name: document.getElementById('sfName').value.trim(),
+    chef_name: document.getElementById('sfChefName').value.trim() || null,
+    bio: document.getElementById('sfBio').value.trim() || null,
+    story: document.getElementById('sfStory').value.trim() || null,
+    neighborhood: document.getElementById('sfNeighborhood').value.trim() || null,
+    cuisine: document.getElementById('sfCuisine').value.trim() || null,
+    tags: tags.length ? tags : null,
+    is_live: document.getElementById('sfIsLive').checked,
+  };
+  const { error } = await db.updateMyKitchen(patch);
+  if (error) { toast(error.message || 'Could not save'); return; }
+  toast('Storefront saved');
+  await renderStorefrontTab();
+}
+
+/* ---------- Menu item editor (with photo) ---------- */
+async function editMenuItemPhoto(id, input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  toast('Uploading…');
+  const { url, error } = await db.uploadPhoto('menu-media', file, `${id}-`);
+  if (error) { toast('Upload failed'); return; }
+  await db.updateMenuItem(id, { photo_url: url });
+  renderOpMenu();
+}
+async function toggleMenuItemAvailable(id, is_available) {
+  await db.updateMenuItem(id, { is_available });
+  renderOpMenu();
+  toast(is_available ? 'Back on the menu' : '86\u2019d');
+}
+async function editMenuItemInline(id, field) {
+  const current = state.operatorMenu.find(m => m.id === id) || {};
+  const label = field === 'price' ? 'New price?' : field === 'desc' ? 'New description?' : 'New name?';
+  const v = prompt(label, field === 'price' ? current.price : (current[field] || current.desc || ''));
+  if (v == null) return;
+  const patch = {};
+  if (field === 'price') patch.price = parseFloat(v) || 0;
+  else if (field === 'desc') patch.description = v;
+  else patch.name = v;
+  await db.updateMenuItem(id, patch);
+  renderOpMenu();
+}
+
+/* ---------- Express onboarding ---------- */
+function openExpress() {
+  if (SUPABASE_ENABLED && !state.user) {
+    store.set('ss_pending_express', '1');
+    openAuthSheet('Create your account to continue', { mode: 'signup' });
+    return;
+  }
+  document.getElementById('expressOverlay').classList.add('open');
+  document.getElementById('expressSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // prefill county if chosen in wizard
+  const county = state.wizardData?.county;
+  if (county) { const sel = document.getElementById('exCounty'); if (sel) sel.value = county; }
+}
+function closeExpress() {
+  document.getElementById('expressOverlay').classList.remove('open');
+  document.getElementById('expressSheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function submitExpress() {
+  const payload = {
+    county: document.getElementById('exCounty').value,
+    permit_number: (document.getElementById('exPermit').value || '').trim(),
+    permit_issued_on: document.getElementById('exIssued').value || null,
+    kitchen_name: (document.getElementById('exKitchenName').value || '').trim(),
+    chef_name: (document.getElementById('exChefName').value || '').trim(),
+    cuisine: (document.getElementById('exCuisine').value || '').trim(),
+    neighborhood: (document.getElementById('exNeighborhood').value || '').trim(),
+  };
+  if (!payload.permit_number) { toast('Enter your permit number'); return; }
+  if (!payload.kitchen_name) { toast('Give your kitchen a name'); return; }
+  const btn = document.getElementById('exSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  const { error } = await db.createExpressKitchen(payload);
+  btn.disabled = false; btn.textContent = 'Create my storefront';
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('duplicate') || msg.includes('unique')) {
+      toast('That permit number is already on Stoveside. Contact us if that\u2019s wrong.');
+    } else {
+      toast(error.message || 'Could not create storefront');
+    }
+    return;
+  }
+  closeExpress();
+  setRole('cook');
+  navTo('dashboard');
+  switchDashTab('storefront');
+  toast('Storefront created. Add a photo and go live.');
+}
+
+/* ---------- Admin queue ---------- */
+let _adminTab = 'submitted';
+async function renderAdmin() {
+  const host = document.getElementById('adminList');
+  if (!state.profile?.is_admin) {
+    host.innerHTML = '<div class="empty"><div class="empty-emoji">🔒</div><h3>Admin only</h3><p>Your account doesn\u2019t have admin access.</p></div>';
+    return;
+  }
+  const rows = await db.loadAdminQueue(_adminTab);
+  host.innerHTML = rows.length ? rows.map(r => {
+    const person = r.profiles || {};
+    const actions = _adminTab === 'submitted' || _adminTab === 'draft'
+      ? `<div style="display:flex; gap:6px;"><button class="btn-primary" onclick="adminSetStatus('${r.id}', 'approved')">Approve</button><button class="btn-ghost" onclick="adminSetStatus('${r.id}', 'denied')">Deny</button></div>`
+      : _adminTab === 'denied' ? `<button class="btn-ghost" onclick="adminSetStatus('${r.id}', 'submitted')">Reopen</button>` : '';
+    return `
+      <div class="admin-row">
+        <div style="flex:1;">
+          <div class="admin-meta">${r.county || '—'} · ${new Date(r.created_at).toLocaleDateString()}${r.is_express ? ' · express' : ''}</div>
+          <h4>${_esc(r.kitchen_name || 'Untitled kitchen')}</h4>
+          <div class="text-muted" style="font-size:13px;">${_esc(person.full_name || '')} · ${_esc(person.email || '')}</div>
+          <div class="text-muted" style="font-size:13px;">${_esc(r.address || '')}${r.permit_number ? ' · permit ' + _esc(r.permit_number) : ''}</div>
+        </div>
+        ${actions}
+      </div>`;
+  }).join('') : '<div class="text-muted" style="padding:12px;">Nothing in this queue.</div>';
+}
+function switchAdminTab(tab) {
+  _adminTab = tab;
+  document.querySelectorAll('[data-admin-tab]').forEach(b => b.classList.toggle('active', b.dataset.adminTab === tab));
+  renderAdmin();
+}
+async function adminSetStatus(id, status) {
+  if (status === 'denied' && !confirm('Deny this application?')) return;
+  const { error } = await db.setApplicationStatus(id, status);
+  if (error) { toast(error.message || 'Failed'); return; }
+  toast(status === 'approved' ? 'Approved — kitchen created' : 'Updated');
+  await renderAdmin();
+}
+
 /* ---------- Auth sheet ---------- */
-function openAuthSheet(title) {
+let _authMode = 'signin'; // 'signin' | 'signup'
+
+function openAuthSheet(title, opts = {}) {
   document.getElementById('authTitle').textContent = title || 'Sign in';
   document.getElementById('authForm').style.display = 'block';
   document.getElementById('authSent').style.display = 'none';
   document.getElementById('authEmail').value = state.wizardData?.email || '';
+  document.getElementById('authPassword').value = '';
+  const nameEl = document.getElementById('authName');
+  if (nameEl) nameEl.value = state.wizardData?.fullName || '';
+  switchAuthTab(opts.mode || 'signin');
   document.getElementById('authOverlay').classList.add('open');
   document.getElementById('authSheet').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -3861,22 +4746,79 @@ function closeAuthSheet() {
   document.body.style.overflow = '';
 }
 
+function switchAuthTab(mode) {
+  _authMode = mode === 'signup' ? 'signup' : 'signin';
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.authTab === _authMode));
+  document.getElementById('authNameField').style.display = _authMode === 'signup' ? 'block' : 'none';
+  document.getElementById('authSubmitBtn').textContent = _authMode === 'signup' ? 'Create account' : 'Sign in';
+  document.getElementById('authPwHint').textContent = _authMode === 'signup'
+    ? 'At least 8 characters. You can change this later.'
+    : 'Forgot it? Use the email-link option below.';
+  document.getElementById('authPassword').setAttribute('autocomplete', _authMode === 'signup' ? 'new-password' : 'current-password');
+}
+
+async function authWithProvider(provider) {
+  const { error } = await auth.signInWithOAuth(provider);
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('provider is not enabled') || msg.includes('unsupported provider')) {
+      toast(provider[0].toUpperCase() + provider.slice(1) + ' sign-in isn\u2019t set up yet — use email for now.');
+    } else {
+      toast(error.message || 'Could not start ' + provider + ' sign-in');
+    }
+  }
+}
+
 async function submitAuth() {
   const email = document.getElementById('authEmail').value.trim();
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast('Enter a valid email');
-    return;
-  }
-  const btn = document.getElementById('authSendBtn');
-  btn.textContent = 'Sending...';
+  const password = document.getElementById('authPassword').value;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Enter a valid email'); return; }
+  if (!password || password.length < 8) { toast('Password must be at least 8 characters'); return; }
+
+  const btn = document.getElementById('authSubmitBtn');
+  const originalLabel = btn.textContent;
+  btn.textContent = _authMode === 'signup' ? 'Creating…' : 'Signing in…';
   btn.classList.add('disabled');
-  const { error } = await auth.sendMagicLink(email);
+
+  let error;
+  if (_authMode === 'signup') {
+    const fullName = (document.getElementById('authName').value || '').trim();
+    ({ error } = await auth.signUpWithPassword(email, password, fullName));
+  } else {
+    ({ error } = await auth.signInWithPassword(email, password));
+  }
+
   btn.classList.remove('disabled');
-  btn.textContent = 'Send magic link';
+  btn.textContent = originalLabel;
+
   if (error) {
-    toast(typeof error === 'string' ? error : (error.message || 'Could not send link'));
+    const msg = (error.message || '').toLowerCase();
+    if (_authMode === 'signin' && msg.includes('invalid')) {
+      toast('Email or password doesn\u2019t match. Try the email link below.');
+    } else if (_authMode === 'signup' && msg.includes('already')) {
+      toast('That email already has an account — try signing in.');
+      switchAuthTab('signin');
+    } else {
+      toast(error.message || 'Something went wrong');
+    }
     return;
   }
+
+  if (_authMode === 'signup') {
+    document.getElementById('authSentEmail').textContent = email;
+    document.getElementById('authForm').style.display = 'none';
+    document.getElementById('authSent').style.display = 'block';
+  }
+}
+
+async function authMagicLinkFallback() {
+  const email = document.getElementById('authEmail').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Enter your email above and try again');
+    return;
+  }
+  const { error } = await auth.sendMagicLink(email);
+  if (error) { toast(error.message || 'Could not send link'); return; }
   document.getElementById('authSentEmail').textContent = email;
   document.getElementById('authForm').style.display = 'none';
   document.getElementById('authSent').style.display = 'block';
@@ -3954,6 +4896,7 @@ async function renderProfile() {
     </div>
     <button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="toast('Notifications coming soon')">Notifications</button>
     <button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="toast('Help: email hello@stoveside.co')">Help &amp; support</button>
+    ${state.profile?.is_admin ? `<button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="navTo('admin')">Admin queue</button>` : ''}
     <button class="btn-secondary" style="width:100%;" onclick="signOut()">Sign out</button>
     <div class="spacer-lg"></div>
   `;
@@ -4042,6 +4985,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // If returning from a magic link, the URL has ?code=... or #access_token — clean it up
   if (window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
     window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // Route on hash: #admin opens the admin page if the caller is an admin.
+  const hash = (window.location.hash || '').replace('#','');
+  const urlParams = new URLSearchParams(window.location.search);
+  if (hash === 'admin') navTo('admin');
+  if (hash === 'express' || urlParams.get('flow') === 'express') {
+    setRole('new-cook');
+    setTimeout(() => openExpress(), 300);
   }
 });
 </script>
