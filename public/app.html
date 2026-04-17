@@ -1,0 +1,3387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#F5EFE6" />
+<title>Stoveside — Real food, from the kitchen next door.</title>
+<meta name="description" content="San Diego's permitted home cooks, cooking tonight. Order direct, pick up warm. Every kitchen holds a MEHKO permit." />
+
+<!-- Open Graph / Social -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Stoveside" />
+<meta property="og:title" content="Stoveside — Real food, from the kitchen next door." />
+<meta property="og:description" content="San Diego's permitted home cooks, cooking tonight. Order direct, pick up warm." />
+<meta property="og:image" content="/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Stoveside" />
+<meta name="twitter:description" content="Real food, from the kitchen next door." />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FF6B4A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Supabase client + config -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+
+<!-- pdf-lib: client-side PDF generation for the MEHKO permit packet -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" defer></script>
+
+<style>
+/* ==========================================================================
+   STOVESIDE DESIGN SYSTEM
+   Aesthetic: warm editorial — coral on cream, Fraunces serif display.
+   Sibling to Spotd but its own identity: serif display instead of Cabinet,
+   slightly more editorial / magazine feel to suit "home cooking" story.
+   ========================================================================== */
+
+:root {
+  /* Core */
+  --bg: #F5EFE6;
+  --bg2: #EDE5D8;
+  --card: #FFFFFF;
+  --card2: #FAF5EE;
+  --ink: #1A1208;
+  --text: #2A1F14;
+  --muted: rgba(42,31,20,0.52);
+  --muted2: rgba(42,31,20,0.32);
+
+  /* Brand */
+  --coral: #FF6B4A;
+  --coral-deep: #E8553A;
+  --amber: #E8943A;
+  --sage: #8FA876;
+
+  /* Borders */
+  --border: rgba(255,107,74,0.18);
+  --border2: rgba(42,31,20,0.08);
+
+  /* Functional */
+  --coral-dim: rgba(255,107,74,0.10);
+  --coral-glow: rgba(255,107,74,0.22);
+  --glass: rgba(245,239,230,0.85);
+  --nav-bg: rgba(245,239,230,0.88);
+
+  /* Shadows */
+  --shadow: 0 1px 3px rgba(42,31,20,0.04), 0 1px 2px rgba(42,31,20,0.06);
+  --shadow-md: 0 4px 12px rgba(42,31,20,0.06), 0 2px 4px rgba(42,31,20,0.04);
+  --shadow-lg: 0 12px 32px rgba(42,31,20,0.08), 0 4px 8px rgba(42,31,20,0.04);
+
+  /* Radii */
+  --r-sm: 8px;
+  --r: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Safe areas */
+  --safe-top: env(safe-area-inset-top, 0);
+  --safe-bot: env(safe-area-inset-bottom, 0);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+body {
+  min-height: 100vh;
+  padding-top: var(--safe-top);
+  padding-bottom: calc(80px + var(--safe-bot));
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; font-size: 15px; }
+a { color: var(--coral); text-decoration: none; }
+h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 900; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+
+/* ====== Top nav ====== */
+.topbar {
+  position: sticky; top: 0; z-index: 90;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+  padding: 12px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 6px;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--coral);
+  margin-top: 8px;
+}
+.topbar-right {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.topbar-right .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); margin-right: 6px; vertical-align: middle; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ====== Pages ====== */
+.page { display: none; animation: pageFade .3s var(--ease-out); }
+.page.active { display: block; }
+@keyframes pageFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.container { max-width: 480px; margin: 0 auto; padding: 0 18px; }
+
+/* ====== Consumer — Discover feed ====== */
+.hero-block {
+  padding: 24px 0 16px;
+}
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--coral);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-size: clamp(32px, 8vw, 44px);
+  line-height: 1.0;
+  margin-bottom: 10px;
+}
+.hero-title em { font-style: italic; color: var(--coral); font-weight: 700; }
+.hero-sub { color: var(--muted); font-size: 15px; max-width: 340px; }
+
+.city-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 13px; font-weight: 600;
+  box-shadow: var(--shadow);
+  margin-top: 14px;
+}
+
+.feed-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 28px 0 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Cook card — hero version (first cook) */
+.cook-hero {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 14px;
+  animation: cardIn .5s var(--ease-out) both;
+  transition: transform .2s var(--ease-out);
+}
+.cook-hero:active { transform: scale(0.985); }
+.cook-hero-photo {
+  aspect-ratio: 4/5;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.cook-hero-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(20,15,8,0) 0%, rgba(20,15,8,0) 35%, rgba(20,15,8,0.8) 100%);
+}
+.cook-hero-body {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 20px;
+  color: #fff;
+  z-index: 2;
+}
+.cook-hero-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 30px;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.cook-hero-by {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+}
+.cook-hero-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+}
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  font-weight: 500;
+}
+.cook-hero-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.95);
+  color: var(--ink);
+  padding: 10px 18px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.badge-status {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  background: rgba(143,168,118,0.95);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.badge-permit {
+  position: absolute; top: 14px; left: 14px; z-index: 3;
+  background: rgba(255,255,255,0.92);
+  color: var(--coral);
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* Compact cook cards — two-up grid */
+.cook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.cook-compact {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: transform .2s var(--ease-out);
+  animation: cardIn .5s var(--ease-out) both;
+}
+.cook-compact:active { transform: scale(0.97); }
+.cook-compact-photo {
+  aspect-ratio: 3/4;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.cook-compact-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(20,15,8,0) 40%, rgba(20,15,8,0.82) 100%);
+}
+.cook-compact-body {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 12px;
+  color: #fff;
+  z-index: 2;
+}
+.cook-compact-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.1;
+  margin-bottom: 2px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.cook-compact-by {
+  font-size: 11px;
+  opacity: 0.88;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+}
+
+/* Standard list cook row */
+.cook-row {
+  display: flex; gap: 14px;
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 10px;
+  align-items: center;
+  animation: cardIn .5s var(--ease-out) both;
+  transition: transform .2s var(--ease-out);
+}
+.cook-row:active { transform: scale(0.98); }
+.cook-row-thumb {
+  width: 72px; height: 72px; border-radius: var(--r-sm);
+  background-size: cover; background-position: center;
+  flex-shrink: 0;
+}
+.cook-row-body { flex: 1; min-width: 0; }
+.cook-row-name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; line-height: 1.1; margin-bottom: 2px; color: var(--ink); }
+.cook-row-by { font-size: 12px; color: var(--muted); font-style: italic; font-family: 'Fraunces', serif; margin-bottom: 4px; }
+.cook-row-meta { font-size: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ====== Venue sheet (modal) ====== */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(20,15,8,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease-out);
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 101;
+  background: var(--bg);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  max-height: 92vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  transform: translateY(100%);
+  transition: transform .4s var(--ease-out);
+  padding-bottom: calc(24px + var(--safe-bot));
+}
+.sheet.open { transform: translateY(0); }
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: rgba(42,31,20,0.18);
+  border-radius: 2px;
+  margin: 10px auto 0;
+  position: sticky; top: 0;
+}
+.sheet-photo {
+  width: 100%; height: 240px;
+  background-size: cover; background-position: center;
+  margin-top: -4px;
+}
+.sheet-body { padding: 20px; }
+.sheet-title { font-family: 'Fraunces', serif; font-weight: 900; font-size: 28px; line-height: 1.0; margin-bottom: 4px; }
+.sheet-by { font-family: 'Fraunces', serif; font-style: italic; color: var(--muted); margin-bottom: 14px; }
+.sheet-story { font-size: 14px; line-height: 1.55; color: var(--text); margin-bottom: 20px; }
+.sheet-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border2); }
+.sheet-section:last-child { border-bottom: none; }
+.sheet-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.menu-item {
+  display: flex; gap: 12px; align-items: center;
+  padding: 10px 0;
+}
+.menu-item + .menu-item { border-top: 1px dashed var(--border2); }
+.menu-item-body { flex: 1; }
+.menu-item-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.menu-item-desc { font-size: 12px; color: var(--muted); }
+.menu-item-price { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; color: var(--coral); }
+.menu-item-add {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--coral); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 400;
+  transition: transform .15s var(--ease-spring);
+}
+.menu-item-add:active { transform: scale(0.85); }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.info-tile {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 12px;
+  border: 1px solid var(--border2);
+}
+.info-tile-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.info-tile-val { font-weight: 600; font-size: 14px; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: var(--r);
+  font-weight: 700;
+  font-size: 15px;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(255,107,74,0.28);
+  transition: transform .15s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+.btn-primary:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(255,107,74,0.3); }
+.btn-primary.disabled { opacity: 0.4; pointer-events: none; }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--card);
+  color: var(--text);
+  border: 1.5px solid var(--border2);
+  padding: 12px 18px;
+  border-radius: var(--r);
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform .15s var(--ease-out);
+}
+.btn-secondary:active { transform: scale(0.97); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--coral);
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+/* ====== Cart bar ====== */
+.cart-bar {
+  position: fixed; left: 16px; right: 16px; bottom: calc(82px + var(--safe-bot));
+  z-index: 50;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--r);
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(20,15,8,0.25);
+  transform: translateY(calc(100% + 100px));
+  transition: transform .4s var(--ease-out);
+}
+.cart-bar.visible { transform: translateY(0); }
+.cart-bar-left { display: flex; align-items: center; gap: 12px; }
+.cart-count {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--coral);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px;
+}
+.cart-bar-label { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+.cart-bar-total { font-family: 'Fraunces', serif; font-weight: 800; font-size: 20px; }
+
+/* ====== Bottom nav ====== */
+.bottom-nav {
+  position: fixed; bottom: 14px; left: 16px; right: 16px; z-index: 80;
+  max-width: 452px;
+  margin: 0 auto;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 8px;
+  display: flex;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: var(--safe-bot);
+}
+.nav-btn {
+  flex: 1;
+  padding: 10px 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: rgba(42,31,20,0.45);
+  transition: transform .15s var(--ease-spring), color .2s;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+  position: relative;
+}
+.nav-btn svg { width: 22px; height: 22px; stroke-width: 2; }
+.nav-btn.active { color: var(--coral); }
+.nav-btn.active::after {
+  content: ''; position: absolute; bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--coral);
+}
+.nav-btn:active { transform: scale(0.88); }
+
+/* ====== Permit wizard ====== */
+.wizard-hero {
+  padding: 30px 0 20px;
+  text-align: left;
+}
+.wizard-title {
+  font-size: clamp(32px, 8vw, 42px);
+  line-height: 1.0;
+  margin-bottom: 12px;
+}
+.wizard-title em { font-style: italic; color: var(--coral); }
+.wizard-sub { color: var(--muted); font-size: 15px; line-height: 1.5; }
+
+.step-tracker {
+  display: flex; gap: 6px; margin: 18px 0 24px;
+}
+.step-dot {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: var(--border2);
+  transition: background .3s;
+}
+.step-dot.active { background: var(--coral); }
+.step-dot.done { background: var(--coral-deep); }
+
+.step {
+  display: none;
+  animation: stepIn .4s var(--ease-out);
+}
+.step.active { display: block; }
+@keyframes stepIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+.step-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.step-q {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.step-help {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: 14px 14px;
+  font-size: 15px;
+  color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-glow);
+}
+.field textarea { resize: vertical; min-height: 90px; font-family: inherit; }
+
+.option-stack { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.option-card {
+  background: var(--card);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  transition: border-color .2s, transform .15s var(--ease-out), background .2s;
+  cursor: pointer;
+  text-align: left;
+}
+.option-card:active { transform: scale(0.98); }
+.option-card.selected {
+  border-color: var(--coral);
+  background: var(--coral-dim);
+}
+.option-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, background .2s;
+}
+.option-card.selected .option-check {
+  border-color: var(--coral);
+  background: var(--coral);
+}
+.option-card.selected .option-check::after {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff;
+}
+.option-body { flex: 1; }
+.option-title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.option-desc { font-size: 12px; color: var(--muted); }
+
+.wizard-nav {
+  display: flex; gap: 10px; margin-top: 24px;
+}
+.wizard-nav .btn-primary { flex: 1; }
+.wizard-nav .btn-secondary { flex: 0 0 auto; }
+
+/* Wizard done state */
+.wizard-done {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+.wizard-done-emoji {
+  font-size: 56px;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: popIn .6s var(--ease-spring);
+}
+@keyframes popIn { from { transform: scale(0); } 60% { transform: scale(1.15); } to { transform: scale(1); } }
+.wizard-done h2 { font-size: 32px; margin-bottom: 8px; }
+.wizard-done p { color: var(--muted); margin-bottom: 24px; }
+.checklist-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  text-align: left;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.checklist-card h3 { font-size: 18px; margin-bottom: 10px; }
+.check-row {
+  display: flex; gap: 10px; padding: 8px 0;
+  border-bottom: 1px dashed var(--border2);
+}
+.check-row:last-child { border-bottom: none; }
+.check-mark {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--sage);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.check-mark.pending { background: var(--border2); color: var(--muted); }
+.check-row-body { flex: 1; }
+.check-row-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.check-row-meta { font-size: 12px; color: var(--muted); }
+
+/* ====== Dashboard ====== */
+.dash-header {
+  padding: 24px 0 16px;
+}
+.dash-greeting {
+  font-size: clamp(26px, 7vw, 34px);
+  line-height: 1.05;
+  margin-bottom: 4px;
+}
+.dash-greeting em { font-style: italic; color: var(--coral); }
+.dash-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat-tile {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 14px 12px;
+  text-align: left;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border2);
+}
+.stat-tile-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.stat-tile-val {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.stat-tile-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.cap-meter {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  border: 1px solid var(--border2);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.cap-meter-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.cap-meter-title { font-weight: 600; font-size: 14px; }
+.cap-meter-count { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); }
+.cap-bar {
+  height: 8px;
+  background: var(--bg2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.cap-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sage), var(--amber));
+  border-radius: 4px;
+  transition: width .5s var(--ease-out);
+}
+.cap-fill.warning { background: linear-gradient(90deg, var(--amber), var(--coral)); }
+.cap-fill.danger { background: var(--coral); }
+.cap-sub { font-size: 11px; color: var(--muted); margin-top: 8px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+
+.order-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border2);
+  animation: cardIn .4s var(--ease-out) both;
+}
+.order-head {
+  display: flex; justify-content: space-between; align-items: start;
+  margin-bottom: 8px;
+}
+.order-name { font-weight: 700; font-size: 15px; }
+.order-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.order-items { font-size: 13px; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
+.order-footer { display: flex; justify-content: space-between; align-items: center; }
+.order-total { font-family: 'Fraunces', serif; font-weight: 800; font-size: 20px; color: var(--coral); }
+.order-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-weight: 500;
+}
+.order-status.new { background: var(--coral-dim); color: var(--coral-deep); }
+.order-status.ready { background: rgba(143,168,118,0.15); color: var(--sage); }
+.order-status.done { background: var(--border2); color: var(--muted); }
+.order-actions { display: flex; gap: 8px; margin-top: 10px; }
+.order-actions button { flex: 1; padding: 10px; font-size: 13px; }
+
+/* Menu manager */
+.menu-list { margin-bottom: 14px; }
+.menu-row {
+  display: flex; gap: 12px;
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 12px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  align-items: center;
+}
+.menu-row-img {
+  width: 52px; height: 52px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.menu-row-body { flex: 1; }
+.menu-row-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.menu-row-desc { font-size: 11px; color: var(--muted); }
+.menu-row-price { font-family: 'Fraunces', serif; font-weight: 700; font-size: 16px; color: var(--coral); margin-right: 8px; }
+.menu-row-del {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg2); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: background .2s, color .2s;
+}
+.menu-row-del:active { background: var(--coral); color: #fff; }
+
+/* Role switcher (for demo) */
+.role-switch {
+  position: fixed; top: calc(var(--safe-top) + 12px); right: 12px;
+  z-index: 200;
+  background: var(--ink);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 50px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.empty-emoji { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+.empty h3 { font-family: 'Fraunces', serif; font-size: 20px; color: var(--text); margin-bottom: 6px; }
+.empty p { font-size: 13px; }
+
+.section-divider {
+  height: 1px;
+  background: var(--border2);
+  margin: 20px 0;
+}
+
+/* Pickup time selector */
+.pickup-options {
+  display: flex; gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -18px;
+  padding-left: 18px; padding-right: 18px;
+}
+.pickup-chip {
+  flex-shrink: 0;
+  background: var(--card);
+  border: 1.5px solid var(--border2);
+  border-radius: 50px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all .2s var(--ease-out);
+}
+.pickup-chip.selected {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--bg2);
+  border-radius: 50px;
+  padding: 4px;
+  margin-bottom: 18px;
+}
+.tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 50px;
+  color: var(--muted);
+  transition: all .2s var(--ease-out);
+}
+.tab.active {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(110px + var(--safe-bot));
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s var(--ease-out);
+  z-index: 150;
+  max-width: 85%;
+  text-align: center;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Utility */
+.spacer-sm { height: 10px; }
+.spacer { height: 20px; }
+.spacer-lg { height: 32px; }
+.flex-row { display: flex; gap: 8px; align-items: center; }
+.text-muted { color: var(--muted); font-size: 13px; }
+.mt-sm { margin-top: 10px; }
+.bold { font-weight: 700; }
+hr.editorial {
+  border: none;
+  border-top: 1px solid var(--border2);
+  margin: 20px 0;
+  position: relative;
+  text-align: center;
+}
+hr.editorial::before {
+  content: '❋';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg);
+  padding: 0 10px;
+  color: var(--coral);
+  font-size: 12px;
+}
+
+.icon-wrap svg { width: 100%; height: 100%; }
+</style>
+</head>
+
+<body>
+
+<!-- ==================================================================== -->
+<!--                           ROLE SWITCHER                               -->
+<!-- ==================================================================== -->
+<button class="role-switch" id="roleSwitch" onclick="cycleRole()">
+  <span id="roleLabel">Consumer</span>
+</button>
+
+<!-- ==================================================================== -->
+<!--                            TOP BAR                                    -->
+<!-- ==================================================================== -->
+<div class="topbar">
+  <div class="logo">
+    Stoveside<span class="logo-dot"></span>
+  </div>
+  <div class="topbar-right">
+    <span class="dot"></span>San Diego
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                     CONSUMER — DISCOVER PAGE                          -->
+<!-- ==================================================================== -->
+<div class="page active" id="page-discover">
+  <div class="container">
+    <div class="hero-block">
+      <div class="eyebrow">Cooking Tonight</div>
+      <h1 class="hero-title">Real food, from the <em>kitchen next door</em>.</h1>
+      <p class="hero-sub">Every cook below holds a MEHKO permit from San Diego County. Order direct, pick up warm.</p>
+    </div>
+
+    <div class="feed-label">
+      <span>🌶️ Open for Pre-Orders</span>
+      <span style="color: var(--coral); font-weight: 600;">Tonight</span>
+    </div>
+
+    <div id="heroCook"></div>
+
+    <div class="feed-label">
+      <span>Near you</span>
+      <span>See map →</span>
+    </div>
+
+    <div id="gridCooks" class="cook-grid"></div>
+
+    <div class="feed-label">
+      <span>More kitchens</span>
+    </div>
+
+    <div id="listCooks"></div>
+
+    <hr class="editorial">
+
+    <div style="text-align: center; padding: 10px 0 30px;">
+      <div class="eyebrow" style="margin-bottom: 8px;">Want to cook?</div>
+      <h3 style="font-size: 22px; margin-bottom: 8px;">Get your home kitchen permitted.</h3>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">San Diego County approves MEHKO permits. We'll walk you through it in 10 minutes.</p>
+      <button class="btn-secondary" onclick="setRole('new-cook')">Start permit application →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                       PERMIT WIZARD PAGE                              -->
+<!-- ==================================================================== -->
+<div class="page" id="page-permit">
+  <div class="container">
+    <div class="wizard-hero">
+      <div class="eyebrow">The Stoveside Permit Wizard</div>
+      <h1 class="wizard-title">Your kitchen, <em>legally</em>.</h1>
+      <p class="wizard-sub">10 questions. We'll build your SOP, menu, and application packet — ready to submit to San Diego County.</p>
+    </div>
+
+    <div class="step-tracker" id="stepTracker"></div>
+
+    <!-- Step 1: County -->
+    <div class="step active" data-step="1">
+      <div class="step-label">Step 1 of 6</div>
+      <h2 class="step-q">Where is your home?</h2>
+      <p class="step-help">MEHKO permits are issued by county. Only counties that have opted in can approve you.</p>
+      <div class="option-stack" id="countyOptions">
+        <button class="option-card selected" data-val="san-diego">
+          <div class="option-check"></div>
+          <div class="option-body">
+            <div class="option-title">San Diego County</div>
+            <div class="option-desc">Permanent program. Fees waived through May 2025. ✓ Open</div>
+          </div>
+        </button>
+        <button class="option-card" data-val="los-angeles">
+          <div class="option-check"></div>
+          <div class="option-body">
+            <div class="option-title">Los Angeles County</div>
+            <div class="option-desc">Pilot program through June 2026. ✓ Open</div>
+          </div>
+        </button>
+        <button class="option-card" data-val="riverside">
+          <div class="option-check"></div>
+          <div class="option-body">
+            <div class="option-title">Riverside County</div>
+            <div class="option-desc">First county to opt in (2019). ✓ Open</div>
+          </div>
+        </button>
+        <button class="option-card" data-val="alameda">
+          <div class="option-check"></div>
+          <div class="option-body">
+            <div class="option-title">Alameda County</div>
+            <div class="option-desc">Active program since 2021. ✓ Open</div>
+          </div>
+        </button>
+        <button class="option-card" data-val="other">
+          <div class="option-check"></div>
+          <div class="option-body">
+            <div class="option-title">My county isn't listed</div>
+            <div class="option-desc">We'll email you when it opens.</div>
+          </div>
+        </button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Basics -->
+    <div class="step" data-step="2">
+      <div class="step-label">Step 2 of 6 — About you</div>
+      <h2 class="step-q">Tell us who's cooking.</h2>
+      <p class="step-help">This goes on your Stoveside profile and your permit application.</p>
+      <div class="field">
+        <label>Your name</label>
+        <input type="text" id="pw-name" placeholder="Shane Rutter" />
+      </div>
+      <div class="field">
+        <label>Kitchen name</label>
+        <input type="text" id="pw-kitchen" placeholder='e.g. "Grandma Rosa\'s" or "Shane\'s Tacos"' />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="pw-email" placeholder="shane@example.com" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="pw-phone" placeholder="(619) 555-0100" />
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Kitchen address + water -->
+    <div class="step" data-step="3">
+      <div class="step-label">Step 3 of 6 — Your kitchen</div>
+      <h2 class="step-q">Where will you cook?</h2>
+      <p class="step-help">Your MEHKO permit applies to one private residence.</p>
+      <div class="field">
+        <label>Home address</label>
+        <input type="text" id="pw-address" placeholder="3201 Adams Ave, San Diego" />
+      </div>
+      <div class="field">
+        <label>Water source</label>
+        <select id="pw-water">
+          <option value="municipal">Municipal water (city)</option>
+          <option value="well">Private well (extra lab test required)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Household members in home during cooking hours</label>
+        <select id="pw-household">
+          <option value="0">Just me</option>
+          <option value="1">1 other</option>
+          <option value="2">2 others</option>
+          <option value="3">3+ others</option>
+        </select>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Food type -->
+    <div class="step" data-step="4">
+      <div class="step-label">Step 4 of 6 — What you'll cook</div>
+      <h2 class="step-q">What kind of food?</h2>
+      <p class="step-help">This shapes your Standard Operating Procedures doc.</p>
+      <div class="option-stack" id="cuisineOptions">
+        <button class="option-card" data-val="mexican"><div class="option-check"></div><div class="option-body"><div class="option-title">Mexican / Latin</div><div class="option-desc">Tacos, birria, pupusas, empanadas</div></div></button>
+        <button class="option-card" data-val="asian"><div class="option-check"></div><div class="option-body"><div class="option-title">Asian / Southeast Asian</div><div class="option-desc">Pho, bao, curries, noodles</div></div></button>
+        <button class="option-card" data-val="middle-eastern"><div class="option-check"></div><div class="option-body"><div class="option-title">Middle Eastern / Mediterranean</div><div class="option-desc">Kebabs, hummus, shawarma, falafel</div></div></button>
+        <button class="option-card" data-val="comfort"><div class="option-check"></div><div class="option-body"><div class="option-title">American / Comfort food</div><div class="option-desc">BBQ, fried chicken, mac and cheese</div></div></button>
+        <button class="option-card" data-val="baking"><div class="option-check"></div><div class="option-body"><div class="option-title">Baked goods / desserts</div><div class="option-desc">You might qualify for a Cottage Food permit too (easier)</div></div></button>
+        <button class="option-card" data-val="other"><div class="option-check"></div><div class="option-body"><div class="option-title">Something else</div><div class="option-desc">Tell us in step 5</div></div></button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Menu preview -->
+    <div class="step" data-step="5">
+      <div class="step-label">Step 5 of 6 — Sample menu</div>
+      <h2 class="step-q">Your three signature dishes?</h2>
+      <p class="step-help">You can edit these later. The county just needs a sample.</p>
+      <div class="field"><label>Dish 1</label><input type="text" id="pw-dish1" placeholder="e.g. Birria tacos with consomé" /></div>
+      <div class="field"><label>Dish 2</label><input type="text" id="pw-dish2" placeholder="e.g. Homemade pupusas" /></div>
+      <div class="field"><label>Dish 3</label><input type="text" id="pw-dish3" placeholder="e.g. Flan" /></div>
+      <div class="wizard-nav">
+        <button class="btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 6: Schedule -->
+    <div class="step" data-step="6">
+      <div class="step-label">Step 6 of 6 — Schedule</div>
+      <h2 class="step-q">When do you want to cook?</h2>
+      <p class="step-help">MEHKO caps you at 30 meals/day and 60/week. We'll track this for you.</p>
+      <div class="option-stack" id="scheduleOptions">
+        <button class="option-card" data-val="weekends"><div class="option-check"></div><div class="option-body"><div class="option-title">Weekends only</div><div class="option-desc">Fri–Sun. Side gig, low volume.</div></div></button>
+        <button class="option-card" data-val="3-4-days"><div class="option-check"></div><div class="option-body"><div class="option-title">3–4 nights/week</div><div class="option-desc">Most common. ~$2–3K/mo typical.</div></div></button>
+        <button class="option-card" data-val="daily"><div class="option-check"></div><div class="option-body"><div class="option-title">Daily</div><div class="option-desc">Full-time. Approaching the $100K/yr cap.</div></div></button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn-primary" onclick="finishWizard()">Generate my application →</button>
+      </div>
+    </div>
+
+    <!-- Done state -->
+    <div class="step" data-step="done">
+      <div class="wizard-done">
+        <div class="wizard-done-emoji">🍳</div>
+        <h2>You're ready to submit.</h2>
+        <p id="wizardDoneSummary">Here's your custom submission packet.</p>
+      </div>
+
+      <div class="checklist-card">
+        <h3>Your application packet</h3>
+        <div class="check-row">
+          <div class="check-mark">✓</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Standard Operating Procedures</div>
+            <div class="check-row-meta">Auto-generated • 7 pages • Customized to your cuisine</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark">✓</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Sample menu document</div>
+            <div class="check-row-meta">Formatted for county review</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark">✓</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Kitchen floor plan template</div>
+            <div class="check-row-meta">Fillable PDF</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark pending">○</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Food Manager Certification</div>
+            <div class="check-row-meta">Required • ~$15 • ServSafe or equivalent • We'll link you</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark pending">○</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Water quality test</div>
+            <div class="check-row-meta" id="waterMeta">Municipal — not required</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark pending">○</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Home kitchen inspection</div>
+            <div class="check-row-meta">County will schedule after submission</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checklist-card">
+        <h3>What happens next</h3>
+        <div class="check-row">
+          <div class="check-mark">1</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Submit your packet</div>
+            <div class="check-row-meta">We'll email the PDF to you + give you the San Diego County contact</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark">2</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Schedule your inspection</div>
+            <div class="check-row-meta">Usually 2–4 weeks after submission</div>
+          </div>
+        </div>
+        <div class="check-row">
+          <div class="check-mark">3</div>
+          <div class="check-row-body">
+            <div class="check-row-title">Start cooking on Stoveside</div>
+            <div class="check-row-meta">Your kitchen goes live the day you're approved</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+      <button class="btn-primary" onclick="downloadPacket()">📄 Download my submission packet (PDF)</button>
+      <div class="spacer-sm"></div>
+      <button class="btn-secondary" style="width:100%" onclick="enterDashboard()">Preview my dashboard →</button>
+      <div class="spacer-lg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                       OPERATOR DASHBOARD PAGE                         -->
+<!-- ==================================================================== -->
+<div class="page" id="page-dashboard">
+  <div class="container">
+    <div class="dash-header">
+      <div class="eyebrow">Your kitchen</div>
+      <h1 class="dash-greeting" id="dashGreeting">Good evening, <em>Chef</em>.</h1>
+      <p class="text-muted" id="dashStatusLine">Permit: <span style="color: var(--sage); font-weight:600;">● Approved</span> • San Diego County • Open tonight</p>
+    </div>
+
+    <div class="dash-stats">
+      <div class="stat-tile">
+        <div class="stat-tile-label">Today</div>
+        <div class="stat-tile-val" id="statToday">12</div>
+        <div class="stat-tile-sub">of 30 meals</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">This Week</div>
+        <div class="stat-tile-val" id="statWeek">41</div>
+        <div class="stat-tile-sub">of 60 meals</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">Earnings YTD</div>
+        <div class="stat-tile-val" id="statYtd">$12.4k</div>
+        <div class="stat-tile-sub">of $100k cap</div>
+      </div>
+    </div>
+
+    <div class="cap-meter">
+      <div class="cap-meter-header">
+        <div class="cap-meter-title">Weekly capacity</div>
+        <div class="cap-meter-count" id="capCount">41 / 60 meals</div>
+      </div>
+      <div class="cap-bar">
+        <div class="cap-fill warning" id="capFill" style="width: 68%"></div>
+      </div>
+      <div class="cap-sub">AB 626 caps MEHKO at 60 meals/week. You're 19 meals from max.</div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="orders" onclick="switchDashTab('orders')">Orders</button>
+      <button class="tab" data-tab="menu" onclick="switchDashTab('menu')">Menu</button>
+      <button class="tab" data-tab="hours" onclick="switchDashTab('hours')">Hours</button>
+    </div>
+
+    <div id="dashTabOrders">
+      <div class="feed-label">
+        <span>New & active</span>
+        <span id="activeCount">3 pending</span>
+      </div>
+      <div id="orderList"></div>
+
+      <div class="feed-label">
+        <span>Completed today</span>
+      </div>
+      <div id="doneOrders"></div>
+    </div>
+
+    <div id="dashTabMenu" style="display:none;">
+      <div class="feed-label">
+        <span>Your menu</span>
+        <button class="btn-ghost" onclick="addMenuItem()">+ Add item</button>
+      </div>
+      <div class="menu-list" id="opMenuList"></div>
+    </div>
+
+    <div id="dashTabHours" style="display:none;">
+      <div class="feed-label"><span>This week's availability</span><span id="hoursSavedNote" style="color: var(--muted); font-size:12px;">—</span></div>
+      <p style="color: var(--muted); font-size: 14px; margin: 0 0 12px 0;">
+        Toggle the days you'll be open for pickup. Each day defaults to 6–9pm — tap Edit to change times.
+      </p>
+      <div id="hoursList"></div>
+      <div class="spacer"></div>
+      <button class="btn-primary" id="hoursSaveBtn" style="width:100%" onclick="saveAvailability()">Save this week's availability</button>
+      <p style="color: var(--muted); font-size: 12px; margin-top: 10px; text-align: center;">
+        MEHKO caps: 30 meals/day, 60/week. Changes apply to the next 7 days.
+      </p>
+    </div>
+
+    <div class="spacer-lg"></div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                       ORDERS (CONSUMER) PAGE                          -->
+<!-- ==================================================================== -->
+<div class="page" id="page-orders">
+  <div class="container">
+    <div class="hero-block">
+      <div class="eyebrow">Your meals</div>
+      <h1 class="hero-title">Orders</h1>
+    </div>
+    <div id="myOrdersList"></div>
+    <div class="spacer-lg"></div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                          PROFILE PAGE                                 -->
+<!-- ==================================================================== -->
+<div class="page" id="page-profile">
+  <div class="container">
+    <!-- Contents populated by renderProfile() on navigation -->
+    <div class="hero-block">
+      <div class="eyebrow">Your profile</div>
+      <h1 class="hero-title">Loading...</h1>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                          COOK DETAIL SHEET                            -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeSheet()"></div>
+<div class="sheet" id="cookSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-photo" id="sheetPhoto"></div>
+  <div class="sheet-body">
+    <h2 class="sheet-title" id="sheetTitle"></h2>
+    <div class="sheet-by" id="sheetBy"></div>
+    <div class="sheet-story" id="sheetStory"></div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Menu</div>
+      <div id="sheetMenu"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Pickup time</div>
+      <div class="pickup-options" id="sheetPickup"></div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-label">Kitchen info</div>
+      <div class="info-grid">
+        <div class="info-tile"><div class="info-tile-label">Permit</div><div class="info-tile-val" id="sheetPermit">MEHKO-SD-1204</div></div>
+        <div class="info-tile"><div class="info-tile-label">Inspected</div><div class="info-tile-val" id="sheetInspect">Feb 2026</div></div>
+        <div class="info-tile"><div class="info-tile-label">Pickup</div><div class="info-tile-val" id="sheetNbhd">North Park</div></div>
+        <div class="info-tile"><div class="info-tile-label">Payment</div><div class="info-tile-val">Cash / Venmo</div></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="placeOrderBtn" onclick="placeOrder()">Place order</button>
+    <div class="text-muted" style="text-align:center; margin-top:12px; font-size:12px;">
+      You'll pay the cook directly at pickup. No fees tonight.
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                             CART BAR                                  -->
+<!-- ==================================================================== -->
+<div class="cart-bar" id="cartBar" onclick="reopenSheet()">
+  <div class="cart-bar-left">
+    <div class="cart-count" id="cartCount">0</div>
+    <div>
+      <div class="cart-bar-label">In basket</div>
+      <div style="font-weight:700; font-size:14px;" id="cartCook"></div>
+    </div>
+  </div>
+  <div class="cart-bar-total" id="cartTotal">$0</div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                          BOTTOM NAV                                   -->
+<!-- ==================================================================== -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-btn active" data-page="discover" onclick="navTo('discover')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Discover
+  </button>
+  <button class="nav-btn" data-page="orders" onclick="navTo('orders')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+    Orders
+  </button>
+  <button class="nav-btn" data-page="profile" onclick="navTo('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>
+    Profile
+  </button>
+</nav>
+
+<!-- ==================================================================== -->
+<!--                          AUTH SHEET                                   -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="authOverlay" onclick="closeAuthSheet()"></div>
+<div class="sheet" id="authSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="padding-top: 24px;">
+    <div class="eyebrow" id="authEyebrow">Welcome to Stoveside</div>
+    <h2 class="sheet-title" id="authTitle">Sign in</h2>
+    <p class="text-muted" id="authSub" style="margin-bottom: 20px; font-size: 14px;">
+      We'll email you a magic link. No password needed.
+    </p>
+
+    <div id="authForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <button class="btn-primary" id="authSendBtn" onclick="submitAuth()">Send magic link</button>
+      <div class="text-muted" style="text-align:center; margin-top:14px; font-size:12px;">
+        By continuing, you agree to our Terms &amp; Privacy.
+      </div>
+    </div>
+
+    <div id="authSent" style="display:none; text-align:center; padding: 14px 0 4px;">
+      <div style="font-size:48px; margin-bottom: 12px;">📬</div>
+      <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin-bottom: 8px;">Check your email</h3>
+      <p class="text-muted" style="font-size: 14px; margin-bottom: 18px;">
+        We sent a magic link to <strong id="authSentEmail"></strong>. Tap it to sign in.
+      </p>
+      <button class="btn-secondary" onclick="closeAuthSheet()" style="width:100%;">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================================
+   STOVESIDE APP — VANILLA JS + SUPABASE
+   Real data from Supabase with graceful fallback to SEED_COOKS if
+   the Supabase client isn't configured (useful for static previews).
+   ========================================================================== */
+
+/* ---------- Safe storage (falls back to memory if localStorage blocked) ---------- */
+const _memStore = {};
+const store = {
+  get(k) {
+    try { return window.localStorage.getItem(k); }
+    catch (_) { return _memStore[k] ?? null; }
+  },
+  set(k, v) {
+    try { window.localStorage.setItem(k, v); }
+    catch (_) { _memStore[k] = v; }
+  },
+  remove(k) {
+    try { window.localStorage.removeItem(k); }
+    catch (_) { delete _memStore[k]; }
+  },
+};
+
+/* ---------- Supabase client ---------- */
+const CFG = window.STOVESIDE_CONFIG || {};
+const SUPABASE_ENABLED = !!(CFG.supabaseUrl && CFG.supabaseKey && window.supabase);
+const sb = SUPABASE_ENABLED
+  ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    })
+  : null;
+
+if (!SUPABASE_ENABLED) {
+  console.warn('[Stoveside] Supabase not configured — running in demo-only mode.');
+}
+
+/* ---------- App state ---------- */
+const ROLES = ['consumer', 'cook', 'new-cook'];
+const state = {
+  role: store.get('ss_role') || 'consumer',
+  page: 'discover',
+  user: null,                  // Supabase auth user
+  profile: null,               // profiles row
+  myKitchen: null,             // kitchens row if the user owns one
+  cart: [],                    // [{cookId, itemId, name, price, qty}]
+  cartCookId: null,
+  openCookId: null,
+  selectedPickup: null,
+  wizardStep: 1,
+  wizardData: { county: 'san-diego' },
+  wizardAppId: null,           // UUID of the active permit_applications row
+  cooksCache: [],              // last fetched kitchens list
+  orders: [],                  // consumer's orders
+  operatorOrders: [],          // orders for the operator's kitchen
+  operatorMenu: [],            // operator's menu items
+};
+
+/* ---------- Seed: SD cooks (would be Supabase `cooks` table) ---------- */
+const SEED_COOKS = [
+  {
+    id: 'c1',
+    name: "Grandma Rosa's",
+    chef: 'Rosa Hernandez',
+    neighborhood: 'North Park',
+    cuisine: 'Mexican',
+    permit: 'MEHKO-SD-1204',
+    inspected: 'Feb 2026',
+    photo: 'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?w=800&q=80',
+    story: "Rosa has been making birria since her abuela taught her at 12 in Jalisco. She opened her home kitchen after retiring from 20 years of catering.",
+    tags: ['Mexican', 'Tonight 6–9pm', 'Pickup · North Park'],
+    pickups: ['6:15 PM', '6:45 PM', '7:15 PM', '7:45 PM', '8:15 PM'],
+    menu: [
+      { id: 'm1', name: 'Birria Tacos (3)', desc: 'Slow-braised beef, consomé dip', price: 14 },
+      { id: 'm2', name: 'Quesadilla', desc: 'Oaxaca cheese, handmade tortilla', price: 9 },
+      { id: 'm3', name: 'Consomé (side)', desc: '12 oz hot broth for dipping', price: 4 },
+      { id: 'm4', name: 'Flan', desc: "Grandma Rosa's recipe", price: 6 },
+    ],
+    rating: 4.9,
+    reviewCount: 47,
+    isHero: true,
+  },
+  {
+    id: 'c2',
+    name: "Anya's Thai Kitchen",
+    chef: 'Anya Prasertsri',
+    neighborhood: 'Hillcrest',
+    cuisine: 'Thai',
+    permit: 'MEHKO-SD-0897',
+    inspected: 'Jan 2026',
+    photo: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80',
+    story: "Anya moved from Chiang Mai in 2019. She cooks the curries her grandmother made, ground by mortar and pestle each morning.",
+    tags: ['Thai', 'Tonight', 'Pickup · Hillcrest'],
+    pickups: ['6:30 PM', '7:00 PM', '7:30 PM'],
+    menu: [
+      { id: 'a1', name: 'Khao Soi', desc: 'Northern Thai coconut curry noodle', price: 15 },
+      { id: 'a2', name: 'Massaman Curry', desc: 'Beef shank, 6-hour braise', price: 16 },
+      { id: 'a3', name: 'Mango Sticky Rice', desc: 'Seasonal', price: 7 },
+    ],
+    rating: 4.8, reviewCount: 31,
+  },
+  {
+    id: 'c3',
+    name: "Pimpin' Chkn",
+    chef: 'Elijah B.',
+    neighborhood: 'East Village',
+    cuisine: 'Comfort',
+    permit: 'MEHKO-SD-1102',
+    inspected: 'Mar 2026',
+    photo: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f9b?w=800&q=80',
+    story: "Elijah's spicy fried chicken sandwich built a cult following at SD farmers markets. Now served from his East Village loft.",
+    tags: ['Comfort', 'Fri–Sat'],
+    pickups: ['7:00 PM', '7:30 PM', '8:00 PM'],
+    menu: [
+      { id: 'p1', name: 'Spicy Chicken Sando', desc: 'Buttermilk-brined, 24hr', price: 13 },
+      { id: 'p2', name: 'Classic Sando', desc: 'Pickles, honey butter', price: 12 },
+      { id: 'p3', name: 'Mac & Cheese', desc: 'Four cheeses, baked', price: 8 },
+    ],
+    rating: 4.9, reviewCount: 22,
+  },
+  {
+    id: 'c4',
+    name: "Saffron Supper",
+    chef: 'Farah K.',
+    neighborhood: 'La Jolla',
+    cuisine: 'Persian',
+    permit: 'MEHKO-SD-0654',
+    inspected: 'Nov 2025',
+    photo: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&q=80',
+    story: "Farah's Persian dinners draw on her family's Shirazi traditions. Ghormeh sabzi braised 8 hours to her mother's exact recipe.",
+    tags: ['Persian', 'Wed–Sun'],
+    pickups: ['6:00 PM', '6:30 PM', '7:00 PM'],
+    menu: [
+      { id: 's1', name: 'Ghormeh Sabzi', desc: 'Herb stew, lamb, saffron rice', price: 18 },
+      { id: 's2', name: 'Fesenjan', desc: 'Pomegranate walnut chicken', price: 17 },
+      { id: 's3', name: 'Zereshk Polo', desc: 'Barberry saffron rice', price: 9 },
+    ],
+    rating: 4.9, reviewCount: 18,
+  },
+  {
+    id: 'c5',
+    name: "Keone's Bao",
+    chef: 'Keone W.',
+    neighborhood: 'Ocean Beach',
+    cuisine: 'Chinese',
+    permit: 'MEHKO-SD-1350',
+    inspected: 'Feb 2026',
+    photo: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=80',
+    story: "Keone folds 200 bao a week from his OB kitchen. Pork belly cured 48 hours, steamed buns made fresh.",
+    tags: ['Chinese', 'Thu–Sat'],
+    pickups: ['6:00 PM', '6:30 PM', '7:00 PM'],
+    menu: [
+      { id: 'k1', name: 'Pork Belly Bao (3)', desc: 'Cured 48 hours', price: 13 },
+      { id: 'k2', name: 'Mushroom Bao (3)', desc: 'Veg option', price: 12 },
+    ],
+    rating: 4.7, reviewCount: 9,
+  },
+  {
+    id: 'c6',
+    name: "Mama Abeba's",
+    chef: 'Abeba T.',
+    neighborhood: 'City Heights',
+    cuisine: 'Ethiopian',
+    permit: 'MEHKO-SD-0441',
+    inspected: 'Dec 2025',
+    photo: 'https://images.unsplash.com/photo-1567529692333-de9fd6772897?w=800&q=80',
+    story: "Abeba's injera is fermented for three days. Her doro wat has been perfected over four decades.",
+    tags: ['Ethiopian', 'Sat–Sun'],
+    pickups: ['5:30 PM', '6:00 PM', '6:30 PM'],
+    menu: [
+      { id: 'e1', name: 'Doro Wat Platter', desc: 'Chicken, berbere, injera', price: 18 },
+      { id: 'e2', name: 'Veggie Combo', desc: '5 stews + injera', price: 16 },
+    ],
+    rating: 4.9, reviewCount: 27,
+  },
+];
+
+/* ---------- Data layer: Supabase if configured, SEED_COOKS fallback ---------- */
+
+function shapeKitchen(k, menu = [], pickups = []) {
+  return {
+    id: k.id,
+    slug: k.slug,
+    name: k.name,
+    chef: k.chef_name,
+    neighborhood: k.neighborhood,
+    cuisine: k.cuisine,
+    permit: k.permit_number,
+    inspected: k.last_inspected
+      ? new Date(k.last_inspected).toLocaleString('en-US', { month: 'short', year: 'numeric' })
+      : '—',
+    photo: k.photo_url,
+    story: k.story,
+    tags: k.tags || [k.cuisine, k.neighborhood].filter(Boolean),
+    pickups,
+    menu: menu.map(m => ({ id: m.id, name: m.name, desc: m.description || '', price: Number(m.price) })),
+    rating: k.rating ? Number(k.rating) : null,
+    reviewCount: k.review_count || 0,
+    isHero: false,
+    isDemo: !!k.is_demo,
+  };
+}
+
+function shapePickups(availabilityRows) {
+  const slots = [];
+  for (const a of availabilityRows) {
+    const start = new Date(a.start_time);
+    const end = new Date(a.end_time);
+    const step = 30 * 60 * 1000;
+    let count = 0;
+    for (let t = start.getTime(); t < end.getTime() && count < 5; t += step, count++) {
+      slots.push(new Date(t).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }));
+    }
+  }
+  return slots;
+}
+
+const db = {
+  async listCooks() {
+    if (!SUPABASE_ENABLED) return SEED_COOKS;
+    try {
+      const { data: kitchens, error } = await sb.from('kitchens').select('*').eq('is_live', true).order('rating', { ascending: false, nullsFirst: false });
+      if (error) throw error;
+      if (!kitchens || kitchens.length === 0) return SEED_COOKS;
+      const ids = kitchens.map(k => k.id);
+      const [menusRes, availRes] = await Promise.all([
+        sb.from('menu_items').select('*').in('kitchen_id', ids).eq('is_available', true).order('sort_order'),
+        sb.from('availability').select('*').in('kitchen_id', ids).gte('end_time', new Date().toISOString()).order('start_time'),
+      ]);
+      const menusByKitchen = {}; (menusRes.data || []).forEach(m => { (menusByKitchen[m.kitchen_id] ||= []).push(m); });
+      const availByKitchen = {}; (availRes.data || []).forEach(a => { (availByKitchen[a.kitchen_id] ||= []).push(a); });
+      const shaped = kitchens.map(k => shapeKitchen(k, menusByKitchen[k.id] || [], shapePickups(availByKitchen[k.id] || [])));
+      if (shaped.length) shaped[0].isHero = true;
+      state.cooksCache = shaped;
+      return shaped;
+    } catch (e) { console.error('[db.listCooks]', e); return SEED_COOKS; }
+  },
+
+  async getCook(id) {
+    if (!SUPABASE_ENABLED) return SEED_COOKS.find(c => c.id === id);
+    const cached = state.cooksCache.find(c => c.id === id);
+    if (cached) return cached;
+    try {
+      const { data: k, error } = await sb.from('kitchens').select('*').eq('id', id).eq('is_live', true).single();
+      if (error || !k) return null;
+      const [menuRes, availRes] = await Promise.all([
+        sb.from('menu_items').select('*').eq('kitchen_id', id).eq('is_available', true).order('sort_order'),
+        sb.from('availability').select('*').eq('kitchen_id', id).gte('end_time', new Date().toISOString()).order('start_time'),
+      ]);
+      return shapeKitchen(k, menuRes.data || [], shapePickups(availRes.data || []));
+    } catch (e) { console.error('[db.getCook]', e); return null; }
+  },
+
+  async createOrder({ kitchenId, items, pickup, total }) {
+    if (!SUPABASE_ENABLED || !state.user) {
+      const cook = state.cooksCache.find(c => c.id === kitchenId) || {};
+      const order = {
+        id: 'ord_' + Date.now(), cookId: kitchenId,
+        cookName: cook.name || 'Kitchen', chef: cook.chef || '',
+        items: items.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+        pickup, total, status: 'confirmed',
+        createdAt: new Date().toISOString(),
+        neighborhood: cook.neighborhood || '', photo: cook.photo || '',
+      };
+      state.orders.unshift(order);
+      store.set('ss_orders_local', JSON.stringify(state.orders));
+      return order;
+    }
+    try {
+      const pickupISO = parsePickupTime(pickup);
+      const { data: order, error } = await sb.from('orders').insert({
+        customer_id: state.user.id, kitchen_id: kitchenId,
+        pickup_time: pickupISO, total, status: 'confirmed', payment_method: 'cash_or_venmo',
+      }).select().single();
+      if (error) throw error;
+      const itemsInsert = items.map(i => ({
+        order_id: order.id, menu_item_id: i.itemId,
+        name_snapshot: i.name, price_snapshot: i.price, qty: i.qty,
+      }));
+      const { error: itemsErr } = await sb.from('order_items').insert(itemsInsert);
+      if (itemsErr) throw itemsErr;
+      await db.loadMyOrders();
+      return order;
+    } catch (e) { console.error('[db.createOrder]', e); throw e; }
+  },
+
+  async loadMyOrders() {
+    if (!SUPABASE_ENABLED || !state.user) {
+      state.orders = JSON.parse(store.get('ss_orders_local') || '[]');
+      return state.orders;
+    }
+    try {
+      const { data: orders, error } = await sb.from('orders')
+        .select('*, kitchens!inner(id, name, chef_name, neighborhood, photo_url), order_items(*)')
+        .eq('customer_id', state.user.id).order('created_at', { ascending: false });
+      if (error) throw error;
+      state.orders = (orders || []).map(o => ({
+        id: o.id, cookId: o.kitchen_id,
+        cookName: o.kitchens?.name || 'Kitchen', chef: o.kitchens?.chef_name || '',
+        neighborhood: o.kitchens?.neighborhood || '', photo: o.kitchens?.photo_url || '',
+        items: (o.order_items || []).map(i => ({ name: i.name_snapshot, qty: i.qty, price: Number(i.price_snapshot) })),
+        pickup: new Date(o.pickup_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+        total: Number(o.total), status: o.status, createdAt: o.created_at,
+      }));
+      return state.orders;
+    } catch (e) { console.error('[db.loadMyOrders]', e); return []; }
+  },
+
+  async loadOperatorKitchen() {
+    if (!SUPABASE_ENABLED || !state.user) { state.myKitchen = null; return null; }
+    try {
+      const { data: k } = await sb.from('kitchens').select('*').eq('owner_id', state.user.id).maybeSingle();
+      state.myKitchen = k || null;
+      return k;
+    } catch (e) { console.error('[db.loadOperatorKitchen]', e); return null; }
+  },
+
+  async loadOperatorOrders() {
+    if (!SUPABASE_ENABLED || !state.myKitchen) {
+      state.operatorOrders = [
+        { id: 'o1', customer: 'Jessie M.', items: '2× Birria tacos, 1× Quesadilla', total: 32, time: '7:15 PM', status: 'new' },
+        { id: 'o2', customer: 'Tom K.',    items: '3× Birria tacos, 1× Flan',       total: 38, time: '7:30 PM', status: 'new' },
+        { id: 'o3', customer: 'Priya S.',  items: '1× Consomé, 2× Birria tacos',    total: 28, time: '7:45 PM', status: 'ready' },
+      ];
+      return state.operatorOrders;
+    }
+    try {
+      const { data: orders } = await sb.from('orders')
+        .select('*, profiles(full_name, email), order_items(*)')
+        .eq('kitchen_id', state.myKitchen.id).order('pickup_time');
+      state.operatorOrders = (orders || []).map(o => ({
+        id: o.id,
+        customer: o.profiles?.full_name || (o.profiles?.email || 'Customer').split('@')[0],
+        items: (o.order_items || []).map(i => `${i.qty}× ${i.name_snapshot}`).join(', '),
+        total: Number(o.total),
+        time: new Date(o.pickup_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+        status: o.status === 'picked_up' ? 'done' : o.status,
+      }));
+      return state.operatorOrders;
+    } catch (e) { console.error('[db.loadOperatorOrders]', e); state.operatorOrders = []; return []; }
+  },
+
+  async updateOperatorOrder(id, patch) {
+    if (!SUPABASE_ENABLED || !state.myKitchen) {
+      const o = state.operatorOrders.find(x => x.id === id);
+      if (o) Object.assign(o, patch);
+      return o;
+    }
+    try {
+      const dbPatch = {};
+      if (patch.status === 'done') dbPatch.status = 'picked_up';
+      else if (patch.status) dbPatch.status = patch.status;
+      await sb.from('orders').update(dbPatch).eq('id', id);
+      await db.loadOperatorOrders();
+    } catch (e) { console.error('[db.updateOperatorOrder]', e); }
+  },
+
+  async loadOperatorMenu() {
+    if (!SUPABASE_ENABLED || !state.myKitchen) {
+      state.operatorMenu = [
+        { id: 'm1', name: 'Birria Tacos (3)', desc: 'Slow-braised beef, consomé dip', price: 14, emoji: '🌮' },
+        { id: 'm2', name: 'Quesadilla',       desc: 'Oaxaca cheese, handmade tortilla', price: 9, emoji: '🫓' },
+        { id: 'm3', name: 'Flan',             desc: "Grandma Rosa's recipe", price: 6, emoji: '🍮' },
+      ];
+      return state.operatorMenu;
+    }
+    try {
+      const { data } = await sb.from('menu_items').select('*').eq('kitchen_id', state.myKitchen.id).order('sort_order');
+      state.operatorMenu = (data || []).map(m => ({
+        id: m.id, name: m.name, desc: m.description || '', price: Number(m.price), emoji: m.emoji || '🍽️',
+      }));
+      return state.operatorMenu;
+    } catch (e) { console.error('[db.loadOperatorMenu]', e); return []; }
+  },
+
+  async addMenuItem(item) {
+    if (!SUPABASE_ENABLED || !state.myKitchen) {
+      state.operatorMenu.push({ id: 'm' + Date.now(), ...item });
+      return;
+    }
+    try {
+      await sb.from('menu_items').insert({
+        kitchen_id: state.myKitchen.id,
+        name: item.name, description: item.desc, price: item.price, emoji: item.emoji || '🍽️',
+        sort_order: state.operatorMenu.length + 1,
+      });
+      await db.loadOperatorMenu();
+    } catch (e) { console.error('[db.addMenuItem]', e); }
+  },
+
+  async removeMenuItem(id) {
+    if (!SUPABASE_ENABLED || !state.myKitchen) {
+      state.operatorMenu = state.operatorMenu.filter(m => m.id !== id);
+      return;
+    }
+    try {
+      await sb.from('menu_items').delete().eq('id', id);
+      await db.loadOperatorMenu();
+    } catch (e) { console.error('[db.removeMenuItem]', e); }
+  },
+
+  async savePermitApp(wizardData) {
+    if (!SUPABASE_ENABLED || !state.user) {
+      store.set('ss_permit_app', JSON.stringify(wizardData));
+      return { id: 'local' };
+    }
+    try {
+      const row = {
+        user_id: state.user.id,
+        county: wizardData.county,
+        kitchen_name: wizardData.kitchen,
+        address: wizardData.address,
+        water_source: wizardData.water || 'municipal',
+        household_size: parseInt(wizardData.household || '0'),
+        cuisine: wizardData.cuisine,
+        sample_dishes: wizardData.dishes || [],
+        schedule: wizardData.schedule,
+        status: 'draft',
+      };
+      if (state.wizardAppId) {
+        const { data, error } = await sb.from('permit_applications').update(row).eq('id', state.wizardAppId).select().single();
+        if (error) throw error;
+        return data;
+      } else {
+        const { data, error } = await sb.from('permit_applications').insert(row).select().single();
+        if (error) throw error;
+        state.wizardAppId = data.id;
+        return data;
+      }
+    } catch (e) { console.error('[db.savePermitApp]', e); return null; }
+  },
+
+  async getPermitApp() {
+    if (!SUPABASE_ENABLED || !state.user) {
+      return JSON.parse(store.get('ss_permit_app') || 'null');
+    }
+    try {
+      const { data } = await sb.from('permit_applications').select('*').eq('user_id', state.user.id)
+        .order('created_at', { ascending: false }).limit(1).maybeSingle();
+      return data;
+    } catch (e) { return null; }
+  },
+
+  async submitPermitApp() {
+    if (!SUPABASE_ENABLED || !state.wizardAppId) return;
+    try {
+      await sb.from('permit_applications').update({ status: 'submitted' }).eq('id', state.wizardAppId);
+    } catch (e) { console.error('[db.submitPermitApp]', e); }
+  },
+};
+
+function parsePickupTime(text) {
+  const m = (text || '').trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return new Date().toISOString();
+  let h = parseInt(m[1]);
+  const min = parseInt(m[2]);
+  const pm = m[3].toUpperCase() === 'PM';
+  if (pm && h !== 12) h += 12;
+  if (!pm && h === 12) h = 0;
+  const d = new Date();
+  d.setHours(h, min, 0, 0);
+  return d.toISOString();
+}
+
+/* ---------- Auth ---------- */
+const auth = {
+  async init() {
+    if (!SUPABASE_ENABLED) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) await this.setSession(session);
+    sb.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) await this.setSession(session);
+      if (event === 'SIGNED_OUT') await this.clearSession();
+    });
+  },
+  async setSession(session) {
+    state.user = session.user;
+    try {
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+      state.profile = profile;
+    } catch (e) { console.error('[auth.setSession profile]', e); }
+    await db.loadOperatorKitchen();
+    await db.loadMyOrders();
+    updateAuthUI();
+  },
+  async clearSession() {
+    state.user = null; state.profile = null; state.myKitchen = null;
+    state.orders = []; state.operatorOrders = []; state.wizardAppId = null;
+    updateAuthUI();
+  },
+  async sendMagicLink(email) {
+    if (!SUPABASE_ENABLED) { toast('Auth disabled — add Supabase keys to config.js'); return { error: 'disabled' }; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    return { error };
+  },
+  async signOut() {
+    if (!SUPABASE_ENABLED) return;
+    await sb.auth.signOut();
+  },
+};
+
+function updateAuthUI() {
+  const el = document.getElementById('authStatus');
+  if (el) {
+    if (state.user) { el.textContent = state.user.email; el.classList.add('signed-in'); }
+    else            { el.textContent = 'Sign in';       el.classList.remove('signed-in'); }
+  }
+  if (state.page === 'orders') renderMyOrders();
+  if (state.page === 'dashboard') renderDashboard();
+  if (state.page === 'profile') renderProfile();
+}
+
+/* ---------- Role switching ---------- */
+function setRole(role) {
+  state.role = role;
+  store.set('ss_role', role);
+  document.getElementById('roleLabel').textContent =
+    role === 'cook' ? 'Operator' : role === 'new-cook' ? 'Permit' : 'Consumer';
+  applyRole();
+}
+function cycleRole() {
+  const idx = ROLES.indexOf(state.role);
+  setRole(ROLES[(idx + 1) % ROLES.length]);
+}
+function applyRole() {
+  // Update nav based on role
+  const nav = document.getElementById('bottomNav');
+  if (state.role === 'cook') {
+    nav.innerHTML = `
+      <button class="nav-btn ${state.page === 'dashboard' ? 'active' : ''}" onclick="navTo('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Kitchen
+      </button>
+      <button class="nav-btn ${state.page === 'discover' ? 'active' : ''}" onclick="navTo('discover')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Browse
+      </button>
+      <button class="nav-btn ${state.page === 'profile' ? 'active' : ''}" onclick="navTo('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>
+        Profile
+      </button>`;
+    navTo('dashboard');
+  } else if (state.role === 'new-cook') {
+    nav.innerHTML = `
+      <button class="nav-btn active" onclick="navTo('permit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        Permit
+      </button>
+      <button class="nav-btn" onclick="navTo('discover')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Browse
+      </button>
+      <button class="nav-btn" onclick="navTo('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>
+        Profile
+      </button>`;
+    navTo('permit');
+  } else {
+    nav.innerHTML = `
+      <button class="nav-btn ${state.page === 'discover' ? 'active' : ''}" onclick="navTo('discover')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Discover
+      </button>
+      <button class="nav-btn ${state.page === 'orders' ? 'active' : ''}" onclick="navTo('orders')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+        Orders
+      </button>
+      <button class="nav-btn ${state.page === 'profile' ? 'active' : ''}" onclick="navTo('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>
+        Profile
+      </button>`;
+    navTo('discover');
+  }
+}
+
+/* ---------- Nav ---------- */
+function navTo(page) {
+  state.page = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(`page-${page}`);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.nav-btn[data-page="${page}"]`) ||
+              [...document.querySelectorAll('.nav-btn')].find(b => b.textContent.trim().toLowerCase().includes(page));
+  // Trigger page-specific renders
+  if (page === 'discover') renderDiscover();
+  if (page === 'orders') renderMyOrders();
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'profile') renderProfile();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ---------- Discover feed ---------- */
+async function renderDiscover() {
+  const cooks = await db.listCooks();
+  const hero = cooks.find(c => c.isHero) || cooks[0];
+  const rest = cooks.filter(c => c.id !== hero.id);
+
+  document.getElementById('heroCook').innerHTML = `
+    <div class="cook-hero" onclick="openCook('${hero.id}')">
+      <div class="badge-permit">✓ MEHKO</div>
+      <div class="badge-status">● Cooking Tonight</div>
+      <div class="cook-hero-photo" style="background-image: url('${hero.photo}');"></div>
+      <div class="cook-hero-body">
+        <div class="cook-hero-name">${hero.name}</div>
+        <div class="cook-hero-by">by ${hero.chef}, ${hero.neighborhood}</div>
+        <div class="cook-hero-meta">
+          ${hero.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        <div class="cook-hero-cta">See menu →</div>
+      </div>
+    </div>`;
+
+  const grid = rest.slice(0, 2);
+  document.getElementById('gridCooks').innerHTML = grid.map((c, i) => `
+    <div class="cook-compact" style="animation-delay: ${i * 60}ms" onclick="openCook('${c.id}')">
+      <div class="cook-compact-photo" style="background-image: url('${c.photo}');"></div>
+      <div class="cook-compact-body">
+        <div class="cook-compact-name">${c.name}</div>
+        <div class="cook-compact-by">by ${c.chef}</div>
+      </div>
+    </div>`).join('');
+
+  const list = rest.slice(2);
+  document.getElementById('listCooks').innerHTML = list.map((c, i) => `
+    <div class="cook-row" style="animation-delay: ${i * 50}ms" onclick="openCook('${c.id}')">
+      <div class="cook-row-thumb" style="background-image: url('${c.photo}');"></div>
+      <div class="cook-row-body">
+        <div class="cook-row-name">${c.name}</div>
+        <div class="cook-row-by">by ${c.chef}</div>
+        <div class="cook-row-meta">
+          <span>⭐ ${c.rating}</span>
+          <span>·</span>
+          <span>${c.cuisine}</span>
+          <span>·</span>
+          <span>${c.neighborhood}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ---------- Cook sheet ---------- */
+async function openCook(id) {
+  const cook = await db.getCook(id);
+  if (!cook) return;
+
+  state.openCookId = id;
+  // If switching cooks, clear cart
+  if (state.cartCookId && state.cartCookId !== id && state.cart.length) {
+    if (!confirm(`Starting a new order will clear your basket with ${SEED_COOKS.find(c => c.id === state.cartCookId)?.name}. Continue?`)) {
+      state.openCookId = state.cartCookId;
+      return;
+    }
+    state.cart = [];
+    state.cartCookId = null;
+  }
+
+  document.getElementById('sheetPhoto').style.backgroundImage = `url('${cook.photo}')`;
+  document.getElementById('sheetTitle').textContent = cook.name;
+  document.getElementById('sheetBy').textContent = `by ${cook.chef}`;
+  document.getElementById('sheetStory').textContent = cook.story;
+  document.getElementById('sheetPermit').textContent = cook.permit;
+  document.getElementById('sheetInspect').textContent = cook.inspected;
+  document.getElementById('sheetNbhd').textContent = cook.neighborhood;
+
+  document.getElementById('sheetMenu').innerHTML = cook.menu.map(item => {
+    const inCart = state.cart.find(c => c.itemId === item.id);
+    return `
+      <div class="menu-item">
+        <div class="menu-item-body">
+          <div class="menu-item-name">${item.name}${inCart ? ` <span style="color:var(--coral); font-size:12px;">× ${inCart.qty}</span>` : ''}</div>
+          <div class="menu-item-desc">${item.desc}</div>
+        </div>
+        <div class="menu-item-price">$${item.price}</div>
+        <button class="menu-item-add" onclick="event.stopPropagation(); addToCart('${cook.id}', '${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})">+</button>
+      </div>`;
+  }).join('');
+
+  document.getElementById('sheetPickup').innerHTML = cook.pickups.map(t => `
+    <button class="pickup-chip ${state.selectedPickup === t ? 'selected' : ''}" onclick="selectPickup('${t}')">${t}</button>
+  `).join('');
+
+  updateOrderBtn();
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('cookSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('cookSheet').classList.remove('open');
+  document.body.style.overflow = '';
+  state.openCookId = null;
+}
+
+function reopenSheet() {
+  if (state.cartCookId) openCook(state.cartCookId);
+}
+
+function selectPickup(t) {
+  state.selectedPickup = t;
+  document.querySelectorAll('.pickup-chip').forEach(c => c.classList.remove('selected'));
+  event.target.classList.add('selected');
+  updateOrderBtn();
+}
+
+/* ---------- Cart ---------- */
+function addToCart(cookId, itemId, name, price) {
+  state.cartCookId = cookId;
+  const existing = state.cart.find(c => c.itemId === itemId);
+  if (existing) existing.qty++;
+  else state.cart.push({ cookId, itemId, name, price, qty: 1 });
+  updateCartBar();
+  // Re-render menu to show qty
+  openCook(cookId);
+  toast(`Added ${name}`);
+}
+
+function updateCartBar() {
+  const bar = document.getElementById('cartBar');
+  const total = state.cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const qty = state.cart.reduce((sum, i) => sum + i.qty, 0);
+  if (qty === 0) {
+    bar.classList.remove('visible');
+    return;
+  }
+  const cook = SEED_COOKS.find(c => c.id === state.cartCookId);
+  document.getElementById('cartCount').textContent = qty;
+  document.getElementById('cartCook').textContent = cook ? cook.name : '';
+  document.getElementById('cartTotal').textContent = '$' + total;
+  bar.classList.add('visible');
+}
+
+function updateOrderBtn() {
+  const btn = document.getElementById('placeOrderBtn');
+  const total = state.cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  if (state.cart.length === 0) {
+    btn.textContent = 'Add something to your basket';
+    btn.classList.add('disabled');
+  } else if (!state.selectedPickup) {
+    btn.textContent = 'Pick a pickup time';
+    btn.classList.add('disabled');
+  } else {
+    btn.textContent = `Place order · $${total} · ${state.selectedPickup}`;
+    btn.classList.remove('disabled');
+  }
+}
+
+async function placeOrder() {
+  if (state.cart.length === 0 || !state.selectedPickup) return;
+
+  // If auth is required but user isn't signed in, open auth sheet first
+  if (SUPABASE_ENABLED && CFG.requireAuthForOrders && !state.user) {
+    openAuthSheet('Sign in to place your order');
+    return;
+  }
+
+  const total = state.cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const items = state.cart.map(c => ({
+    itemId: c.itemId, name: c.name, price: c.price, qty: c.qty,
+  }));
+  try {
+    await db.createOrder({
+      kitchenId: state.cartCookId,
+      items,
+      pickup: state.selectedPickup,
+      total,
+    });
+  } catch (e) {
+    toast('Could not place order. Try again?');
+    return;
+  }
+  state.cart = [];
+  state.cartCookId = null;
+  state.selectedPickup = null;
+  updateCartBar();
+  closeSheet();
+  toast('Order placed! Pay the cook at pickup 💰');
+  setTimeout(() => navTo('orders'), 800);
+}
+
+/* ---------- My orders (consumer) ---------- */
+async function renderMyOrders() {
+  const el = document.getElementById('myOrdersList');
+
+  // If Supabase-enabled and user isn't signed in, show sign-in prompt
+  if (SUPABASE_ENABLED && !state.user) {
+    el.innerHTML = `
+      <div class="empty">
+        <div class="empty-emoji">🔐</div>
+        <h3>Sign in to see your orders</h3>
+        <p style="margin-bottom: 18px;">Your order history lives on your account.</p>
+        <button class="btn-primary" onclick="openAuthSheet('Sign in to see your orders')" style="max-width: 240px;">Sign in with email</button>
+      </div>`;
+    return;
+  }
+
+  // Refresh from DB
+  await db.loadMyOrders();
+
+  if (state.orders.length === 0) {
+    el.innerHTML = `
+      <div class="empty">
+        <div class="empty-emoji">🍽️</div>
+        <h3>No orders yet</h3>
+        <p>Find a kitchen on the Discover tab.</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML = state.orders.map(o => `
+    <div class="order-card">
+      <div class="order-head">
+        <div>
+          <div class="order-name">${o.cookName}</div>
+          <div style="font-size:12px; color:var(--muted); font-style:italic; font-family: 'Fraunces', serif;">by ${o.chef} · ${o.neighborhood}</div>
+        </div>
+        <div class="order-time">Pickup ${o.pickup}</div>
+      </div>
+      <div class="order-items">${o.items.map(i => `${i.qty}× ${i.name}`).join(' · ')}</div>
+      <div class="order-footer">
+        <div class="order-total">$${o.total}</div>
+        <div class="order-status ready">● ${o.status === 'confirmed' ? 'Ready to pick up' : o.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ---------- Permit wizard ---------- */
+function renderStepTracker() {
+  const steps = 6;
+  const cur = state.wizardStep;
+  document.getElementById('stepTracker').innerHTML = Array.from({length: steps}, (_, i) => {
+    const n = i + 1;
+    const cls = n < cur ? 'done' : n === cur ? 'active' : '';
+    return `<div class="step-dot ${cls}"></div>`;
+  }).join('');
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const el = document.querySelector(`.step[data-step="${n}"]`);
+  if (el) el.classList.add('active');
+  state.wizardStep = n;
+  renderStepTracker();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function nextStep() {
+  const step = state.wizardStep;
+  if (step === 1) {
+    const sel = document.querySelector('#countyOptions .option-card.selected');
+    state.wizardData.county = sel?.dataset.val;
+  }
+  if (step === 2) {
+    state.wizardData.name = document.getElementById('pw-name').value;
+    state.wizardData.kitchen = document.getElementById('pw-kitchen').value;
+    state.wizardData.email = document.getElementById('pw-email').value;
+    state.wizardData.phone = document.getElementById('pw-phone').value;
+  }
+  if (step === 3) {
+    state.wizardData.address = document.getElementById('pw-address').value;
+    state.wizardData.water = document.getElementById('pw-water').value;
+    state.wizardData.household = document.getElementById('pw-household').value;
+  }
+  if (step === 4) {
+    const sel = document.querySelector('#cuisineOptions .option-card.selected');
+    state.wizardData.cuisine = sel?.dataset.val;
+    if (!sel) { toast('Pick a cuisine to continue'); return; }
+  }
+  if (step === 5) {
+    state.wizardData.dishes = [
+      document.getElementById('pw-dish1').value,
+      document.getElementById('pw-dish2').value,
+      document.getElementById('pw-dish3').value,
+    ].filter(d => d);
+  }
+  // Auto-save draft as they progress (only if signed in)
+  if (SUPABASE_ENABLED && state.user && step >= 2) {
+    db.savePermitApp(state.wizardData); // fire-and-forget
+  }
+  if (step < 6) showStep(step + 1);
+}
+
+function prevStep() {
+  if (state.wizardStep > 1) showStep(state.wizardStep - 1);
+}
+
+async function finishWizard() {
+  const sel = document.querySelector('#scheduleOptions .option-card.selected');
+  state.wizardData.schedule = sel?.dataset.val;
+  if (!sel) { toast('Pick a schedule'); return; }
+
+  // If Supabase is on, require auth before saving the final packet
+  if (SUPABASE_ENABLED && !state.user) {
+    // Save locally first so we don't lose progress, then prompt sign-in
+    store.set('ss_permit_app', JSON.stringify(state.wizardData));
+    openAuthSheet('Sign in to save your application');
+    return;
+  }
+
+  await db.savePermitApp(state.wizardData);
+
+  const summary = state.wizardData.kitchen
+    ? `${state.wizardData.kitchen} in ${state.wizardData.county === 'san-diego' ? 'San Diego' : 'your county'} — let's get you permitted.`
+    : "Here's your custom submission packet.";
+  document.getElementById('wizardDoneSummary').textContent = summary;
+
+  const waterMeta = document.getElementById('waterMeta');
+  if (state.wizardData.water === 'well') {
+    waterMeta.textContent = 'Well water — lab test required (E. coli, coliform, nitrates). ~$45.';
+  } else {
+    waterMeta.textContent = 'Municipal — not required ✓';
+  }
+
+  showStep('done');
+}
+
+async function downloadPacket() {
+  if (!window.PDFLib) {
+    toast('PDF library still loading — try again in a moment');
+    return;
+  }
+  try {
+    await db.submitPermitApp();
+    await generatePacketPDF(state.wizardData);
+    toast('Packet downloaded 📄');
+  } catch (err) {
+    console.error('[downloadPacket]', err);
+    toast('Could not generate PDF — please try again');
+  }
+}
+
+/* ---------- Permit packet PDF generation (pdf-lib, single download) ---------- */
+const COUNTY_LABELS = {
+  'san-diego':    'San Diego County',
+  'los-angeles':  'Los Angeles County',
+  'riverside':    'Riverside County',
+  'alameda':      'Alameda County',
+  'santa-clara':  'Santa Clara County',
+  'other':        'Your County',
+};
+const COUNTY_AGENCY = {
+  'san-diego':   'San Diego County Department of Environmental Health and Quality (DEHQ)',
+  'los-angeles': 'Los Angeles County Department of Public Health — Environmental Health (DPH-EH)',
+  'riverside':   'Riverside County Department of Environmental Health (DEH)',
+  'alameda':     'Alameda County Environmental Health (ACEH)',
+  'santa-clara': 'Santa Clara County Department of Environmental Health (DEH)',
+  'other':       'your county environmental health department',
+};
+const CUISINE_LABELS = {
+  'mexican':        'Mexican / Latin American cuisine',
+  'asian':          'Asian / Southeast Asian cuisine',
+  'middle-eastern': 'Middle Eastern / Mediterranean cuisine',
+  'comfort':        'American comfort food',
+  'baking':         'Baked goods and desserts',
+  'other':          'specialty cuisine',
+};
+const SCHEDULE_LABELS = {
+  'weekends':  'Friday through Sunday evenings',
+  '3-4-days':  'Three to four evenings per week',
+  'daily':     'Daily operation',
+};
+
+function buildCoverLetter(d) {
+  const countyKey = d.county || 'san-diego';
+  const county    = COUNTY_LABELS[countyKey] || 'Your County';
+  const agency    = COUNTY_AGENCY[countyKey] || 'your county environmental health department';
+  const cook      = d.name || '[Applicant name]';
+  const kitchen   = d.kitchen || '[Kitchen name]';
+  const date      = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const waterLine = d.water === 'well'
+    ? 'a private well that has passed the required potability testing'
+    : 'municipal potable water';
+
+  return (
+`${date}
+
+${agency}
+
+Re: Microenterprise Home Kitchen Operation (MEHKO) Permit Application
+
+To Whom It May Concern,
+
+My name is ${cook} and I am applying for a Microenterprise Home Kitchen Operation (MEHKO) permit in ${county} under California Health and Safety Code Section 114367 (AB 626). This submission includes my Standard Operating Procedures, proposed menu, operator information, and operating schedule.
+
+My home kitchen, operating under the name "${kitchen}," will prepare and sell food directly to consumers from my private residence at ${d.address || '[address]'}. I understand and will comply with all MEHKO operational limits: no more than 30 meals per day, no more than 60 meals per calendar week, and no more than $100,000 in annual gross revenue. I will handle all food preparation personally and will only sell directly to end consumers.
+
+I have completed (or will complete prior to operation) a Food Protection Manager Certification from an ANSI-accredited program, and I confirm the water source at my residence is ${waterLine}.
+
+Thank you for your review of my application. I am available at the contact information below to schedule the home kitchen inspection at your convenience.
+
+Sincerely,
+
+${cook}
+${d.email || '[email]'}
+${d.phone || '[phone]'}`
+  );
+}
+
+async function generatePacketPDF(d) {
+  const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+
+  const countyKey    = d.county || 'san-diego';
+  const countyLabel  = COUNTY_LABELS[countyKey]  || 'Your County';
+  const cuisineLabel = CUISINE_LABELS[d.cuisine] || CUISINE_LABELS.other;
+  const scheduleLbl  = SCHEDULE_LABELS[d.schedule] || d.schedule || '—';
+
+  const pdfDoc = await PDFDocument.create();
+  pdfDoc.setTitle(`Stoveside MEHKO Packet — ${d.kitchen || 'Applicant'}`);
+  pdfDoc.setAuthor('Stoveside');
+  pdfDoc.setSubject(`${countyLabel} MEHKO application packet`);
+  pdfDoc.setCreator('Stoveside (stoveside.co)');
+  pdfDoc.setCreationDate(new Date());
+
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold    = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontItalic  = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  const fontSerif   = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+
+  // Brand colors (RGB 0–1)
+  const CORAL = rgb(1, 107 / 255, 74 / 255);      // #FF6B4A
+  const INK   = rgb(26 / 255, 18 / 255, 8 / 255); // #1A1208
+  const MUTED = rgb(0.42, 0.35, 0.28);
+  const RULE  = rgb(0.85, 0.82, 0.75);
+
+  const PAGE_W = 612, PAGE_H = 792;  // US Letter
+  const MARGIN_X = 54;
+  const MAX_W = PAGE_W - MARGIN_X * 2;
+
+  // Wrap text to a max width, returns array of lines (handles embedded \n).
+  function wrapLines(text, font, size, maxWidth) {
+    const out = [];
+    const paragraphs = String(text).split(/\n/);
+    for (const para of paragraphs) {
+      if (!para.trim()) { out.push(''); continue; }
+      const words = para.split(/\s+/);
+      let cur = '';
+      for (const word of words) {
+        const trial = cur ? cur + ' ' + word : word;
+        if (font.widthOfTextAtSize(trial, size) > maxWidth && cur) {
+          out.push(cur);
+          cur = word;
+        } else {
+          cur = trial;
+        }
+      }
+      if (cur) out.push(cur);
+    }
+    return out;
+  }
+
+  function drawWrapped(page, text, opts) {
+    const { x, font, size, color, lineHeight, maxWidth } = opts;
+    let { y } = opts;
+    const lines = wrapLines(text, font, size, maxWidth);
+    for (const line of lines) {
+      page.drawText(line, { x, y, size, font, color });
+      y -= lineHeight;
+    }
+    return y;
+  }
+
+  // Page footer (same on every page)
+  function drawFooter(page, pageNum, totalPages) {
+    page.drawLine({
+      start: { x: MARGIN_X, y: 48 },
+      end:   { x: PAGE_W - MARGIN_X, y: 48 },
+      thickness: 0.5, color: RULE,
+    });
+    page.drawText('Generated with Stoveside · stoveside.co', {
+      x: MARGIN_X, y: 34, size: 8, font: fontRegular, color: MUTED,
+    });
+    const pageStr = `Page ${pageNum} of ${totalPages}`;
+    const pw = fontRegular.widthOfTextAtSize(pageStr, 8);
+    page.drawText(pageStr, {
+      x: PAGE_W - MARGIN_X - pw, y: 34, size: 8, font: fontRegular, color: MUTED,
+    });
+  }
+
+  // ---- PAGE 1: COVER ----
+  const p1 = pdfDoc.addPage([PAGE_W, PAGE_H]);
+  // Coral accent bar at top
+  p1.drawRectangle({ x: 0, y: PAGE_H - 8, width: PAGE_W, height: 8, color: CORAL });
+
+  // "STOVESIDE" eyebrow
+  p1.drawText('STOVESIDE · MEHKO APPLICATION PACKET', {
+    x: MARGIN_X, y: PAGE_H - 90, size: 9, font: fontBold, color: CORAL,
+  });
+
+  // Big title
+  p1.drawText(d.kitchen || 'Your Home Kitchen', {
+    x: MARGIN_X, y: PAGE_H - 160, size: 32, font: fontSerif, color: INK,
+  });
+  // Subtitle
+  drawWrapped(p1, `${countyLabel} — Microenterprise Home Kitchen Operation permit submission packet, prepared under California Health & Safety Code § 114367 (AB 626).`, {
+    x: MARGIN_X, y: PAGE_H - 200, font: fontItalic, size: 13, color: MUTED,
+    lineHeight: 18, maxWidth: MAX_W,
+  });
+
+  // Info grid rules
+  const g1y = PAGE_H - 300;
+  p1.drawLine({ start: { x: MARGIN_X, y: g1y + 14 }, end: { x: PAGE_W - MARGIN_X, y: g1y + 14 }, thickness: 0.5, color: RULE });
+
+  const pairs = [
+    ['APPLICANT',     d.name    || '—'],
+    ['KITCHEN NAME',  d.kitchen || '—'],
+    ['EMAIL',         d.email   || '—'],
+    ['PHONE',         d.phone   || '—'],
+    ['ADDRESS',       d.address || '—'],
+    ['COUNTY',        countyLabel],
+    ['WATER SOURCE',  d.water === 'well' ? 'Private well (lab test required)' : 'Municipal'],
+    ['CUISINE',       cuisineLabel],
+    ['SCHEDULE',      scheduleLbl],
+    ['DATE PREPARED', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
+  ];
+
+  let py = g1y - 8;
+  for (const [label, value] of pairs) {
+    p1.drawText(label, { x: MARGIN_X, y: py, size: 8, font: fontBold, color: MUTED });
+    // Wrap value column in case of long address
+    const vLines = wrapLines(value, fontRegular, 12, MAX_W - 140);
+    let vy = py;
+    for (const line of vLines) {
+      p1.drawText(line, { x: MARGIN_X + 140, y: vy, size: 12, font: fontRegular, color: INK });
+      vy -= 16;
+    }
+    py = Math.min(py - 28, vy - 10);
+  }
+
+  // Footer block on cover
+  p1.drawRectangle({
+    x: MARGIN_X, y: 80, width: MAX_W, height: 60,
+    color: rgb(1, 107 / 255, 74 / 255), opacity: 0.08,
+    borderColor: CORAL, borderWidth: 1,
+  });
+  p1.drawText('AB 626 COMPLIANCE ACKNOWLEDGEMENT', {
+    x: MARGIN_X + 14, y: 120, size: 9, font: fontBold, color: CORAL,
+  });
+  drawWrapped(p1, 'The applicant acknowledges the MEHKO operational limits: 30 meals per day, 60 meals per calendar week, and $100,000 in annual gross revenue. Direct-to-consumer sales only.', {
+    x: MARGIN_X + 14, y: 104, font: fontRegular, size: 9, color: INK, lineHeight: 12, maxWidth: MAX_W - 28,
+  });
+
+  drawFooter(p1, 1, 4);
+
+  // ---- PAGE 2: COVER LETTER ----
+  const p2 = pdfDoc.addPage([PAGE_W, PAGE_H]);
+  p2.drawText('COVER LETTER', {
+    x: MARGIN_X, y: PAGE_H - 60, size: 9, font: fontBold, color: CORAL,
+  });
+  p2.drawText(`To ${COUNTY_AGENCY[countyKey] || 'county health department'}`, {
+    x: MARGIN_X, y: PAGE_H - 80, size: 11, font: fontItalic, color: MUTED,
+  });
+  p2.drawLine({
+    start: { x: MARGIN_X, y: PAGE_H - 92 },
+    end:   { x: PAGE_W - MARGIN_X, y: PAGE_H - 92 },
+    thickness: 0.5, color: RULE,
+  });
+
+  drawWrapped(p2, buildCoverLetter(d), {
+    x: MARGIN_X, y: PAGE_H - 120, font: fontRegular, size: 11, color: INK,
+    lineHeight: 16, maxWidth: MAX_W,
+  });
+  drawFooter(p2, 2, 4);
+
+  // ---- PAGE 3: STANDARD OPERATING PROCEDURES ----
+  const p3 = pdfDoc.addPage([PAGE_W, PAGE_H]);
+  p3.drawText('STANDARD OPERATING PROCEDURES', {
+    x: MARGIN_X, y: PAGE_H - 60, size: 9, font: fontBold, color: CORAL,
+  });
+  p3.drawText(`${d.kitchen || 'Your Kitchen'} — ${countyLabel}`, {
+    x: MARGIN_X, y: PAGE_H - 80, size: 11, font: fontItalic, color: MUTED,
+  });
+  p3.drawLine({
+    start: { x: MARGIN_X, y: PAGE_H - 92 },
+    end:   { x: PAGE_W - MARGIN_X, y: PAGE_H - 92 },
+    thickness: 0.5, color: RULE,
+  });
+
+  let y = PAGE_H - 120;
+  const H2_SIZE = 12, BODY_SIZE = 10.5, BODY_LH = 14, H2_GAP = 8;
+
+  function section(title, body) {
+    // Page break if we're low
+    if (y < 120) {
+      drawFooter(p3, 3, 4);
+      // Shouldn't normally happen — SOP is sized to fit one page. Safe fallback:
+      y = PAGE_H - 120;
+    }
+    p3.drawText(title, { x: MARGIN_X, y, size: H2_SIZE, font: fontBold, color: INK });
+    y -= H2_GAP + 10;
+    y = drawWrapped(p3, body, {
+      x: MARGIN_X, y, font: fontRegular, size: BODY_SIZE, color: INK,
+      lineHeight: BODY_LH, maxWidth: MAX_W,
+    });
+    y -= 10;
+  }
+
+  section('1. Scope of Operation',
+    `This MEHKO will operate at ${d.address || '[address]'} and is limited to ${cuisineLabel.toLowerCase()}. All food is prepared, cooked, and portioned on-site by the operator, ${d.name || '[applicant]'}. Meals are sold directly to end consumers for immediate consumption or pickup. Third-party delivery platforms are not used.`
+  );
+  section('2. Menu & Sourcing',
+    `The approved menu is provided on page 4 of this packet. Ingredients are sourced from licensed commercial suppliers, retail grocers, or farmers certified under the California Retail Food Code. No home-grown animal products are used. All raw animal products are from USDA-inspected facilities.`
+  );
+  section('3. Food Safety Controls',
+    `Handwashing is performed before any food contact and after any contamination event. All potentially hazardous foods are held at 41°F or below, or at 135°F or above. A calibrated thermometer is used to verify. Cross-contamination is prevented through separate cutting boards, sanitized prep surfaces, and dedicated storage for raw proteins.`
+  );
+  section('4. Cooling, Reheating, and Storage',
+    `Cooked food intended for later service is cooled from 135°F to 70°F within 2 hours and to 41°F within an additional 4 hours. Reheating for hot-holding reaches 165°F for at least 15 seconds. All ready-to-eat foods are labeled with preparation date and discarded after 7 days.`
+  );
+  section('5. Personal Hygiene & Illness Policy',
+    `The operator does not prepare food while experiencing vomiting, diarrhea, jaundice, sore throat with fever, or an open infected wound. Hair is restrained and clean outer garments are worn during preparation. No smoking, eating, or gum chewing in the kitchen during food prep.`
+  );
+  section('6. Water Source',
+    d.water === 'well'
+      ? `The residence is supplied by a private well. A potability test (E. coli, total coliform, nitrates) has been or will be completed by a state-certified lab prior to operation, and results will be submitted with this packet.`
+      : `The residence is supplied by a municipal potable water system that meets California Safe Drinking Water Act standards. No supplemental treatment is used in food preparation.`
+  );
+  section('7. Operational Limits',
+    `The operator acknowledges and will comply with the AB 626 operational limits: no more than 30 meals per day, no more than 60 meals per calendar week, and no more than $100,000 in annual gross revenue. A daily sales log is maintained for compliance verification.`
+  );
+  drawFooter(p3, 3, 4);
+
+  // ---- PAGE 4: SAMPLE MENU & SCHEDULE ----
+  const p4 = pdfDoc.addPage([PAGE_W, PAGE_H]);
+  p4.drawText('SAMPLE MENU & OPERATING SCHEDULE', {
+    x: MARGIN_X, y: PAGE_H - 60, size: 9, font: fontBold, color: CORAL,
+  });
+  p4.drawText(`${d.kitchen || 'Your Kitchen'}`, {
+    x: MARGIN_X, y: PAGE_H - 80, size: 11, font: fontItalic, color: MUTED,
+  });
+  p4.drawLine({
+    start: { x: MARGIN_X, y: PAGE_H - 92 },
+    end:   { x: PAGE_W - MARGIN_X, y: PAGE_H - 92 },
+    thickness: 0.5, color: RULE,
+  });
+
+  y = PAGE_H - 120;
+
+  p4.drawText('Sample menu', { x: MARGIN_X, y, size: 14, font: fontBold, color: INK });
+  y -= 24;
+  const dishes = (d.dishes && d.dishes.length ? d.dishes : ['[Dish 1]', '[Dish 2]', '[Dish 3]']);
+  for (let i = 0; i < dishes.length; i++) {
+    const dish = dishes[i] || '—';
+    p4.drawText(`${i + 1}.`, { x: MARGIN_X, y, size: 12, font: fontBold, color: CORAL });
+    y = drawWrapped(p4, dish, {
+      x: MARGIN_X + 20, y, font: fontRegular, size: 12, color: INK,
+      lineHeight: 16, maxWidth: MAX_W - 20,
+    });
+    y -= 6;
+  }
+  y -= 18;
+
+  // Divider
+  p4.drawLine({ start: { x: MARGIN_X, y: y }, end: { x: PAGE_W - MARGIN_X, y: y }, thickness: 0.5, color: RULE });
+  y -= 24;
+
+  p4.drawText('Operating schedule', { x: MARGIN_X, y, size: 14, font: fontBold, color: INK });
+  y -= 22;
+  y = drawWrapped(p4, scheduleLbl, {
+    x: MARGIN_X, y, font: fontRegular, size: 12, color: INK,
+    lineHeight: 16, maxWidth: MAX_W,
+  });
+  y -= 6;
+  y = drawWrapped(p4, 'Specific pickup windows will be set through the Stoveside operator dashboard once the permit is issued. All windows respect the AB 626 daily and weekly meal caps.', {
+    x: MARGIN_X, y, font: fontItalic, size: 10.5, color: MUTED,
+    lineHeight: 14, maxWidth: MAX_W,
+  });
+  y -= 20;
+
+  // Divider
+  p4.drawLine({ start: { x: MARGIN_X, y: y }, end: { x: PAGE_W - MARGIN_X, y: y }, thickness: 0.5, color: RULE });
+  y -= 24;
+
+  p4.drawText('Operator attestation', { x: MARGIN_X, y, size: 14, font: fontBold, color: INK });
+  y -= 22;
+  y = drawWrapped(p4, `I, ${d.name || '[applicant name]'}, attest that the information in this packet is true and accurate to the best of my knowledge, and that I will operate in compliance with California Health & Safety Code § 114367 and all ${countyLabel} MEHKO requirements.`, {
+    x: MARGIN_X, y, font: fontRegular, size: 11, color: INK,
+    lineHeight: 15, maxWidth: MAX_W,
+  });
+  y -= 30;
+
+  // Signature lines
+  const sigY = Math.max(y, 130);
+  p4.drawLine({ start: { x: MARGIN_X, y: sigY }, end: { x: MARGIN_X + 260, y: sigY }, thickness: 0.5, color: INK });
+  p4.drawText('Operator signature', { x: MARGIN_X, y: sigY - 14, size: 9, font: fontRegular, color: MUTED });
+  p4.drawLine({ start: { x: PAGE_W - MARGIN_X - 160, y: sigY }, end: { x: PAGE_W - MARGIN_X, y: sigY }, thickness: 0.5, color: INK });
+  p4.drawText('Date', { x: PAGE_W - MARGIN_X - 160, y: sigY - 14, size: 9, font: fontRegular, color: MUTED });
+
+  drawFooter(p4, 4, 4);
+
+  // ---- Serialize + trigger download ----
+  const bytes = await pdfDoc.save();
+  const safeName = (d.kitchen || 'mehko-packet')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'mehko-packet';
+  const filename = `stoveside-${safeName}-${countyKey}.pdf`;
+
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function enterDashboard() {
+  setRole('cook');
+}
+
+/* ---------- Permit option wiring ---------- */
+function wireOptions(containerSel, multi = false) {
+  document.querySelectorAll(`${containerSel} .option-card`).forEach(card => {
+    card.addEventListener('click', () => {
+      if (!multi) {
+        card.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+      }
+      card.classList.toggle('selected');
+    });
+  });
+}
+
+/* ---------- Dashboard ---------- */
+async function renderDashboard() {
+  // Greeting
+  let firstName = 'Chef';
+  if (state.profile?.full_name) firstName = state.profile.full_name.split(' ')[0];
+  else if (state.user?.email) firstName = state.user.email.split('@')[0];
+  document.getElementById('dashGreeting').innerHTML = `Good evening, <em>${firstName}</em>.`;
+
+  // Permit status line
+  const statusEl = document.getElementById('dashStatusLine');
+  if (state.myKitchen) {
+    statusEl.innerHTML = `Permit: <span style="color: var(--sage); font-weight:600;">● Approved</span> • ${state.myKitchen.county || 'San Diego'} • ${state.myKitchen.is_live ? 'Live' : 'Paused'}`;
+  } else if (SUPABASE_ENABLED && state.user) {
+    const app = await db.getPermitApp();
+    if (app) {
+      statusEl.innerHTML = `Permit: <span style="color: var(--amber); font-weight:600;">● ${app.status || 'Draft'}</span> • ${app.county || 'San Diego'} • Not yet approved`;
+    } else {
+      statusEl.innerHTML = `No kitchen yet. <a href="#" onclick="setRole('new-cook'); return false;">Start your permit application →</a>`;
+    }
+  } else {
+    statusEl.innerHTML = `Demo preview — sign in to claim your kitchen.`;
+  }
+
+  // Load real data from Supabase if available
+  await Promise.all([
+    db.loadOperatorOrders(),
+    db.loadOperatorMenu(),
+  ]);
+  renderOrders();
+  renderOpMenu();
+}
+
+function renderOrders() {
+  const list = document.getElementById('orderList');
+  const done = document.getElementById('doneOrders');
+  const active = state.operatorOrders.filter(o => o.status !== 'done');
+  const completed = state.operatorOrders.filter(o => o.status === 'done');
+
+  document.getElementById('activeCount').textContent = `${active.length} pending`;
+
+  list.innerHTML = active.length ? active.map(o => `
+    <div class="order-card">
+      <div class="order-head">
+        <div>
+          <div class="order-name">${o.customer}</div>
+          <div class="order-time">Pickup ${o.time}</div>
+        </div>
+        <div class="order-status ${o.status}">● ${o.status === 'new' || o.status === 'confirmed' ? 'New' : 'Ready'}</div>
+      </div>
+      <div class="order-items">${o.items}</div>
+      <div class="order-footer">
+        <div class="order-total">$${o.total}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--muted);">Paid at pickup</div>
+      </div>
+      <div class="order-actions">
+        ${(o.status === 'new' || o.status === 'confirmed') ? `<button class="btn-secondary" onclick="setOrderStatus('${o.id}', 'ready')">Mark ready</button>` : ''}
+        <button class="btn-secondary" onclick="setOrderStatus('${o.id}', 'done')">Mark picked up</button>
+      </div>
+    </div>
+  `).join('') : '<div class="empty"><div class="empty-emoji">📭</div><h3>No active orders</h3><p>You\'ll see new orders here.</p></div>';
+
+  done.innerHTML = completed.length ? completed.map(o => `
+    <div class="order-card" style="opacity:0.55;">
+      <div class="order-head">
+        <div>
+          <div class="order-name">${o.customer}</div>
+          <div class="order-time">Picked up ${o.time}</div>
+        </div>
+        <div class="order-status done">✓ Done</div>
+      </div>
+      <div class="order-items">${o.items}</div>
+      <div class="order-footer">
+        <div class="order-total">$${o.total}</div>
+      </div>
+    </div>
+  `).join('') : '<div class="text-muted" style="text-align:center; padding:16px;">No completed orders yet.</div>';
+}
+
+async function setOrderStatus(id, status) {
+  await db.updateOperatorOrder(id, { status });
+  renderOrders();
+  toast(status === 'ready' ? 'Marked ready for pickup ✓' : 'Order completed ✓');
+}
+
+function renderOpMenu() {
+  const list = document.getElementById('opMenuList');
+  list.innerHTML = state.operatorMenu.map(m => `
+    <div class="menu-row">
+      <div class="menu-row-img">${m.emoji || '🍽️'}</div>
+      <div class="menu-row-body">
+        <div class="menu-row-name">${m.name}</div>
+        <div class="menu-row-desc">${m.desc || ''}</div>
+      </div>
+      <div class="menu-row-price">$${m.price}</div>
+      <button class="menu-row-del" onclick="removeMenuItem('${m.id}')">×</button>
+    </div>
+  `).join('');
+}
+
+async function addMenuItem() {
+  const name = prompt('Dish name?');
+  if (!name) return;
+  const desc = prompt('Short description?') || '';
+  const price = parseFloat(prompt('Price?') || '0');
+  if (!price) return;
+  await db.addMenuItem({ name, desc, price, emoji: '🍽️' });
+  renderOpMenu();
+  toast('Dish added ✓');
+}
+
+async function removeMenuItem(id) {
+  if (!confirm('Remove this dish?')) return;
+  await db.removeMenuItem(id);
+  renderOpMenu();
+}
+
+function switchDashTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('dashTabOrders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('dashTabMenu').style.display = tab === 'menu' ? 'block' : 'none';
+  document.getElementById('dashTabHours').style.display = tab === 'hours' ? 'block' : 'none';
+  if (tab === 'hours') renderHoursTab();
+}
+
+/* ---------- Availability scheduling (operator Hours tab) ---------- */
+// In-memory working copy of the operator's next 7 days of availability.
+// Shape: [{ date: Date (midnight local), enabled: bool, startHHMM: '18:00', endHHMM: '21:00', existingId: uuid|null }]
+let _hoursWorking = null;
+
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function _midnightLocal(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+
+function _fmtDayLabel(date, i) {
+  const today = _midnightLocal(new Date());
+  const diff = Math.round((_midnightLocal(date) - today) / 86400000);
+  const dayName = DAY_NAMES[date.getDay()];
+  if (diff === 0) return `${dayName} — today`;
+  if (diff === 1) return `${dayName} — tomorrow`;
+  const m = date.toLocaleString('en-US', { month: 'short' });
+  return `${dayName}, ${m} ${date.getDate()}`;
+}
+
+function _toHHMM(date) {
+  const h = String(date.getHours()).padStart(2, '0');
+  const m = String(date.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+function _mergeExistingIntoWorking(workingDays, existingRows) {
+  // Group existing rows by local date (YYYY-MM-DD).
+  const byDate = {};
+  for (const row of existingRows) {
+    const start = new Date(row.start_time);
+    const key = _midnightLocal(start).toISOString().slice(0, 10);
+    // If multiple rows exist for one day we keep the earliest start / latest end
+    // (operator would need a fuller UI to manage multiple windows per day).
+    if (!byDate[key] || new Date(row.start_time) < new Date(byDate[key].start_time)) {
+      byDate[key] = row;
+    }
+  }
+  for (const day of workingDays) {
+    const key = day.date.toISOString().slice(0, 10);
+    const row = byDate[key];
+    if (row) {
+      day.enabled = true;
+      day.existingId = row.id;
+      day.startHHMM = _toHHMM(new Date(row.start_time));
+      day.endHHMM = _toHHMM(new Date(row.end_time));
+    }
+  }
+}
+
+async function renderHoursTab() {
+  const listEl = document.getElementById('hoursList');
+  const noteEl = document.getElementById('hoursSavedNote');
+  if (!listEl) return;
+
+  if (!state.myKitchen) {
+    listEl.innerHTML = `<div style="padding: 20px; background: var(--card); border: 1px solid var(--border2); border-radius: var(--r); color: var(--muted); font-size: 14px;">
+      Scheduling becomes available once your permit is approved and your kitchen goes live.
+    </div>`;
+    const btn = document.getElementById('hoursSaveBtn');
+    if (btn) btn.style.display = 'none';
+    return;
+  }
+
+  // Build the 7-day working set: today + next 6 days, default 6pm–9pm, disabled.
+  const today = _midnightLocal(new Date());
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    days.push({ date: d, enabled: false, startHHMM: '18:00', endHHMM: '21:00', existingId: null });
+  }
+
+  // Overlay existing rows from Supabase (if available).
+  if (SUPABASE_ENABLED) {
+    try {
+      const endOfWindow = new Date(today);
+      endOfWindow.setDate(endOfWindow.getDate() + 7);
+      const { data, error } = await sb.from('availability')
+        .select('*')
+        .eq('kitchen_id', state.myKitchen.id)
+        .gte('start_time', today.toISOString())
+        .lt('start_time', endOfWindow.toISOString())
+        .order('start_time');
+      if (error) throw error;
+      if (data && data.length) _mergeExistingIntoWorking(days, data);
+      if (noteEl) noteEl.textContent = data && data.length ? `${data.length} window${data.length === 1 ? '' : 's'} saved` : 'No windows yet';
+    } catch (err) {
+      console.error('[renderHoursTab]', err);
+      if (noteEl) noteEl.textContent = 'Could not load saved windows';
+    }
+  } else if (noteEl) {
+    noteEl.textContent = 'Demo mode — changes not persisted';
+  }
+
+  _hoursWorking = days;
+  _paintHoursTab();
+}
+
+function _paintHoursTab() {
+  const listEl = document.getElementById('hoursList');
+  if (!listEl || !_hoursWorking) return;
+  listEl.innerHTML = _hoursWorking.map((day, i) => {
+    const label = _fmtDayLabel(day.date, i);
+    const onCls = day.enabled ? 'selected' : '';
+    const desc = day.enabled
+      ? `${_prettyTime(day.startHHMM)} – ${_prettyTime(day.endHHMM)} pickup`
+      : 'Closed';
+    return `
+      <div class="option-card ${onCls}" style="cursor: default; margin-bottom: 10px;">
+        <div class="option-check" onclick="toggleHoursDay(${i})" style="cursor:pointer;"></div>
+        <div class="option-body" style="flex:1;">
+          <div class="option-title" onclick="toggleHoursDay(${i})" style="cursor:pointer;">${label}</div>
+          <div class="option-desc">${desc}</div>
+          ${day.enabled ? `
+            <div style="display:flex; gap:8px; align-items:center; margin-top:10px; font-family:'DM Mono',monospace; font-size:12px; color: var(--muted);">
+              <span>Start</span>
+              <input type="time" value="${day.startHHMM}" onchange="updateHoursTime(${i}, 'start', this.value)" style="padding: 6px 8px; border: 1px solid var(--border2); border-radius: 6px; background: var(--card); font-size: 13px;" />
+              <span>End</span>
+              <input type="time" value="${day.endHHMM}" onchange="updateHoursTime(${i}, 'end', this.value)" style="padding: 6px 8px; border: 1px solid var(--border2); border-radius: 6px; background: var(--card); font-size: 13px;" />
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function _prettyTime(hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const period = h >= 12 ? 'pm' : 'am';
+  const h12 = ((h + 11) % 12) + 1;
+  return m === 0 ? `${h12}${period}` : `${h12}:${String(m).padStart(2,'0')}${period}`;
+}
+
+function toggleHoursDay(i) {
+  if (!_hoursWorking || !_hoursWorking[i]) return;
+  _hoursWorking[i].enabled = !_hoursWorking[i].enabled;
+  _paintHoursTab();
+}
+
+function updateHoursTime(i, which, value) {
+  if (!_hoursWorking || !_hoursWorking[i] || !value) return;
+  if (which === 'start') _hoursWorking[i].startHHMM = value;
+  else _hoursWorking[i].endHHMM = value;
+  // Don't repaint — user is mid-interaction. Just update state; repaint happens on toggle/save.
+}
+
+async function saveAvailability() {
+  if (!_hoursWorking) return;
+  if (!SUPABASE_ENABLED || !state.myKitchen) {
+    toast('Sign in with an active kitchen to save hours');
+    return;
+  }
+  const btn = document.getElementById('hoursSaveBtn');
+  if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
+
+  try {
+    // Validate: end must be after start for each enabled day.
+    for (const day of _hoursWorking) {
+      if (!day.enabled) continue;
+      if (day.endHHMM <= day.startHHMM) {
+        toast('End time must be after start time');
+        if (btn) { btn.textContent = 'Save this week\'s availability'; btn.disabled = false; }
+        return;
+      }
+    }
+
+    // Build operations: delete rows for days now-disabled, upsert rows for days now-enabled.
+    const toDelete = [];
+    const toUpsert = [];
+    for (const day of _hoursWorking) {
+      if (day.enabled) {
+        const [sh, sm] = day.startHHMM.split(':').map(Number);
+        const [eh, em] = day.endHHMM.split(':').map(Number);
+        const start = new Date(day.date); start.setHours(sh, sm, 0, 0);
+        const end   = new Date(day.date); end.setHours(eh, em, 0, 0);
+        const row = {
+          kitchen_id: state.myKitchen.id,
+          start_time: start.toISOString(),
+          end_time:   end.toISOString(),
+          max_meals:  30,
+        };
+        if (day.existingId) row.id = day.existingId;
+        toUpsert.push(row);
+      } else if (day.existingId) {
+        toDelete.push(day.existingId);
+      }
+    }
+
+    if (toDelete.length) {
+      const { error } = await sb.from('availability').delete().in('id', toDelete);
+      if (error) throw error;
+    }
+    if (toUpsert.length) {
+      const { error } = await sb.from('availability').upsert(toUpsert, { onConflict: 'id' });
+      if (error) throw error;
+    }
+
+    toast('Availability saved ✓');
+    await renderHoursTab();
+  } catch (err) {
+    console.error('[saveAvailability]', err);
+    toast('Could not save — please try again');
+  } finally {
+    if (btn) { btn.textContent = 'Save this week\'s availability'; btn.disabled = false; }
+  }
+}
+
+/* ---------- Auth sheet ---------- */
+function openAuthSheet(title) {
+  document.getElementById('authTitle').textContent = title || 'Sign in';
+  document.getElementById('authForm').style.display = 'block';
+  document.getElementById('authSent').style.display = 'none';
+  document.getElementById('authEmail').value = state.wizardData?.email || '';
+  document.getElementById('authOverlay').classList.add('open');
+  document.getElementById('authSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('authEmail').focus(), 300);
+}
+
+function closeAuthSheet() {
+  document.getElementById('authOverlay').classList.remove('open');
+  document.getElementById('authSheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Enter a valid email');
+    return;
+  }
+  const btn = document.getElementById('authSendBtn');
+  btn.textContent = 'Sending...';
+  btn.classList.add('disabled');
+  const { error } = await auth.sendMagicLink(email);
+  btn.classList.remove('disabled');
+  btn.textContent = 'Send magic link';
+  if (error) {
+    toast(typeof error === 'string' ? error : (error.message || 'Could not send link'));
+    return;
+  }
+  document.getElementById('authSentEmail').textContent = email;
+  document.getElementById('authForm').style.display = 'none';
+  document.getElementById('authSent').style.display = 'block';
+}
+
+async function signOut() {
+  if (!confirm('Sign out of Stoveside?')) return;
+  await auth.signOut();
+  toast('Signed out');
+  navTo('discover');
+}
+
+/* ---------- Profile ---------- */
+async function renderProfile() {
+  const container = document.querySelector('#page-profile .container');
+  if (!container) return;
+
+  if (!state.user) {
+    // Signed out state
+    container.innerHTML = `
+      <div class="hero-block">
+        <div class="eyebrow">Your profile</div>
+        <h1 class="hero-title">Sign in to <em>Stoveside</em>.</h1>
+        <p class="hero-sub">Order from permitted home cooks, or start your own kitchen.</p>
+      </div>
+      <button class="btn-primary" onclick="openAuthSheet('Sign in to Stoveside')">Sign in with email</button>
+      <div class="section-divider"></div>
+      <div class="eyebrow" style="margin-bottom:12px;">Stoveside for cooks</div>
+      <h3 style="font-size:22px; margin-bottom: 8px;">Cook from your kitchen, legally.</h3>
+      <p style="color: var(--muted); font-size:14px; margin-bottom:14px;">Get your MEHKO permit in ~4 weeks. We'll walk you through every step.</p>
+      <button class="btn-secondary" onclick="setRole('new-cook')" style="width:100%;">Start my application</button>
+      <div class="spacer-lg"></div>
+    `;
+    return;
+  }
+
+  // Signed in state
+  const name = state.profile?.full_name || state.user.email.split('@')[0];
+  const joined = state.profile?.created_at
+    ? new Date(state.profile.created_at).toLocaleString('en-US', { month: 'long', year: 'numeric' })
+    : '—';
+  const orderCount = state.orders.length;
+  const hasKitchen = !!state.myKitchen;
+
+  container.innerHTML = `
+    <div class="hero-block">
+      <div class="eyebrow">Your profile</div>
+      <h1 class="hero-title">Hey, <em>${name.split(' ')[0]}</em>.</h1>
+      <p class="hero-sub">${orderCount} ${orderCount === 1 ? 'order' : 'orders'} placed • Joined ${joined}</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    ${hasKitchen ? `
+      <div class="eyebrow" style="margin-bottom:12px;">Your kitchen</div>
+      <h3 style="font-size:22px; margin-bottom: 8px;">${state.myKitchen.name}</h3>
+      <p style="color: var(--muted); font-size:14px; margin-bottom:14px;">
+        ${state.myKitchen.is_live ? '● Live' : '○ Paused'} • ${state.myKitchen.neighborhood || state.myKitchen.city} • ${state.myKitchen.permit_number || 'Permit pending'}
+      </p>
+      <button class="btn-primary" onclick="setRole('cook')">Open operator dashboard</button>
+    ` : `
+      <div class="eyebrow" style="margin-bottom:12px;">Stoveside for cooks</div>
+      <h3 style="font-size:22px; margin-bottom: 8px;">Cook from your kitchen, legally.</h3>
+      <p style="color: var(--muted); font-size:14px; margin-bottom:14px;">Get your MEHKO permit in ~4 weeks. We'll walk you through every step.</p>
+      <button class="btn-primary" onclick="setRole('new-cook')">Start my application</button>
+    `}
+
+    <div class="spacer-lg"></div>
+
+    <div class="section-divider"></div>
+    <div class="eyebrow" style="margin-bottom:12px;">Account</div>
+    <div style="background: var(--card); border: 1px solid var(--border2); border-radius: var(--r); padding: 14px; margin-bottom: 14px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color: var(--muted); margin-bottom: 4px;">Signed in as</div>
+      <div style="font-weight: 600; font-size: 15px;">${state.user.email}</div>
+    </div>
+    <button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="toast('Notifications coming soon')">Notifications</button>
+    <button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="toast('Help: email hello@stoveside.co')">Help &amp; support</button>
+    <button class="btn-secondary" style="width:100%;" onclick="signOut()">Sign out</button>
+    <div class="spacer-lg"></div>
+  `;
+}
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ---------- URL param prefill for the permit wizard ---------- */
+function applyWizardPrefill() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.toString()) return;
+
+  const email    = params.get('email');
+  const countyRaw = params.get('county');
+  const name     = params.get('name');
+  const phone    = params.get('phone');
+  const src      = params.get('src');
+
+  // Normalize county to a slug we recognize; leave wizardData.county alone otherwise.
+  const COUNTY_SLUGS = ['san-diego','los-angeles','riverside','alameda','santa-clara','other'];
+  const county = countyRaw && COUNTY_SLUGS.includes(countyRaw.toLowerCase()) ? countyRaw.toLowerCase() : null;
+
+  // Populate state.wizardData so a later db.savePermitApp carries them.
+  if (email)  state.wizardData.email  = email;
+  if (name)   state.wizardData.name   = name;
+  if (phone)  state.wizardData.phone  = phone;
+  if (county) state.wizardData.county = county;
+  if (src)    state.wizardData.src    = src;  // stored in-memory only; not a db column
+
+  // Write values into the form inputs (step 2) so the user sees them prefilled.
+  if (email) { const el = document.getElementById('pw-email'); if (el) el.value = email; }
+  if (name)  { const el = document.getElementById('pw-name');  if (el) el.value = name; }
+  if (phone) { const el = document.getElementById('pw-phone'); if (el) el.value = phone; }
+
+  // Flip the county selection card on step 1 if a recognized county was passed.
+  if (county) {
+    const cards = document.querySelectorAll('#countyOptions .option-card');
+    cards.forEach(c => c.classList.remove('selected'));
+    const target = document.querySelector(`#countyOptions .option-card[data-val="${county}"]`);
+    if (target) {
+      target.classList.add('selected');
+    } else {
+      // County not a recognized wizard option — select 'other' as the safe default.
+      const other = document.querySelector('#countyOptions .option-card[data-val="other"]');
+      if (other) other.classList.add('selected');
+    }
+  }
+
+  // If a county was explicitly passed, assume this is a permit-flow entry:
+  // route the user straight to the wizard rather than the consumer discover feed.
+  // Note: setRole runs navTo(...) internally.
+  if (county && state.role !== 'cook') {
+    setRole('new-cook');
+  }
+}
+
+/* ---------- Init ---------- */
+document.addEventListener('DOMContentLoaded', async () => {
+  // Wire wizard options
+  wireOptions('#countyOptions');
+  wireOptions('#cuisineOptions');
+  wireOptions('#scheduleOptions');
+
+  // First select
+  document.querySelector('#countyOptions .option-card')?.classList.add('selected');
+
+  renderStepTracker();
+  applyRole();
+
+  // Apply URL-param prefill *after* the DOM wiring and role apply so the
+  // correct county card gets selected and the form inputs are populated.
+  applyWizardPrefill();
+
+  // Initialize Supabase auth — this will auto-detect magic-link return
+  // from the URL and call setSession() which re-renders the current page.
+  await auth.init();
+
+  // If returning from a magic link, the URL has ?code=... or #access_token — clean it up
+  if (window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+});
+</script>
+
+</body>
+</html>

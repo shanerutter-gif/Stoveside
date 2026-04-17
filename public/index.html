@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F5EFE6">
+
+<title>Stoveside — Sell homemade food legally. MEHKO permit + marketplace for California home cooks.</title>
+<meta name="description" content="Stoveside helps California home cooks get their MEHKO permit and sell homemade food legally. Guided permit application, digital storefront, and local marketplace — built for San Diego, LA, and 16 more CA counties.">
+<meta name="keywords" content="MEHKO, home cook California, sell food from home, AB 626, microenterprise home kitchen, San Diego MEHKO permit, LA county home kitchen, home restaurant California">
+
+<link rel="canonical" href="https://stoveside.co/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Stoveside">
+<meta property="og:title" content="Stoveside — Sell homemade food legally in California">
+<meta property="og:description" content="Get your MEHKO permit and sell homemade food legally. Guided application, digital storefront, local marketplace.">
+<meta property="og:url" content="https://stoveside.co/">
+<meta property="og:image" content="https://stoveside.co/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stoveside">
+<meta name="twitter:description" content="Sell homemade food legally in California. MEHKO permits, digital storefront, local marketplace.">
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FF6B4A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
+
+<!-- Structured data for Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Stoveside",
+  "url": "https://stoveside.co",
+  "description": "Marketplace and MEHKO permit guide for California home cooks.",
+  "logo": "https://stoveside.co/og-image.png",
+  "sameAs": []
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a MEHKO permit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Microenterprise Home Kitchen Operation (MEHKO) permit is a legal authorization under California AB 626 that lets home cooks prepare and sell meals from their private kitchen. Permits are issued by county health departments and cap you at 30 meals per day, 60 per week, and $100,000 in annual gross sales."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which California counties allow MEHKO?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "As of 2026, 17 counties plus the City of Berkeley have opted into MEHKO. That includes San Diego, Los Angeles, Riverside, Alameda, Santa Clara, Sonoma, Solano, Lake, Imperial, and more. The list continues to grow as counties adopt the law."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does a MEHKO permit cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Permit fees vary by county, typically $400 to $1,000 per year. San Diego County has waived fees through May 2025. You'll also need a food manager certification (~$15) and, if you use well water, a water lab test (~$45)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does MEHKO approval take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most counties approve MEHKO applications in 2 to 4 weeks after you submit your packet and pass the in-home kitchen inspection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use DoorDash or Uber Eats with a MEHKO?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. AB 626 requires direct sales from the cook to the customer. Third-party delivery platforms are not allowed. Customers can pick up at your home or you can deliver yourself."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #F5EFE6; --bg2: #EDE5D8; --card: #FFFFFF; --card2: #FAF5EE;
+  --ink: #1A1208; --text: #2A1F14;
+  --muted: rgba(42,31,20,0.58); --muted2: rgba(42,31,20,0.32);
+  --coral: #FF6B4A; --coral-deep: #E8553A; --amber: #E8943A; --sage: #8FA876;
+  --border: rgba(255,107,74,0.18); --border2: rgba(42,31,20,0.08);
+  --coral-dim: rgba(255,107,74,0.10); --coral-glow: rgba(255,107,74,0.22);
+  --glass: rgba(245,239,230,0.88);
+  --shadow: 0 1px 3px rgba(42,31,20,0.04), 0 1px 2px rgba(42,31,20,0.06);
+  --shadow-md: 0 4px 12px rgba(42,31,20,0.06), 0 2px 4px rgba(42,31,20,0.04);
+  --shadow-lg: 0 12px 32px rgba(42,31,20,0.08), 0 4px 8px rgba(42,31,20,0.04);
+  --r-sm: 8px; --r: 14px; --r-lg: 20px; --r-xl: 28px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --safe-top: env(safe-area-inset-top, 0);
+  --safe-bot: env(safe-area-inset-bottom, 0);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', system-ui, sans-serif; font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { padding-top: var(--safe-top); }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; font-size: inherit; }
+input, textarea, select { font-family: inherit; font-size: 16px; }
+a { color: var(--coral); text-decoration: none; transition: opacity .2s; }
+a:hover { opacity: 0.75; }
+h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 900; letter-spacing: -0.025em; margin: 0; color: var(--ink); }
+img { max-width: 100%; display: block; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.container-sm { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+/* ===== NAV ===== */
+.nav {
+  position: sticky; top: 0; z-index: 80;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+}
+.nav-logo {
+  font-family: 'Fraunces', serif; font-weight: 900; font-size: 26px;
+  letter-spacing: -0.04em; color: var(--ink); display: flex; align-items: center; gap: 4px;
+}
+.nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); margin-top: 6px; }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-link { color: var(--text); font-weight: 500; font-size: 14px; }
+.nav-link:hover { color: var(--coral); }
+.nav-cta {
+  background: var(--ink); color: var(--bg);
+  padding: 9px 16px; border-radius: 50px; font-weight: 600; font-size: 14px;
+  transition: transform .15s var(--ease-out);
+}
+.nav-cta:hover { transform: scale(1.04); opacity: 1; }
+@media (max-width: 720px) {
+  .nav-links .nav-link { display: none; }
+  .nav-links { gap: 12px; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 72px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -10%; right: -5%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,107,74,0.14), transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-eyebrow {
+  display: inline-block;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--coral);
+  padding: 6px 12px; background: var(--coral-dim); border-radius: 50px;
+  margin-bottom: 20px;
+}
+.hero-title {
+  font-size: clamp(40px, 7vw, 76px);
+  line-height: 0.98; letter-spacing: -0.035em;
+  margin-bottom: 24px; max-width: 840px;
+}
+.hero-title em { font-style: italic; color: var(--coral); font-weight: 700; }
+.hero-sub {
+  font-size: clamp(17px, 2.1vw, 21px);
+  color: var(--muted); max-width: 620px;
+  line-height: 1.5; margin-bottom: 32px;
+}
+.hero-form {
+  display: flex; gap: 10px; max-width: 480px;
+  background: var(--card);
+  padding: 8px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border2);
+}
+.hero-form input {
+  flex: 1; min-width: 0;
+  background: transparent; border: none; outline: none;
+  padding: 8px 16px; font-size: 15px;
+  color: var(--text);
+}
+.hero-form input::placeholder { color: var(--muted2); }
+.hero-form button {
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  color: #fff; font-weight: 700; font-size: 14px;
+  padding: 12px 22px; border-radius: 50px;
+  box-shadow: 0 4px 14px rgba(255,107,74,0.28);
+  transition: transform .15s var(--ease-out);
+  white-space: nowrap;
+}
+.hero-form button:hover { transform: translateY(-1px); }
+.hero-form button:active { transform: scale(0.97); }
+.hero-form-note {
+  font-size: 12px; color: var(--muted); margin-top: 12px;
+  font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+}
+.hero-form.sent {
+  background: var(--sage); color: #fff; padding: 20px 24px;
+  justify-content: center; text-align: center; font-weight: 600;
+}
+.hero-form.sent input, .hero-form.sent button { display: none; }
+
+.hero-stats {
+  display: flex; flex-wrap: wrap; gap: 32px 40px;
+  margin-top: 40px; padding-top: 28px;
+  border-top: 1px solid var(--border2);
+}
+.hero-stat { }
+.hero-stat-num {
+  font-family: 'Fraunces', serif; font-weight: 900; font-size: 32px;
+  line-height: 1; color: var(--ink); letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.hero-stat-num em { font-style: italic; color: var(--coral); font-weight: 700; }
+.hero-stat-label {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ===== SECTIONS ===== */
+.section { padding: 80px 0; position: relative; }
+.section-alt { background: var(--bg2); }
+.section-dark { background: var(--ink); color: var(--bg); }
+.section-dark h1, .section-dark h2, .section-dark h3 { color: var(--bg); }
+.section-dark .muted { color: rgba(245,239,230,0.68); }
+
+.section-header { text-align: center; margin-bottom: 56px; }
+.section-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--coral);
+  font-weight: 500; margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.05; letter-spacing: -0.025em;
+  max-width: 760px; margin: 0 auto 16px;
+}
+.section-title em { font-style: italic; color: var(--coral); font-weight: 700; }
+.section-sub {
+  font-size: 17px; color: var(--muted); max-width: 620px;
+  margin: 0 auto; line-height: 1.5;
+}
+
+/* ===== PIPELINE STEPS ===== */
+.pipeline {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+@media (max-width: 860px) { .pipeline { grid-template-columns: 1fr; } }
+.pipe-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s var(--ease-out), box-shadow .3s;
+}
+.pipe-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.pipe-step {
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 700;
+  font-size: 14px; color: var(--coral);
+  margin-bottom: 14px;
+}
+.pipe-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+.pipe-card h3 { font-size: 22px; margin-bottom: 10px; line-height: 1.2; }
+.pipe-card p { color: var(--muted); font-size: 15px; line-height: 1.55; }
+.pipe-card ul { list-style: none; padding: 0; margin: 12px 0 0; }
+.pipe-card li {
+  color: var(--text); font-size: 14px;
+  padding: 4px 0 4px 22px; position: relative;
+}
+.pipe-card li::before {
+  content: '✓';
+  position: absolute; left: 0; top: 4px;
+  color: var(--sage); font-weight: 700;
+}
+
+/* ===== COUNTY GRID ===== */
+.county-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.county-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: border-color .2s, transform .15s var(--ease-out);
+}
+.county-card:hover { border-color: var(--coral); transform: translateY(-2px); }
+.county-card.soon { opacity: 0.55; pointer-events: none; }
+.county-name { font-weight: 600; font-size: 15px; }
+.county-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
+.county-status-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--sage); margin-right: 6px; vertical-align: middle;
+}
+.county-status-dot.soon { background: var(--muted2); }
+
+/* ===== HOW IT WORKS (long-form) ===== */
+.howto {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  align-items: center;
+}
+@media (max-width: 860px) { .howto { grid-template-columns: 1fr; gap: 32px; } }
+.howto-copy h3 { font-size: clamp(26px, 3.8vw, 36px); margin-bottom: 16px; line-height: 1.1; }
+.howto-copy p { color: var(--muted); font-size: 16px; line-height: 1.6; margin-bottom: 14px; }
+.howto-visual {
+  background: var(--card);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border2);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+.howto-visual::before {
+  content: ''; position: absolute; top: -40%; right: -20%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,107,74,0.12), transparent 70%);
+  pointer-events: none;
+}
+.wizard-preview-step {
+  display: flex; gap: 14px; padding: 12px 0;
+  border-bottom: 1px dashed var(--border2);
+}
+.wizard-preview-step:last-child { border-bottom: none; }
+.wizard-preview-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--coral); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; flex-shrink: 0;
+}
+.wizard-preview-body h4 { font-size: 15px; margin-bottom: 2px; color: var(--ink); }
+.wizard-preview-body p { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* ===== WHAT'S INCLUDED ===== */
+.included-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+}
+@media (max-width: 720px) { .included-grid { grid-template-columns: 1fr; } }
+.included-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 24px;
+  display: flex; gap: 16px;
+}
+.included-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--coral-dim); color: var(--coral);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.included-body h4 { font-size: 17px; margin-bottom: 6px; line-height: 1.2; }
+.included-body p { color: var(--muted); font-size: 14px; margin: 0; }
+
+/* ===== FAQ ===== */
+.faq-list { max-width: 760px; margin: 0 auto; }
+.faq-item {
+  border-bottom: 1px solid var(--border2);
+  padding: 20px 0;
+  cursor: pointer;
+}
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Fraunces', serif; font-weight: 700; font-size: 19px;
+  color: var(--ink); line-height: 1.3;
+}
+.faq-q::after {
+  content: '+'; font-size: 26px; color: var(--coral); line-height: 1;
+  transition: transform .3s var(--ease-out);
+}
+.faq-item.open .faq-q::after { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s var(--ease-out), padding .3s;
+  color: var(--muted); font-size: 15px; line-height: 1.6;
+}
+.faq-item.open .faq-a { max-height: 400px; padding-top: 14px; }
+
+/* ===== CTA BAND ===== */
+.cta-band {
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  color: #fff;
+  padding: 72px 24px;
+  text-align: center;
+  border-radius: var(--r-xl);
+  margin: 40px auto;
+  max-width: 1052px;
+  position: relative; overflow: hidden;
+}
+.cta-band::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 50%);
+  pointer-events: none;
+}
+.cta-band h2 {
+  color: #fff; font-size: clamp(28px, 5vw, 42px); margin-bottom: 14px;
+  position: relative;
+}
+.cta-band h2 em { font-style: italic; font-weight: 700; }
+.cta-band p { opacity: 0.9; font-size: 17px; margin-bottom: 28px; position: relative; }
+.cta-band-btn {
+  display: inline-block;
+  background: #fff; color: var(--ink);
+  padding: 14px 32px; border-radius: 50px;
+  font-weight: 700; font-size: 15px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  position: relative;
+  transition: transform .2s var(--ease-out);
+}
+.cta-band-btn:hover { transform: translateY(-2px); opacity: 1; }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--ink); color: var(--bg);
+  padding: 56px 0 36px;
+}
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+@media (max-width: 720px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; } }
+.footer-logo {
+  font-family: 'Fraunces', serif; font-weight: 900; font-size: 28px;
+  letter-spacing: -0.04em; color: var(--bg);
+  display: flex; align-items: center; gap: 4px; margin-bottom: 12px;
+}
+.footer-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); margin-top: 6px; }
+.footer-tagline {
+  color: rgba(245,239,230,0.6); font-size: 14px;
+  max-width: 280px; line-height: 1.5;
+}
+.footer h5 {
+  font-family: 'DM Mono', monospace; font-weight: 500;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(245,239,230,0.5); margin-bottom: 14px;
+}
+.footer a {
+  color: rgba(245,239,230,0.8);
+  display: block; padding: 4px 0;
+  font-size: 14px;
+}
+.footer a:hover { color: var(--coral); opacity: 1; }
+.footer-bottom {
+  margin-top: 48px; padding-top: 24px;
+  border-top: 1px solid rgba(245,239,230,0.08);
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: rgba(245,239,230,0.4);
+  font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+}
+@media (max-width: 540px) { .footer-bottom { flex-direction: column; gap: 8px; } }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: #fff; padding: 14px 22px;
+  border-radius: 50px; font-size: 14px; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none;
+  transition: all .3s var(--ease-out); z-index: 150;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Subtle line-break tweaks */
+.nowrap { white-space: nowrap; }
+.serif-italic { font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ==== NAV ==== -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/" aria-label="Stoveside home">
+      Stoveside<span class="nav-logo-dot"></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#pipeline" class="nav-link">How it works</a>
+      <a href="#counties" class="nav-link">Counties</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="/app" class="nav-cta">Open app →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ==== HERO ==== -->
+<section class="hero">
+  <div class="container hero-inner">
+    <span class="hero-eyebrow">California home cooks</span>
+    <h1 class="hero-title">
+      Turn your kitchen into a <em>legal</em> restaurant.
+    </h1>
+    <p class="hero-sub">
+      Stoveside walks you through the MEHKO permit in 10 minutes, builds your digital storefront, and lists you on the local marketplace the day you're approved. Home-cooked food, sold right.
+    </p>
+
+    <form class="hero-form" id="heroForm" onsubmit="return submitHeroForm(event)">
+      <input type="email" id="heroEmail" placeholder="your@email.com" required autocomplete="email" aria-label="Email address">
+      <button type="submit">Start my application</button>
+    </form>
+    <p class="hero-form-note">→ We'll email you a link to the permit wizard. No credit card. No spam.</p>
+
+    <div class="hero-stats" role="list">
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num"><em>18</em></div>
+        <div class="hero-stat-label">CA counties live</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num"><em>10</em>min</div>
+        <div class="hero-stat-label">To build your packet</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num">$<em>100k</em></div>
+        <div class="hero-stat-label">Annual sales cap (AB 626)</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-num"><em>30</em></div>
+        <div class="hero-stat-label">Meals/day allowed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== PIPELINE ==== -->
+<section class="section section-alt" id="pipeline">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">The Stoveside pipeline</div>
+      <h2 class="section-title">From kitchen to customers, <em>in one place</em>.</h2>
+      <p class="section-sub">Everything you need to sell homemade food legally. No spreadsheets, no Facebook groups, no mystery about whether you're breaking the law.</p>
+    </div>
+
+    <div class="pipeline">
+      <div class="pipe-card">
+        <div class="pipe-icon">📋</div>
+        <div class="pipe-step">Step 01</div>
+        <h3>Get your permit</h3>
+        <p>Answer 6 questions. We generate your Standard Operating Procedures, menu doc, and floor plan — formatted exactly how your county wants them.</p>
+        <ul>
+          <li>County-specific requirements</li>
+          <li>Auto-generated SOP document</li>
+          <li>Food Manager Cert scheduling</li>
+          <li>Inspection checklist</li>
+        </ul>
+      </div>
+      <div class="pipe-card">
+        <div class="pipe-icon">🏠</div>
+        <div class="pipe-step">Step 02</div>
+        <h3>Build your storefront</h3>
+        <p>The moment your permit clears, your kitchen goes live. Menu, photos, pickup schedule, customer messaging. Like Shopify for your kitchen.</p>
+        <ul>
+          <li>Instant digital menu</li>
+          <li>Photo-first listings</li>
+          <li>Pickup window scheduler</li>
+          <li>Customer DMs built in</li>
+        </ul>
+      </div>
+      <div class="pipe-card">
+        <div class="pipe-icon">🍽️</div>
+        <div class="pipe-step">Step 03</div>
+        <h3>Sell on the marketplace</h3>
+        <p>Hungry neighbors find you on the Stoveside app. Orders drop into your dashboard. We enforce the AB 626 caps so you stay compliant automatically.</p>
+        <ul>
+          <li>Local discovery feed</li>
+          <li>Auto caps: 30/day, 60/wk, $100k/yr</li>
+          <li>Cash or Venmo at pickup</li>
+          <li>Customer reviews + repeat orders</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== HOW (wizard preview) ==== -->
+<section class="section">
+  <div class="container">
+    <div class="howto">
+      <div class="howto-copy">
+        <div class="section-eyebrow">The permit wizard</div>
+        <h3>10 minutes of questions. <span class="serif-italic">Your whole application.</span></h3>
+        <p>Most home cooks try to decipher a 40-page county PDF, give up, and stay unlicensed. Stoveside's wizard is the opposite: plain English, one question at a time, county-aware so you never get asked something that doesn't apply to you.</p>
+        <p>At the end you get a submission-ready packet — SOP, menu, floor plan, inspection checklist — plus direct contact info for your county health department.</p>
+        <a href="/app" class="nav-cta" style="display: inline-block; margin-top: 12px;">Try the wizard →</a>
+      </div>
+      <div class="howto-visual">
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">1</div>
+          <div class="wizard-preview-body">
+            <h4>Where is your home?</h4>
+            <p>We route to your county's exact rules.</p>
+          </div>
+        </div>
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">2</div>
+          <div class="wizard-preview-body">
+            <h4>Who's cooking?</h4>
+            <p>Name, email, phone. That's it.</p>
+          </div>
+        </div>
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">3</div>
+          <div class="wizard-preview-body">
+            <h4>Where's your kitchen?</h4>
+            <p>Home address, water source, household.</p>
+          </div>
+        </div>
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">4</div>
+          <div class="wizard-preview-body">
+            <h4>What are you cooking?</h4>
+            <p>Shapes your SOP doc automatically.</p>
+          </div>
+        </div>
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">5</div>
+          <div class="wizard-preview-body">
+            <h4>Three signature dishes</h4>
+            <p>Sample menu for the health inspector.</p>
+          </div>
+        </div>
+        <div class="wizard-preview-step">
+          <div class="wizard-preview-num">6</div>
+          <div class="wizard-preview-body">
+            <h4>When will you cook?</h4>
+            <p>We enforce AB 626 limits automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== COUNTIES ==== -->
+<section class="section section-alt" id="counties">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">MEHKO coverage</div>
+      <h2 class="section-title">18 California jurisdictions, <em>and counting</em>.</h2>
+      <p class="section-sub">We're live wherever counties have opted into AB 626. Tap your county to see its specific rules, fees, and timelines.</p>
+    </div>
+
+    <div class="county-grid" id="countyGrid">
+      <a class="county-card" href="/permit/san-diego">
+        <div>
+          <div class="county-name"><span class="county-status-dot"></span>San Diego</div>
+          <div class="county-meta">Fees waived · 2–4 wk</div>
+        </div>
+        <span style="color: var(--coral);">→</span>
+      </a>
+      <a class="county-card" href="/permit/los-angeles">
+        <div>
+          <div class="county-name"><span class="county-status-dot"></span>Los Angeles</div>
+          <div class="county-meta">Pilot thru June '26</div>
+        </div>
+        <span style="color: var(--coral);">→</span>
+      </a>
+      <a class="county-card" href="/permit/riverside">
+        <div>
+          <div class="county-name"><span class="county-status-dot"></span>Riverside</div>
+          <div class="county-meta">First CA county</div>
+        </div>
+        <span style="color: var(--coral);">→</span>
+      </a>
+      <a class="county-card" href="/permit/alameda">
+        <div>
+          <div class="county-name"><span class="county-status-dot"></span>Alameda</div>
+          <div class="county-meta">Active since 2021</div>
+        </div>
+        <span style="color: var(--coral);">→</span>
+      </a>
+      <a class="county-card" href="/permit/santa-clara">
+        <div>
+          <div class="county-name"><span class="county-status-dot"></span>Santa Clara</div>
+          <div class="county-meta">3-yr pilot</div>
+        </div>
+        <span style="color: var(--coral);">→</span>
+      </a>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>Solano</div><div class="county-meta">Active</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>Sonoma</div><div class="county-meta">Active</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>Santa Barbara</div><div class="county-meta">Active</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>Lake</div><div class="county-meta">Active</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>Imperial</div><div class="county-meta">Active</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card"><div><div class="county-name"><span class="county-status-dot"></span>City of Berkeley</div><div class="county-meta">Own program</div></div><span style="color: var(--muted2);">→</span></div>
+      <div class="county-card soon"><div><div class="county-name"><span class="county-status-dot soon"></span>San Bernardino</div><div class="county-meta">Coming</div></div></div>
+      <div class="county-card soon"><div><div class="county-name"><span class="county-status-dot soon"></span>Orange</div><div class="county-meta">Coming</div></div></div>
+      <div class="county-card soon"><div><div class="county-name"><span class="county-status-dot soon"></span>Fresno</div><div class="county-meta">Coming</div></div></div>
+    </div>
+
+    <p style="text-align: center; color: var(--muted); font-size: 14px; margin-top: 32px;">
+      Don't see your county? <a href="#waitlist" onclick="document.getElementById('heroEmail').focus(); return false;" style="font-weight: 600;">Get on the waitlist →</a>
+    </p>
+  </div>
+</section>
+
+<!-- ==== INCLUDED ==== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">What's included</div>
+      <h2 class="section-title">Everything a home cook needs. <em>Nothing they don't.</em></h2>
+    </div>
+
+    <div class="included-grid">
+      <div class="included-card">
+        <div class="included-icon">📝</div>
+        <div class="included-body"><h4>Auto-generated SOP</h4><p>Standard Operating Procedures doc customized to your cuisine and county. No templating.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">🧑‍🍳</div>
+        <div class="included-body"><h4>Food Manager Cert help</h4><p>Direct links to approved ServSafe exams. ~$15, done online in a day.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">🏡</div>
+        <div class="included-body"><h4>Kitchen floor plan template</h4><p>Fillable PDF your inspector will actually accept. We sized it for home kitchens.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">💧</div>
+        <div class="included-body"><h4>Well water lab scheduling</h4><p>If you're on a private well, we connect you with state-certified labs for the required test.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">📱</div>
+        <div class="included-body"><h4>Digital storefront</h4><p>Menu, photos, pickup windows, order inbox. Ready the day your permit clears.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">📊</div>
+        <div class="included-body"><h4>Auto compliance caps</h4><p>AB 626 limits baked into the software. We warn you before you cross a cap, not after.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">💬</div>
+        <div class="included-body"><h4>Customer messaging</h4><p>DMs with customers, without giving out your phone number.</p></div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">⭐</div>
+        <div class="included-body"><h4>Reviews that build trust</h4><p>Ratings and repeat-customer tracking. Home cooks live on word of mouth.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== FAQ ==== -->
+<section class="section section-alt" id="faq">
+  <div class="container-sm">
+    <div class="section-header">
+      <div class="section-eyebrow">Common questions</div>
+      <h2 class="section-title">Things home cooks ask us.</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">What is a MEHKO permit?</div>
+        <div class="faq-a"><p>A Microenterprise Home Kitchen Operation (MEHKO) permit is California's legal framework — passed as AB 626 in 2018 — that lets home cooks prepare and sell full meals directly to customers from a private kitchen. Unlike Cottage Food (which only covers shelf-stable items like bread and jam), MEHKO covers hot food, meat, dairy, and perishables. You're capped at 30 meals/day, 60/week, and $100,000 in annual gross sales.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Which counties allow MEHKO?</div>
+        <div class="faq-a"><p>As of 2026, 17 counties plus the City of Berkeley have opted in: San Diego, Los Angeles, Riverside, Alameda, Santa Clara, Sonoma, Solano, Santa Barbara, Lake, Imperial, and more. Your county has to explicitly adopt an ordinance for the program to be active locally. Big holdouts: Orange, San Bernardino, Fresno. Coverage continues to expand.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">How much does it cost?</div>
+        <div class="faq-a"><p>Permit fees vary by county — typically $400–$1,000 per year. San Diego County has waived fees through May 2025. You'll also need a Food Manager Certification (~$15, ServSafe online) and, if your home uses well water, a water quality lab test (~$45). Stoveside's permit wizard is free. We only make money when you do.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">How long does approval take?</div>
+        <div class="faq-a"><p>Most counties approve MEHKO applications in 2–4 weeks after you submit your packet and pass the in-home kitchen inspection. Stoveside gives you a submission-ready packet at the end of the wizard, so the slowest part is usually scheduling the county inspector's visit.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Can I use DoorDash or Uber Eats?</div>
+        <div class="faq-a"><p>No. AB 626 explicitly prohibits third-party delivery. Customers can pick up from your home, or you can deliver it yourself. This is actually a feature — you keep 100% of the order value instead of giving 30% to a delivery app.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Do I need to change my zoning or get a business license?</div>
+        <div class="faq-a"><p>No on both counts. AB 626 explicitly prevents cities and counties from requiring zoning changes, home occupation permits, or land use permits for MEHKOs. You might need a regular business license (same as any self-employed person), but that's a separate, simple filing.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">What does Stoveside charge?</div>
+        <div class="faq-a"><p>The permit wizard is free. The marketplace charges a small take rate on completed orders to keep the lights on. No monthly subscription, no listing fees, no charge before you make your first sale.</p></div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Is my home kitchen going to be inspected?</div>
+        <div class="faq-a"><p>Yes, once per year. The inspector checks food safety fundamentals — proper storage, separate sinks for food prep, handwashing, safe temperatures. Stoveside gives you a pre-inspection checklist so nothing's a surprise.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== CTA BAND ==== -->
+<section style="padding: 0 24px;">
+  <div class="cta-band">
+    <h2>Ready to cook <em>legally</em>?</h2>
+    <p>Start your permit application free. 10 minutes. No credit card.</p>
+    <a href="/app" class="cta-band-btn">Start my application →</a>
+  </div>
+</section>
+
+<!-- ==== FOOTER ==== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Stoveside<span class="footer-logo-dot"></span></div>
+        <p class="footer-tagline">Real food, from the kitchen next door. California's home for permitted home cooks.</p>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <a href="/app">Open app</a>
+        <a href="#pipeline">How it works</a>
+        <a href="#counties">Counties</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h5>Counties</h5>
+        <a href="/permit/san-diego">San Diego</a>
+        <a href="/permit/los-angeles">Los Angeles</a>
+        <a href="/permit/riverside">Riverside</a>
+        <a href="/permit/alameda">Alameda</a>
+        <a href="/permit/santa-clara">Santa Clara</a>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="mailto:hello@stoveside.co">Contact</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Stoveside</span>
+      <span>Built for California cooks</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="/config.js"></script>
+<script>
+const CFG = window.STOVESIDE_CONFIG || {};
+const EDGE_URL = CFG.supabaseUrl ? `${CFG.supabaseUrl}/functions/v1/waitlist-signup` : null;
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function parseUTM() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source: p.get('utm_source'),
+    utm_medium: p.get('utm_medium'),
+    utm_campaign: p.get('utm_campaign'),
+  };
+}
+
+async function submitHeroForm(e) {
+  e.preventDefault();
+  const email = document.getElementById('heroEmail').value.trim().toLowerCase();
+  if (!email) return false;
+
+  const form = document.getElementById('heroForm');
+  const btn = form.querySelector('button');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    if (EDGE_URL) {
+      await fetch(EDGE_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email, role: 'cook', source: 'landing',
+          ...parseUTM(),
+        }),
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  // Show success state regardless (graceful)
+  form.classList.add('sent');
+  form.innerHTML = '<div>✓ Check your email — we\'ll send your wizard link shortly.</div>';
+
+  // Redirect to the app after a moment
+  setTimeout(() => {
+    const params = new URLSearchParams({ email, src: 'landing' });
+    window.location.href = `/app?${params.toString()}`;
+  }, 1800);
+
+  return false;
+}
+</script>
+</body>
+</html>
