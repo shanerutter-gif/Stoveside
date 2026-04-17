@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -8,6 +9,7 @@
 <meta name="description" content="San Diego's permitted home cooks, cooking tonight. Order direct, pick up warm. Every kitchen holds a MEHKO permit." />
 
 <!-- Open Graph / Social -->
+
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Stoveside" />
 <meta property="og:title" content="Stoveside — Real food, from the kitchen next door." />
@@ -23,10 +25,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Supabase client + config -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="/config.js"></script>
 
 <!-- pdf-lib: client-side PDF generation for the MEHKO permit packet -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" defer></script>
 
 <style>
@@ -980,20 +985,27 @@ hr.editorial::before {
 
 .icon-wrap svg { width: 100%; height: 100%; }
 </style>
+
 </head>
 
 <body>
 
 <!-- ==================================================================== -->
+
 <!--                           ROLE SWITCHER                               -->
+
 <!-- ==================================================================== -->
+
 <button class="role-switch" id="roleSwitch" onclick="cycleRole()">
   <span id="roleLabel">Consumer</span>
 </button>
 
 <!-- ==================================================================== -->
+
 <!--                            TOP BAR                                    -->
+
 <!-- ==================================================================== -->
+
 <div class="topbar">
   <div class="logo">
     Stoveside<span class="logo-dot"></span>
@@ -1004,8 +1016,11 @@ hr.editorial::before {
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                     CONSUMER — DISCOVER PAGE                          -->
+
 <!-- ==================================================================== -->
+
 <div class="page active" id="page-discover">
   <div class="container">
     <div class="hero-block">
@@ -1014,40 +1029,46 @@ hr.editorial::before {
       <p class="hero-sub">Every cook below holds a MEHKO permit from San Diego County. Order direct, pick up warm.</p>
     </div>
 
-    <div class="feed-label">
-      <span>🌶️ Open for Pre-Orders</span>
-      <span style="color: var(--coral); font-weight: 600;">Tonight</span>
-    </div>
+```
+<div class="feed-label">
+  <span>🌶️ Open for Pre-Orders</span>
+  <span style="color: var(--coral); font-weight: 600;">Tonight</span>
+</div>
 
-    <div id="heroCook"></div>
+<div id="heroCook"></div>
 
-    <div class="feed-label">
-      <span>Near you</span>
-      <span>See map →</span>
-    </div>
+<div class="feed-label">
+  <span>Near you</span>
+  <span>See map →</span>
+</div>
 
-    <div id="gridCooks" class="cook-grid"></div>
+<div id="gridCooks" class="cook-grid"></div>
 
-    <div class="feed-label">
-      <span>More kitchens</span>
-    </div>
+<div class="feed-label">
+  <span>More kitchens</span>
+</div>
 
-    <div id="listCooks"></div>
+<div id="listCooks"></div>
 
-    <hr class="editorial">
+<hr class="editorial">
 
-    <div style="text-align: center; padding: 10px 0 30px;">
-      <div class="eyebrow" style="margin-bottom: 8px;">Want to cook?</div>
-      <h3 style="font-size: 22px; margin-bottom: 8px;">Get your home kitchen permitted.</h3>
-      <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">San Diego County approves MEHKO permits. We'll walk you through it in 10 minutes.</p>
-      <button class="btn-secondary" onclick="setRole('new-cook')">Start permit application →</button>
-    </div>
+<div style="text-align: center; padding: 10px 0 30px;">
+  <div class="eyebrow" style="margin-bottom: 8px;">Want to cook?</div>
+  <h3 style="font-size: 22px; margin-bottom: 8px;">Get your home kitchen permitted.</h3>
+  <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">San Diego County approves MEHKO permits. We'll walk you through it in 10 minutes.</p>
+  <button class="btn-secondary" onclick="setRole('new-cook')">Start permit application →</button>
+</div>
+```
+
   </div>
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                       PERMIT WIZARD PAGE                              -->
+
 <!-- ==================================================================== -->
+
 <div class="page" id="page-permit">
   <div class="container">
     <div class="wizard-hero">
@@ -1056,253 +1077,327 @@ hr.editorial::before {
       <p class="wizard-sub">10 questions. We'll build your SOP, menu, and application packet — ready to submit to San Diego County.</p>
     </div>
 
-    <div class="step-tracker" id="stepTracker"></div>
+```
+<div class="step-tracker" id="stepTracker"></div>
 
-    <!-- Step 1: County -->
-    <div class="step active" data-step="1">
-      <div class="step-label">Step 1 of 6</div>
-      <h2 class="step-q">Where is your home?</h2>
-      <p class="step-help">MEHKO permits are issued by county. Only counties that have opted in can approve you.</p>
-      <div class="option-stack" id="countyOptions">
-        <button class="option-card selected" data-val="san-diego">
-          <div class="option-check"></div>
-          <div class="option-body">
-            <div class="option-title">San Diego County</div>
-            <div class="option-desc">Permanent program. Fees waived through May 2025. ✓ Open</div>
-          </div>
-        </button>
-        <button class="option-card" data-val="los-angeles">
-          <div class="option-check"></div>
-          <div class="option-body">
-            <div class="option-title">Los Angeles County</div>
-            <div class="option-desc">Pilot program through June 2026. ✓ Open</div>
-          </div>
-        </button>
-        <button class="option-card" data-val="riverside">
-          <div class="option-check"></div>
-          <div class="option-body">
-            <div class="option-title">Riverside County</div>
-            <div class="option-desc">First county to opt in (2019). ✓ Open</div>
-          </div>
-        </button>
-        <button class="option-card" data-val="alameda">
-          <div class="option-check"></div>
-          <div class="option-body">
-            <div class="option-title">Alameda County</div>
-            <div class="option-desc">Active program since 2021. ✓ Open</div>
-          </div>
-        </button>
-        <button class="option-card" data-val="other">
-          <div class="option-check"></div>
-          <div class="option-body">
-            <div class="option-title">My county isn't listed</div>
-            <div class="option-desc">We'll email you when it opens.</div>
-          </div>
-        </button>
+<!-- Step 1: County -->
+<div class="step active" data-step="1">
+  <div class="step-label">Step 1 of 6</div>
+  <h2 class="step-q">Where is your home?</h2>
+  <p class="step-help">MEHKO permits are issued by county. Only counties that have opted in can approve you.</p>
+  <div class="option-stack" id="countyOptions">
+    <button class="option-card selected" data-val="san-diego">
+      <div class="option-check"></div>
+      <div class="option-body">
+        <div class="option-title">San Diego County</div>
+        <div class="option-desc">Permanent program. Fees waived through May 2025. ✓ Open</div>
       </div>
-      <div class="wizard-nav">
-        <button class="btn-primary" onclick="nextStep()">Continue</button>
+    </button>
+    <button class="option-card" data-val="los-angeles">
+      <div class="option-check"></div>
+      <div class="option-body">
+        <div class="option-title">Los Angeles County</div>
+        <div class="option-desc">Pilot program through June 2026. ✓ Open</div>
+      </div>
+    </button>
+    <button class="option-card" data-val="riverside">
+      <div class="option-check"></div>
+      <div class="option-body">
+        <div class="option-title">Riverside County</div>
+        <div class="option-desc">First county to opt in (2019). ✓ Open</div>
+      </div>
+    </button>
+    <button class="option-card" data-val="alameda">
+      <div class="option-check"></div>
+      <div class="option-body">
+        <div class="option-title">Alameda County</div>
+        <div class="option-desc">Active program since 2021. ✓ Open</div>
+      </div>
+    </button>
+    <button class="option-card" data-val="other">
+      <div class="option-check"></div>
+      <div class="option-body">
+        <div class="option-title">My county isn't listed</div>
+        <div class="option-desc">We'll email you when it opens.</div>
+      </div>
+    </button>
+  </div>
+  <div class="wizard-nav">
+    <button class="btn-primary" onclick="nextStep()">Continue</button>
+  </div>
+</div>
+
+<!-- Step 2: Basics -->
+<div class="step" data-step="2">
+  <div class="step-label">Step 2 of 6 — About you</div>
+  <h2 class="step-q">Tell us who's cooking.</h2>
+  <p class="step-help">This goes on your Stoveside profile and your permit application.</p>
+  <div class="field">
+    <label>Your name</label>
+    <input type="text" id="pw-name" placeholder="Shane Rutter" />
+  </div>
+  <div class="field">
+    <label>Kitchen name</label>
+    <input type="text" id="pw-kitchen" placeholder='e.g. "Grandma Rosa\'s" or "Shane\'s Tacos"' />
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="pw-email" placeholder="shane@example.com" />
+  </div>
+  <div class="field">
+    <label>Phone</label>
+    <input type="tel" id="pw-phone" placeholder="(619) 555-0100" />
+  </div>
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" onclick="nextStep()">Continue</button>
+  </div>
+</div>
+
+<!-- Step 3: Kitchen address + water -->
+<div class="step" data-step="3">
+  <div class="step-label">Step 3 of 6 — Your kitchen</div>
+  <h2 class="step-q">Where will you cook?</h2>
+  <p class="step-help">Your MEHKO permit applies to one private residence.</p>
+  <div class="field">
+    <label>Home address</label>
+    <input type="text" id="pw-address" placeholder="3201 Adams Ave, San Diego" />
+  </div>
+  <div class="field">
+    <label>Water source</label>
+    <select id="pw-water">
+      <option value="municipal">Municipal water (city)</option>
+      <option value="well">Private well (extra lab test required)</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Household members in home during cooking hours</label>
+    <select id="pw-household">
+      <option value="0">Just me</option>
+      <option value="1">1 other</option>
+      <option value="2">2 others</option>
+      <option value="3">3+ others</option>
+    </select>
+  </div>
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" onclick="nextStep()">Continue</button>
+  </div>
+</div>
+
+<!-- Step 4: Food type -->
+<div class="step" data-step="4">
+  <div class="step-label">Step 4 of 6 — What you'll cook</div>
+  <h2 class="step-q">What kind of food?</h2>
+  <p class="step-help">This shapes your Standard Operating Procedures doc.</p>
+  <div class="option-stack" id="cuisineOptions">
+    <button class="option-card" data-val="mexican"><div class="option-check"></div><div class="option-body"><div class="option-title">Mexican / Latin</div><div class="option-desc">Tacos, birria, pupusas, empanadas</div></div></button>
+    <button class="option-card" data-val="asian"><div class="option-check"></div><div class="option-body"><div class="option-title">Asian / Southeast Asian</div><div class="option-desc">Pho, bao, curries, noodles</div></div></button>
+    <button class="option-card" data-val="middle-eastern"><div class="option-check"></div><div class="option-body"><div class="option-title">Middle Eastern / Mediterranean</div><div class="option-desc">Kebabs, hummus, shawarma, falafel</div></div></button>
+    <button class="option-card" data-val="comfort"><div class="option-check"></div><div class="option-body"><div class="option-title">American / Comfort food</div><div class="option-desc">BBQ, fried chicken, mac and cheese</div></div></button>
+    <button class="option-card" data-val="baking"><div class="option-check"></div><div class="option-body"><div class="option-title">Baked goods / desserts</div><div class="option-desc">You might qualify for a Cottage Food permit too (easier)</div></div></button>
+    <button class="option-card" data-val="other"><div class="option-check"></div><div class="option-body"><div class="option-title">Something else</div><div class="option-desc">Tell us in step 5</div></div></button>
+  </div>
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" onclick="nextStep()">Continue</button>
+  </div>
+</div>
+
+<!-- Step 5: Menu preview -->
+<div class="step" data-step="5">
+  <div class="step-label">Step 5 of 6 — Sample menu</div>
+  <h2 class="step-q">Your three signature dishes?</h2>
+  <p class="step-help">You can edit these later. The county just needs a sample.</p>
+  <div class="field"><label>Dish 1</label><input type="text" id="pw-dish1" placeholder="e.g. Birria tacos with consomé" /></div>
+  <div class="field"><label>Dish 2</label><input type="text" id="pw-dish2" placeholder="e.g. Homemade pupusas" /></div>
+  <div class="field"><label>Dish 3</label><input type="text" id="pw-dish3" placeholder="e.g. Flan" /></div>
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" onclick="nextStep()">Continue</button>
+  </div>
+</div>
+
+<!-- Step 6: Schedule -->
+<div class="step" data-step="6">
+  <div class="step-label">Step 6 of 6 — Schedule</div>
+  <h2 class="step-q">When do you want to cook?</h2>
+  <p class="step-help" id="step6CapText">MEHKO caps you at 30 meals/day and 60/week. We'll track this for you.</p>
+  <div class="option-stack" id="scheduleOptions">
+    <button class="option-card" data-val="weekends"><div class="option-check"></div><div class="option-body"><div class="option-title">Weekends only</div><div class="option-desc">Fri–Sun. Side gig, low volume.</div></div></button>
+    <button class="option-card" data-val="3-4-days"><div class="option-check"></div><div class="option-body"><div class="option-title">3–4 nights/week</div><div class="option-desc">Most common. ~$2–3K/mo typical.</div></div></button>
+    <button class="option-card" data-val="daily"><div class="option-check"></div><div class="option-body"><div class="option-title">Daily</div><div class="option-desc">Full-time. Approaching the $100K/yr cap.</div></div></button>
+  </div>
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" id="step6CTA" onclick="advanceFromStep6()">Generate my application →</button>
+  </div>
+</div>
+
+<!-- Step 7: San Diego DEHQ details (optional, SD-only) -->
+<div class="step" data-step="7">
+  <div class="step-label">Step 7 — San Diego DEHQ details</div>
+  <h2 class="step-q">A few San Diego-specific questions.</h2>
+  <p class="step-help">DEHQ's SOP form asks for more detail than the statewide minimum. We've pre-filled sensible defaults — edit anything that's wrong. All fields are optional; leave blank to use our defaults.</p>
+
+  <div class="field">
+    <label>Business name (DBA), if different from kitchen name</label>
+    <input type="text" id="sd-dba" placeholder="Leave blank if same as kitchen name" />
+  </div>
+
+  <div class="field">
+    <label>Website or ordering page (optional)</label>
+    <input type="text" id="sd-website" placeholder="stoveside.co/k/your-kitchen" />
+  </div>
+
+  <div class="field">
+    <label>Typical daily hours (applied to every day you cook)</label>
+    <div style="display:flex; gap:8px; align-items:center; font-family:'DM Mono',monospace; font-size:13px;">
+      <input type="time" id="sd-hours-start" value="17:00" style="padding: 8px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--card);" />
+      <span style="color: var(--muted);">to</span>
+      <input type="time" id="sd-hours-end" value="21:00" style="padding: 8px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--card);" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Typical meals per cooking day</label>
+    <select id="sd-meals-per-day">
+      <option value="10">~10 meals/day (starter)</option>
+      <option value="15" selected>~15 meals/day (typical)</option>
+      <option value="20">~20 meals/day</option>
+      <option value="30">30 meals/day (at cap)</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Warewashing / dish sanitization</label>
+    <select id="sd-sanitizer">
+      <option value="chlorine-100" selected>Chlorine, 100 ppm (most common)</option>
+      <option value="quat-200">Quaternary ammonium, 200 ppm</option>
+      <option value="iodine-25">Iodine, 25 ppm</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Where will customers get their food?</label>
+    <select id="sd-pickup-location">
+      <option value="porch" selected>Front porch / doorstep pickup</option>
+      <option value="driveway">Driveway pickup</option>
+      <option value="kitchen-door">Kitchen door pickup</option>
+      <option value="delivery">I deliver directly to customers</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Wastewater / sewage</label>
+    <select id="sd-sewage">
+      <option value="public" selected>Public sewer system</option>
+      <option value="septic">Private septic system</option>
+    </select>
+  </div>
+
+  <div class="wizard-nav">
+    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+    <button class="btn-primary" onclick="finishWizard()">Generate my DEHQ packet →</button>
+  </div>
+</div>
+
+<!-- Done state -->
+<div class="step" data-step="done">
+  <div class="wizard-done">
+    <div class="wizard-done-emoji">🍳</div>
+    <h2>You're ready to submit.</h2>
+    <p id="wizardDoneSummary">Here's your custom submission packet.</p>
+  </div>
+
+  <div class="checklist-card">
+    <h3>Your application packet</h3>
+    <div class="check-row">
+      <div class="check-mark">✓</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Standard Operating Procedures</div>
+        <div class="check-row-meta">Auto-generated • 7 pages • Customized to your cuisine</div>
       </div>
     </div>
-
-    <!-- Step 2: Basics -->
-    <div class="step" data-step="2">
-      <div class="step-label">Step 2 of 6 — About you</div>
-      <h2 class="step-q">Tell us who's cooking.</h2>
-      <p class="step-help">This goes on your Stoveside profile and your permit application.</p>
-      <div class="field">
-        <label>Your name</label>
-        <input type="text" id="pw-name" placeholder="Shane Rutter" />
-      </div>
-      <div class="field">
-        <label>Kitchen name</label>
-        <input type="text" id="pw-kitchen" placeholder='e.g. "Grandma Rosa\'s" or "Shane\'s Tacos"' />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="pw-email" placeholder="shane@example.com" />
-      </div>
-      <div class="field">
-        <label>Phone</label>
-        <input type="tel" id="pw-phone" placeholder="(619) 555-0100" />
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-secondary" onclick="prevStep()">← Back</button>
-        <button class="btn-primary" onclick="nextStep()">Continue</button>
+    <div class="check-row">
+      <div class="check-mark">✓</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Sample menu document</div>
+        <div class="check-row-meta">Formatted for county review</div>
       </div>
     </div>
-
-    <!-- Step 3: Kitchen address + water -->
-    <div class="step" data-step="3">
-      <div class="step-label">Step 3 of 6 — Your kitchen</div>
-      <h2 class="step-q">Where will you cook?</h2>
-      <p class="step-help">Your MEHKO permit applies to one private residence.</p>
-      <div class="field">
-        <label>Home address</label>
-        <input type="text" id="pw-address" placeholder="3201 Adams Ave, San Diego" />
-      </div>
-      <div class="field">
-        <label>Water source</label>
-        <select id="pw-water">
-          <option value="municipal">Municipal water (city)</option>
-          <option value="well">Private well (extra lab test required)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Household members in home during cooking hours</label>
-        <select id="pw-household">
-          <option value="0">Just me</option>
-          <option value="1">1 other</option>
-          <option value="2">2 others</option>
-          <option value="3">3+ others</option>
-        </select>
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-secondary" onclick="prevStep()">← Back</button>
-        <button class="btn-primary" onclick="nextStep()">Continue</button>
+    <div class="check-row">
+      <div class="check-mark">✓</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Kitchen floor plan template</div>
+        <div class="check-row-meta">Fillable PDF</div>
       </div>
     </div>
-
-    <!-- Step 4: Food type -->
-    <div class="step" data-step="4">
-      <div class="step-label">Step 4 of 6 — What you'll cook</div>
-      <h2 class="step-q">What kind of food?</h2>
-      <p class="step-help">This shapes your Standard Operating Procedures doc.</p>
-      <div class="option-stack" id="cuisineOptions">
-        <button class="option-card" data-val="mexican"><div class="option-check"></div><div class="option-body"><div class="option-title">Mexican / Latin</div><div class="option-desc">Tacos, birria, pupusas, empanadas</div></div></button>
-        <button class="option-card" data-val="asian"><div class="option-check"></div><div class="option-body"><div class="option-title">Asian / Southeast Asian</div><div class="option-desc">Pho, bao, curries, noodles</div></div></button>
-        <button class="option-card" data-val="middle-eastern"><div class="option-check"></div><div class="option-body"><div class="option-title">Middle Eastern / Mediterranean</div><div class="option-desc">Kebabs, hummus, shawarma, falafel</div></div></button>
-        <button class="option-card" data-val="comfort"><div class="option-check"></div><div class="option-body"><div class="option-title">American / Comfort food</div><div class="option-desc">BBQ, fried chicken, mac and cheese</div></div></button>
-        <button class="option-card" data-val="baking"><div class="option-check"></div><div class="option-body"><div class="option-title">Baked goods / desserts</div><div class="option-desc">You might qualify for a Cottage Food permit too (easier)</div></div></button>
-        <button class="option-card" data-val="other"><div class="option-check"></div><div class="option-body"><div class="option-title">Something else</div><div class="option-desc">Tell us in step 5</div></div></button>
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-secondary" onclick="prevStep()">← Back</button>
-        <button class="btn-primary" onclick="nextStep()">Continue</button>
+    <div class="check-row">
+      <div class="check-mark pending">○</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Food Manager Certification</div>
+        <div class="check-row-meta">Required • ~$15 • ServSafe or equivalent • We'll link you</div>
       </div>
     </div>
-
-    <!-- Step 5: Menu preview -->
-    <div class="step" data-step="5">
-      <div class="step-label">Step 5 of 6 — Sample menu</div>
-      <h2 class="step-q">Your three signature dishes?</h2>
-      <p class="step-help">You can edit these later. The county just needs a sample.</p>
-      <div class="field"><label>Dish 1</label><input type="text" id="pw-dish1" placeholder="e.g. Birria tacos with consomé" /></div>
-      <div class="field"><label>Dish 2</label><input type="text" id="pw-dish2" placeholder="e.g. Homemade pupusas" /></div>
-      <div class="field"><label>Dish 3</label><input type="text" id="pw-dish3" placeholder="e.g. Flan" /></div>
-      <div class="wizard-nav">
-        <button class="btn-secondary" onclick="prevStep()">← Back</button>
-        <button class="btn-primary" onclick="nextStep()">Continue</button>
+    <div class="check-row">
+      <div class="check-mark pending">○</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Water quality test</div>
+        <div class="check-row-meta" id="waterMeta">Municipal — not required</div>
       </div>
     </div>
-
-    <!-- Step 6: Schedule -->
-    <div class="step" data-step="6">
-      <div class="step-label">Step 6 of 6 — Schedule</div>
-      <h2 class="step-q">When do you want to cook?</h2>
-      <p class="step-help">MEHKO caps you at 30 meals/day and 60/week. We'll track this for you.</p>
-      <div class="option-stack" id="scheduleOptions">
-        <button class="option-card" data-val="weekends"><div class="option-check"></div><div class="option-body"><div class="option-title">Weekends only</div><div class="option-desc">Fri–Sun. Side gig, low volume.</div></div></button>
-        <button class="option-card" data-val="3-4-days"><div class="option-check"></div><div class="option-body"><div class="option-title">3–4 nights/week</div><div class="option-desc">Most common. ~$2–3K/mo typical.</div></div></button>
-        <button class="option-card" data-val="daily"><div class="option-check"></div><div class="option-body"><div class="option-title">Daily</div><div class="option-desc">Full-time. Approaching the $100K/yr cap.</div></div></button>
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-secondary" onclick="prevStep()">← Back</button>
-        <button class="btn-primary" onclick="finishWizard()">Generate my application →</button>
+    <div class="check-row">
+      <div class="check-mark pending">○</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Home kitchen inspection</div>
+        <div class="check-row-meta">County will schedule after submission</div>
       </div>
     </div>
+  </div>
 
-    <!-- Done state -->
-    <div class="step" data-step="done">
-      <div class="wizard-done">
-        <div class="wizard-done-emoji">🍳</div>
-        <h2>You're ready to submit.</h2>
-        <p id="wizardDoneSummary">Here's your custom submission packet.</p>
+  <div class="checklist-card">
+    <h3>What happens next</h3>
+    <div class="check-row">
+      <div class="check-mark">1</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Submit your packet</div>
+        <div class="check-row-meta">We'll email the PDF to you + give you the San Diego County contact</div>
       </div>
-
-      <div class="checklist-card">
-        <h3>Your application packet</h3>
-        <div class="check-row">
-          <div class="check-mark">✓</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Standard Operating Procedures</div>
-            <div class="check-row-meta">Auto-generated • 7 pages • Customized to your cuisine</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark">✓</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Sample menu document</div>
-            <div class="check-row-meta">Formatted for county review</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark">✓</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Kitchen floor plan template</div>
-            <div class="check-row-meta">Fillable PDF</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark pending">○</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Food Manager Certification</div>
-            <div class="check-row-meta">Required • ~$15 • ServSafe or equivalent • We'll link you</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark pending">○</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Water quality test</div>
-            <div class="check-row-meta" id="waterMeta">Municipal — not required</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark pending">○</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Home kitchen inspection</div>
-            <div class="check-row-meta">County will schedule after submission</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="checklist-card">
-        <h3>What happens next</h3>
-        <div class="check-row">
-          <div class="check-mark">1</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Submit your packet</div>
-            <div class="check-row-meta">We'll email the PDF to you + give you the San Diego County contact</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark">2</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Schedule your inspection</div>
-            <div class="check-row-meta">Usually 2–4 weeks after submission</div>
-          </div>
-        </div>
-        <div class="check-row">
-          <div class="check-mark">3</div>
-          <div class="check-row-body">
-            <div class="check-row-title">Start cooking on Stoveside</div>
-            <div class="check-row-meta">Your kitchen goes live the day you're approved</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="spacer"></div>
-      <button class="btn-primary" onclick="downloadPacket()">📄 Download my submission packet (PDF)</button>
-      <div class="spacer-sm"></div>
-      <button class="btn-secondary" style="width:100%" onclick="enterDashboard()">Preview my dashboard →</button>
-      <div class="spacer-lg"></div>
     </div>
+    <div class="check-row">
+      <div class="check-mark">2</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Schedule your inspection</div>
+        <div class="check-row-meta">Usually 2–4 weeks after submission</div>
+      </div>
+    </div>
+    <div class="check-row">
+      <div class="check-mark">3</div>
+      <div class="check-row-body">
+        <div class="check-row-title">Start cooking on Stoveside</div>
+        <div class="check-row-meta">Your kitchen goes live the day you're approved</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <button class="btn-primary" id="downloadPacketBtn" onclick="downloadPacket()">📄 Download my submission packet (PDF)</button>
+  <div class="spacer-sm"></div>
+  <button class="btn-secondary" style="width:100%" onclick="enterDashboard()">Preview my dashboard →</button>
+  <div class="spacer-lg"></div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                       OPERATOR DASHBOARD PAGE                         -->
+
 <!-- ==================================================================== -->
+
 <div class="page" id="page-dashboard">
   <div class="container">
     <div class="dash-header">
@@ -1311,82 +1406,88 @@ hr.editorial::before {
       <p class="text-muted" id="dashStatusLine">Permit: <span style="color: var(--sage); font-weight:600;">● Approved</span> • San Diego County • Open tonight</p>
     </div>
 
-    <div class="dash-stats">
-      <div class="stat-tile">
-        <div class="stat-tile-label">Today</div>
-        <div class="stat-tile-val" id="statToday">12</div>
-        <div class="stat-tile-sub">of 30 meals</div>
-      </div>
-      <div class="stat-tile">
-        <div class="stat-tile-label">This Week</div>
-        <div class="stat-tile-val" id="statWeek">41</div>
-        <div class="stat-tile-sub">of 60 meals</div>
-      </div>
-      <div class="stat-tile">
-        <div class="stat-tile-label">Earnings YTD</div>
-        <div class="stat-tile-val" id="statYtd">$12.4k</div>
-        <div class="stat-tile-sub">of $100k cap</div>
-      </div>
-    </div>
+```
+<div class="dash-stats">
+  <div class="stat-tile">
+    <div class="stat-tile-label">Today</div>
+    <div class="stat-tile-val" id="statToday">12</div>
+    <div class="stat-tile-sub">of 30 meals</div>
+  </div>
+  <div class="stat-tile">
+    <div class="stat-tile-label">This Week</div>
+    <div class="stat-tile-val" id="statWeek">41</div>
+    <div class="stat-tile-sub">of 60 meals</div>
+  </div>
+  <div class="stat-tile">
+    <div class="stat-tile-label">Earnings YTD</div>
+    <div class="stat-tile-val" id="statYtd">$12.4k</div>
+    <div class="stat-tile-sub">of $100k cap</div>
+  </div>
+</div>
 
-    <div class="cap-meter">
-      <div class="cap-meter-header">
-        <div class="cap-meter-title">Weekly capacity</div>
-        <div class="cap-meter-count" id="capCount">41 / 60 meals</div>
-      </div>
-      <div class="cap-bar">
-        <div class="cap-fill warning" id="capFill" style="width: 68%"></div>
-      </div>
-      <div class="cap-sub">AB 626 caps MEHKO at 60 meals/week. You're 19 meals from max.</div>
-    </div>
+<div class="cap-meter">
+  <div class="cap-meter-header">
+    <div class="cap-meter-title">Weekly capacity</div>
+    <div class="cap-meter-count" id="capCount">41 / 60 meals</div>
+  </div>
+  <div class="cap-bar">
+    <div class="cap-fill warning" id="capFill" style="width: 68%"></div>
+  </div>
+  <div class="cap-sub">AB 626 caps MEHKO at 60 meals/week. You're 19 meals from max.</div>
+</div>
 
-    <div class="tab-bar">
-      <button class="tab active" data-tab="orders" onclick="switchDashTab('orders')">Orders</button>
-      <button class="tab" data-tab="menu" onclick="switchDashTab('menu')">Menu</button>
-      <button class="tab" data-tab="hours" onclick="switchDashTab('hours')">Hours</button>
-    </div>
+<div class="tab-bar">
+  <button class="tab active" data-tab="orders" onclick="switchDashTab('orders')">Orders</button>
+  <button class="tab" data-tab="menu" onclick="switchDashTab('menu')">Menu</button>
+  <button class="tab" data-tab="hours" onclick="switchDashTab('hours')">Hours</button>
+</div>
 
-    <div id="dashTabOrders">
-      <div class="feed-label">
-        <span>New & active</span>
-        <span id="activeCount">3 pending</span>
-      </div>
-      <div id="orderList"></div>
+<div id="dashTabOrders">
+  <div class="feed-label">
+    <span>New & active</span>
+    <span id="activeCount">3 pending</span>
+  </div>
+  <div id="orderList"></div>
 
-      <div class="feed-label">
-        <span>Completed today</span>
-      </div>
-      <div id="doneOrders"></div>
-    </div>
+  <div class="feed-label">
+    <span>Completed today</span>
+  </div>
+  <div id="doneOrders"></div>
+</div>
 
-    <div id="dashTabMenu" style="display:none;">
-      <div class="feed-label">
-        <span>Your menu</span>
-        <button class="btn-ghost" onclick="addMenuItem()">+ Add item</button>
-      </div>
-      <div class="menu-list" id="opMenuList"></div>
-    </div>
+<div id="dashTabMenu" style="display:none;">
+  <div class="feed-label">
+    <span>Your menu</span>
+    <button class="btn-ghost" onclick="addMenuItem()">+ Add item</button>
+  </div>
+  <div class="menu-list" id="opMenuList"></div>
+</div>
 
-    <div id="dashTabHours" style="display:none;">
-      <div class="feed-label"><span>This week's availability</span><span id="hoursSavedNote" style="color: var(--muted); font-size:12px;">—</span></div>
-      <p style="color: var(--muted); font-size: 14px; margin: 0 0 12px 0;">
-        Toggle the days you'll be open for pickup. Each day defaults to 6–9pm — tap Edit to change times.
-      </p>
-      <div id="hoursList"></div>
-      <div class="spacer"></div>
-      <button class="btn-primary" id="hoursSaveBtn" style="width:100%" onclick="saveAvailability()">Save this week's availability</button>
-      <p style="color: var(--muted); font-size: 12px; margin-top: 10px; text-align: center;">
-        MEHKO caps: 30 meals/day, 60/week. Changes apply to the next 7 days.
-      </p>
-    </div>
+<div id="dashTabHours" style="display:none;">
+  <div class="feed-label"><span>This week's availability</span><span id="hoursSavedNote" style="color: var(--muted); font-size:12px;">—</span></div>
+  <p style="color: var(--muted); font-size: 14px; margin: 0 0 12px 0;">
+    Toggle the days you'll be open for pickup. Each day defaults to 6–9pm — tap Edit to change times.
+  </p>
+  <div id="hoursList"></div>
+  <div class="spacer"></div>
+  <button class="btn-primary" id="hoursSaveBtn" style="width:100%" onclick="saveAvailability()">Save this week's availability</button>
+  <p style="color: var(--muted); font-size: 12px; margin-top: 10px; text-align: center;">
+    MEHKO caps: 30 meals/day, 60/week. Changes apply to the next 7 days.
+  </p>
+</div>
 
-    <div class="spacer-lg"></div>
+<div class="spacer-lg"></div>
+```
+
   </div>
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                       ORDERS (CONSUMER) PAGE                          -->
+
 <!-- ==================================================================== -->
+
 <div class="page" id="page-orders">
   <div class="container">
     <div class="hero-block">
@@ -1399,8 +1500,11 @@ hr.editorial::before {
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                          PROFILE PAGE                                 -->
+
 <!-- ==================================================================== -->
+
 <div class="page" id="page-profile">
   <div class="container">
     <!-- Contents populated by renderProfile() on navigation -->
@@ -1412,8 +1516,11 @@ hr.editorial::before {
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                          COOK DETAIL SHEET                            -->
+
 <!-- ==================================================================== -->
+
 <div class="modal-overlay" id="modalOverlay" onclick="closeSheet()"></div>
 <div class="sheet" id="cookSheet">
   <div class="sheet-handle"></div>
@@ -1423,36 +1530,42 @@ hr.editorial::before {
     <div class="sheet-by" id="sheetBy"></div>
     <div class="sheet-story" id="sheetStory"></div>
 
-    <div class="sheet-section">
-      <div class="sheet-label">Menu</div>
-      <div id="sheetMenu"></div>
-    </div>
+```
+<div class="sheet-section">
+  <div class="sheet-label">Menu</div>
+  <div id="sheetMenu"></div>
+</div>
 
-    <div class="sheet-section">
-      <div class="sheet-label">Pickup time</div>
-      <div class="pickup-options" id="sheetPickup"></div>
-    </div>
+<div class="sheet-section">
+  <div class="sheet-label">Pickup time</div>
+  <div class="pickup-options" id="sheetPickup"></div>
+</div>
 
-    <div class="sheet-section">
-      <div class="sheet-label">Kitchen info</div>
-      <div class="info-grid">
-        <div class="info-tile"><div class="info-tile-label">Permit</div><div class="info-tile-val" id="sheetPermit">MEHKO-SD-1204</div></div>
-        <div class="info-tile"><div class="info-tile-label">Inspected</div><div class="info-tile-val" id="sheetInspect">Feb 2026</div></div>
-        <div class="info-tile"><div class="info-tile-label">Pickup</div><div class="info-tile-val" id="sheetNbhd">North Park</div></div>
-        <div class="info-tile"><div class="info-tile-label">Payment</div><div class="info-tile-val">Cash / Venmo</div></div>
-      </div>
-    </div>
+<div class="sheet-section">
+  <div class="sheet-label">Kitchen info</div>
+  <div class="info-grid">
+    <div class="info-tile"><div class="info-tile-label">Permit</div><div class="info-tile-val" id="sheetPermit">MEHKO-SD-1204</div></div>
+    <div class="info-tile"><div class="info-tile-label">Inspected</div><div class="info-tile-val" id="sheetInspect">Feb 2026</div></div>
+    <div class="info-tile"><div class="info-tile-label">Pickup</div><div class="info-tile-val" id="sheetNbhd">North Park</div></div>
+    <div class="info-tile"><div class="info-tile-label">Payment</div><div class="info-tile-val">Cash / Venmo</div></div>
+  </div>
+</div>
 
-    <button class="btn-primary" id="placeOrderBtn" onclick="placeOrder()">Place order</button>
-    <div class="text-muted" style="text-align:center; margin-top:12px; font-size:12px;">
-      You'll pay the cook directly at pickup. No fees tonight.
-    </div>
+<button class="btn-primary" id="placeOrderBtn" onclick="placeOrder()">Place order</button>
+<div class="text-muted" style="text-align:center; margin-top:12px; font-size:12px;">
+  You'll pay the cook directly at pickup. No fees tonight.
+</div>
+```
+
   </div>
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                             CART BAR                                  -->
+
 <!-- ==================================================================== -->
+
 <div class="cart-bar" id="cartBar" onclick="reopenSheet()">
   <div class="cart-bar-left">
     <div class="cart-count" id="cartCount">0</div>
@@ -1465,8 +1578,11 @@ hr.editorial::before {
 </div>
 
 <!-- ==================================================================== -->
+
 <!--                          BOTTOM NAV                                   -->
+
 <!-- ==================================================================== -->
+
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" data-page="discover" onclick="navTo('discover')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1483,8 +1599,11 @@ hr.editorial::before {
 </nav>
 
 <!-- ==================================================================== -->
+
 <!--                          AUTH SHEET                                   -->
+
 <!-- ==================================================================== -->
+
 <div class="modal-overlay" id="authOverlay" onclick="closeAuthSheet()"></div>
 <div class="sheet" id="authSheet">
   <div class="sheet-handle"></div>
@@ -1495,29 +1614,33 @@ hr.editorial::before {
       We'll email you a magic link. No password needed.
     </p>
 
-    <div id="authForm">
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" />
-      </div>
-      <button class="btn-primary" id="authSendBtn" onclick="submitAuth()">Send magic link</button>
-      <div class="text-muted" style="text-align:center; margin-top:14px; font-size:12px;">
-        By continuing, you agree to our Terms &amp; Privacy.
-      </div>
-    </div>
+```
+<div id="authForm">
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" />
+  </div>
+  <button class="btn-primary" id="authSendBtn" onclick="submitAuth()">Send magic link</button>
+  <div class="text-muted" style="text-align:center; margin-top:14px; font-size:12px;">
+    By continuing, you agree to our Terms &amp; Privacy.
+  </div>
+</div>
 
-    <div id="authSent" style="display:none; text-align:center; padding: 14px 0 4px;">
-      <div style="font-size:48px; margin-bottom: 12px;">📬</div>
-      <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin-bottom: 8px;">Check your email</h3>
-      <p class="text-muted" style="font-size: 14px; margin-bottom: 18px;">
-        We sent a magic link to <strong id="authSentEmail"></strong>. Tap it to sign in.
-      </p>
-      <button class="btn-secondary" onclick="closeAuthSheet()" style="width:100%;">Got it</button>
-    </div>
+<div id="authSent" style="display:none; text-align:center; padding: 14px 0 4px;">
+  <div style="font-size:48px; margin-bottom: 12px;">📬</div>
+  <h3 style="font-family:'Fraunces',serif; font-size: 22px; margin-bottom: 8px;">Check your email</h3>
+  <p class="text-muted" style="font-size: 14px; margin-bottom: 18px;">
+    We sent a magic link to <strong id="authSentEmail"></strong>. Tap it to sign in.
+  </p>
+  <button class="btn-secondary" onclick="closeAuthSheet()" style="width:100%;">Got it</button>
+</div>
+```
+
   </div>
 </div>
 
 <!-- Toast -->
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2004,6 +2127,8 @@ const auth = {
     await db.loadOperatorKitchen();
     await db.loadMyOrders();
     updateAuthUI();
+    // If the user was mid-wizard when they signed in, pick up where they left off.
+    try { await restoreWizardAfterAuth(); } catch (e) { console.error('[restoreWizardAfterAuth]', e); }
   },
   async clearSession() {
     state.user = null; state.profile = null; state.myKitchen = null;
@@ -2349,8 +2474,13 @@ async function renderMyOrders() {
 }
 
 /* ---------- Permit wizard ---------- */
+function totalSteps() {
+  // San Diego applicants get an extra step 7 for DEHQ SOP fields.
+  return state.wizardData.county === 'san-diego' ? 7 : 6;
+}
+
 function renderStepTracker() {
-  const steps = 6;
+  const steps = totalSteps();
   const cur = state.wizardStep;
   document.getElementById('stepTracker').innerHTML = Array.from({length: steps}, (_, i) => {
     const n = i + 1;
@@ -2365,7 +2495,22 @@ function showStep(n) {
   if (el) el.classList.add('active');
   state.wizardStep = n;
   renderStepTracker();
+  updateStep6Chrome();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Step 6 label + CTA + cap copy depend on the selected county.
+function updateStep6Chrome() {
+  const isSD = state.wizardData.county === 'san-diego';
+  const cta = document.getElementById('step6CTA');
+  if (cta) cta.textContent = isSD ? 'Continue →' : 'Generate my application →';
+  const label = document.querySelector('.step[data-step="6"] .step-label');
+  if (label) label.textContent = isSD ? 'Step 6 of 7 — Schedule' : 'Step 6 of 6 — Schedule';
+  const capEl = document.getElementById('step6CapText');
+  if (capEl) {
+    const c = capsFor(state.wizardData.county);
+    capEl.textContent = `MEHKO caps you at ${c.perDay} meals/day and ${c.perWeek}/week. We'll track this for you.`;
+  }
 }
 
 async function nextStep() {
@@ -2404,38 +2549,163 @@ async function nextStep() {
   if (step < 6) showStep(step + 1);
 }
 
+// Wired to step 6's primary CTA. For San Diego, advance to step 7.
+// For other counties, finishWizard directly (step 6 IS the last step).
+function advanceFromStep6() {
+  const sel = document.querySelector('#scheduleOptions .option-card.selected');
+  state.wizardData.schedule = sel?.dataset.val;
+  if (!sel) { toast('Pick a schedule'); return; }
+  if (state.wizardData.county === 'san-diego') {
+    showStep(7);
+  } else {
+    finishWizard();
+  }
+}
+
+// Capture step 7 (SD-specific) fields into state.wizardData.sd
+function captureStep7() {
+  state.wizardData.sd = {
+    dba:          document.getElementById('sd-dba')?.value.trim() || '',
+    website:      document.getElementById('sd-website')?.value.trim() || '',
+    hoursStart:   document.getElementById('sd-hours-start')?.value || '17:00',
+    hoursEnd:     document.getElementById('sd-hours-end')?.value || '21:00',
+    mealsPerDay:  parseInt(document.getElementById('sd-meals-per-day')?.value || '15', 10),
+    sanitizer:    document.getElementById('sd-sanitizer')?.value || 'chlorine-100',
+    pickupLoc:    document.getElementById('sd-pickup-location')?.value || 'porch',
+    sewage:       document.getElementById('sd-sewage')?.value || 'public',
+  };
+}
+
 function prevStep() {
   if (state.wizardStep > 1) showStep(state.wizardStep - 1);
 }
 
 async function finishWizard() {
-  const sel = document.querySelector('#scheduleOptions .option-card.selected');
-  state.wizardData.schedule = sel?.dataset.val;
-  if (!sel) { toast('Pick a schedule'); return; }
+  // Step 6 must have a schedule selection (may already be set if we passed through advanceFromStep6).
+  if (!state.wizardData.schedule) {
+    const sel = document.querySelector('#scheduleOptions .option-card.selected');
+    state.wizardData.schedule = sel?.dataset.val;
+    if (!sel) { toast('Pick a schedule'); return; }
+  }
+  // If we're on the San Diego step 7, grab those fields now.
+  if (state.wizardStep === 7) captureStep7();
 
   // If Supabase is on, require auth before saving the final packet
   if (SUPABASE_ENABLED && !state.user) {
     // Save locally first so we don't lose progress, then prompt sign-in
     store.set('ss_permit_app', JSON.stringify(state.wizardData));
+    // Flag so restoreWizardAfterAuth knows to complete the flow after sign-in
+    store.set('ss_permit_pending_finish', '1');
     openAuthSheet('Sign in to save your application');
     return;
   }
 
   await db.savePermitApp(state.wizardData);
+  renderWizardDone();
+  showStep('done');
+}
 
+// Paints the done-step DOM from current state.wizardData. Safe to call
+// from finishWizard or from post-auth restore.
+function renderWizardDone() {
+  const isSD = state.wizardData.county === 'san-diego';
   const summary = state.wizardData.kitchen
-    ? `${state.wizardData.kitchen} in ${state.wizardData.county === 'san-diego' ? 'San Diego' : 'your county'} — let's get you permitted.`
-    : "Here's your custom submission packet.";
-  document.getElementById('wizardDoneSummary').textContent = summary;
+    ? (isSD
+        ? `${state.wizardData.kitchen} in San Diego — your DEHQ SOP is ready.`
+        : `${state.wizardData.kitchen} in your county — let's get you permitted.`)
+    : (isSD
+        ? 'Your San Diego DEHQ SOP is ready to download.'
+        : "Here's your custom submission packet.");
+  const el = document.getElementById('wizardDoneSummary');
+  if (el) el.textContent = summary;
+
+  const btn = document.getElementById('downloadPacketBtn');
+  if (btn) btn.textContent = isSD
+    ? '📄 Download my DEHQ SOP (PDF)'
+    : '📄 Download my submission packet (PDF)';
 
   const waterMeta = document.getElementById('waterMeta');
-  if (state.wizardData.water === 'well') {
-    waterMeta.textContent = 'Well water — lab test required (E. coli, coliform, nitrates). ~$45.';
-  } else {
-    waterMeta.textContent = 'Municipal — not required ✓';
+  if (waterMeta) {
+    if (state.wizardData.water === 'well') {
+      waterMeta.textContent = 'Well water — lab test required (E. coli, coliform, nitrates). ~$45.';
+    } else {
+      waterMeta.textContent = 'Municipal — not required ✓';
+    }
+  }
+}
+
+// Called from auth.setSession after a successful sign-in. If the user was
+// mid-wizard and hit the sign-in gate, restore their answers, save the row
+// to Supabase (now that we have an auth.uid), and jump them to the done step.
+async function restoreWizardAfterAuth() {
+  const pending = store.get('ss_permit_pending_finish');
+  const raw = store.get('ss_permit_app');
+  if (!raw) return;
+  let saved;
+  try { saved = JSON.parse(raw); } catch { store.remove('ss_permit_app'); return; }
+  if (!saved || typeof saved !== 'object') { store.remove('ss_permit_app'); return; }
+
+  // Restore state
+  state.wizardData = { ...state.wizardData, ...saved };
+
+  // Repopulate the form inputs so the user can still go Back and edit if they want
+  const setIfPresent = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  setIfPresent('pw-name',    saved.name);
+  setIfPresent('pw-kitchen', saved.kitchen);
+  setIfPresent('pw-email',   saved.email);
+  setIfPresent('pw-phone',   saved.phone);
+  setIfPresent('pw-address', saved.address);
+  setIfPresent('pw-water',   saved.water);
+  setIfPresent('pw-household', saved.household);
+  setIfPresent('pw-dish1',   saved.dishes?.[0]);
+  setIfPresent('pw-dish2',   saved.dishes?.[1]);
+  setIfPresent('pw-dish3',   saved.dishes?.[2]);
+
+  // SD step 7 fields (may not exist in DOM if user wasn't on SD flow)
+  if (saved.sd) {
+    setIfPresent('sd-dba',             saved.sd.dba);
+    setIfPresent('sd-website',         saved.sd.website);
+    setIfPresent('sd-hours-start',     saved.sd.hoursStart);
+    setIfPresent('sd-hours-end',       saved.sd.hoursEnd);
+    setIfPresent('sd-meals-per-day',   saved.sd.mealsPerDay);
+    setIfPresent('sd-sanitizer',       saved.sd.sanitizer);
+    setIfPresent('sd-pickup-location', saved.sd.pickupLoc);
+    setIfPresent('sd-sewage',          saved.sd.sewage);
   }
 
-  showStep('done');
+  // Re-select option-cards for step 1 (county), step 4 (cuisine), step 6 (schedule)
+  const reselect = (container, val) => {
+    if (!val) return;
+    const cards = document.querySelectorAll(`${container} .option-card`);
+    cards.forEach(c => c.classList.remove('selected'));
+    const hit = document.querySelector(`${container} .option-card[data-val="${val}"]`);
+    if (hit) hit.classList.add('selected');
+  };
+  reselect('#countyOptions',   saved.county);
+  reselect('#cuisineOptions',  saved.cuisine);
+  reselect('#scheduleOptions', saved.schedule);
+
+  // If they had completed all steps and we were waiting on auth only to save+finish,
+  // push through to the done state. Otherwise just leave them where they left off.
+  if (pending === '1' && saved.schedule) {
+    // Make sure we're actually on the permit page
+    if (state.role !== 'new-cook') {
+      state.role = 'new-cook';
+      store.set('ss_role', 'new-cook');
+      applyRole(); // this routes to #page-permit
+    }
+    try {
+      await db.savePermitApp(state.wizardData);
+    } catch (e) { console.error('[restore savePermitApp]', e); }
+    renderWizardDone();
+    showStep('done');
+    toast('Signed in — your packet is ready 📄');
+  }
+
+  // One-shot: clear the pending flag and the cached draft. The permit_applications
+  // row in Supabase is now the source of truth.
+  store.remove('ss_permit_pending_finish');
+  store.remove('ss_permit_app');
 }
 
 async function downloadPacket() {
@@ -2445,8 +2715,13 @@ async function downloadPacket() {
   }
   try {
     await db.submitPermitApp();
-    await generatePacketPDF(state.wizardData);
-    toast('Packet downloaded 📄');
+    if (state.wizardData.county === 'san-diego') {
+      await generateSanDiegoDEHQSOP(state.wizardData);
+      toast('DEHQ SOP downloaded 📄');
+    } else {
+      await generatePacketPDF(state.wizardData);
+      toast('Packet downloaded 📄');
+    }
   } catch (err) {
     console.error('[downloadPacket]', err);
     toast('Could not generate PDF — please try again');
@@ -2484,6 +2759,25 @@ const SCHEDULE_LABELS = {
   'daily':     'Daily operation',
 };
 
+// MEHKO operational caps by county. San Diego raised its weekly meal cap to 90
+// (Rev 7/31/2025 ordinance). All other counties default to the AB 626 baseline
+// of 60/week. Annual gross is $100,000 statewide.
+const COUNTY_CAPS = {
+  'san-diego':   { perDay: 30, perWeek: 90, annual: 100000 },
+  'los-angeles': { perDay: 30, perWeek: 60, annual: 100000 },
+  'riverside':   { perDay: 30, perWeek: 60, annual: 100000 },
+  'alameda':     { perDay: 30, perWeek: 60, annual: 100000 },
+  'santa-clara': { perDay: 30, perWeek: 60, annual: 100000 },
+  'other':       { perDay: 30, perWeek: 60, annual: 100000 },
+};
+function capsFor(countyKey) {
+  return COUNTY_CAPS[countyKey] || COUNTY_CAPS.other;
+}
+function formatCapsSentence(countyKey) {
+  const c = capsFor(countyKey);
+  return `no more than ${c.perDay} meals per day, no more than ${c.perWeek} meals per calendar week, and no more than $${c.annual.toLocaleString()} in annual gross revenue`;
+}
+
 function buildCoverLetter(d) {
   const countyKey = d.county || 'san-diego';
   const county    = COUNTY_LABELS[countyKey] || 'Your County';
@@ -2506,7 +2800,7 @@ To Whom It May Concern,
 
 My name is ${cook} and I am applying for a Microenterprise Home Kitchen Operation (MEHKO) permit in ${county} under California Health and Safety Code Section 114367 (AB 626). This submission includes my Standard Operating Procedures, proposed menu, operator information, and operating schedule.
 
-My home kitchen, operating under the name "${kitchen}," will prepare and sell food directly to consumers from my private residence at ${d.address || '[address]'}. I understand and will comply with all MEHKO operational limits: no more than 30 meals per day, no more than 60 meals per calendar week, and no more than $100,000 in annual gross revenue. I will handle all food preparation personally and will only sell directly to end consumers.
+My home kitchen, operating under the name "${kitchen}," will prepare and sell food directly to consumers from my private residence at ${d.address || '[address]'}. I understand and will comply with all MEHKO operational limits: ${formatCapsSentence(countyKey)}. I will handle all food preparation personally and will only sell directly to end consumers.
 
 I have completed (or will complete prior to operation) a Food Protection Manager Certification from an ANSI-accredited program, and I confirm the water source at my residence is ${waterLine}.
 
@@ -2659,7 +2953,7 @@ async function generatePacketPDF(d) {
   p1.drawText('AB 626 COMPLIANCE ACKNOWLEDGEMENT', {
     x: MARGIN_X + 14, y: 120, size: 9, font: fontBold, color: CORAL,
   });
-  drawWrapped(p1, 'The applicant acknowledges the MEHKO operational limits: 30 meals per day, 60 meals per calendar week, and $100,000 in annual gross revenue. Direct-to-consumer sales only.', {
+  drawWrapped(p1, `The applicant acknowledges the MEHKO operational limits: ${capsFor(countyKey).perDay} meals per day, ${capsFor(countyKey).perWeek} meals per calendar week, and $${capsFor(countyKey).annual.toLocaleString()} in annual gross revenue. Direct-to-consumer sales only.`, {
     x: MARGIN_X + 14, y: 104, font: fontRegular, size: 9, color: INK, lineHeight: 12, maxWidth: MAX_W - 28,
   });
 
@@ -2739,7 +3033,7 @@ async function generatePacketPDF(d) {
       : `The residence is supplied by a municipal potable water system that meets California Safe Drinking Water Act standards. No supplemental treatment is used in food preparation.`
   );
   section('7. Operational Limits',
-    `The operator acknowledges and will comply with the AB 626 operational limits: no more than 30 meals per day, no more than 60 meals per calendar week, and no more than $100,000 in annual gross revenue. A daily sales log is maintained for compliance verification.`
+    `The operator acknowledges and will comply with the applicable MEHKO operational limits: ${formatCapsSentence(countyKey)}. A daily sales log is maintained for compliance verification.`
   );
   drawFooter(p3, 3, 4);
 
@@ -2817,6 +3111,375 @@ async function generatePacketPDF(d) {
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'mehko-packet';
   const filename = `stoveside-${safeName}-${countyKey}.pdf`;
 
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ---------- San Diego DEHQ MEHKO SOP generator ----------
+ * Produces a submission-ready document structured to match the field sections
+ * of the San Diego DEHQ MEHKO SOP form (mehkosop.pdf, Rev 7/31/2025).
+ * The output mirrors DEHQ's section order so an intake reviewer can map each
+ * of the applicant's answers to the corresponding form section, and the
+ * applicant can attach this document alongside the DEHQ fillable PDF.
+ */
+const SD_SANITIZERS = {
+  'chlorine-100': 'Chlorine, 100 ppm',
+  'quat-200':     'Quaternary ammonium, 200 ppm',
+  'iodine-25':    'Iodine, 25 ppm',
+};
+const SD_PICKUP_DESC = {
+  'porch':        'Customer pickup at front porch / doorstep.',
+  'driveway':     'Customer pickup at driveway.',
+  'kitchen-door': 'Customer pickup at side / kitchen door.',
+  'delivery':     'Operator-delivered directly to customer, in-person only.',
+};
+const SD_ACKNOWLEDGEMENTS = [
+  'I will obtain and maintain a Health Permit from DEHQ and have it available upon request.',
+  'I will maintain an approved copy of this operational procedure on site at all times. Any changes to menu, equipment, or procedures require prior DEHQ approval.',
+  'My MEHKO operation is limited to my private home, where food will be stored, handled, prepared, and served.',
+  'I will have no more than one full-time employee, not including family or household members.',
+  'All food served will be prepared, cooked, and served or delivered on the same day.',
+  'I will not engage in food processes that require a HACCP plan (smoking, curing, reduced oxygen packaging, canning, fermenting, sous vide).',
+  'I will not produce or sell raw milk products, raw oysters, or manufacture/package milk products (cheese, ice cream, yogurt, sour cream, butter).',
+  'Children and animals will be kept outside of the kitchen and dining areas during food preparation and service. Service animals are permitted in dining areas.',
+  'I will comply with the MEHKO meal caps: no more than 30 individual meals per day and no more than 90 individual meals per calendar week in San Diego County.',
+  'I will comply with the MEHKO gross revenue cap of $100,000 annually, as adjusted for CPI. I will maintain sales records for verification.',
+  'Food will only be sold directly to consumers, not to wholesalers, caterers, or retailers. I will not act as a caterer or operate as a Cottage Food Operation.',
+  'I am prohibited from outdoor advertising displays at my residence and will comply with applicable noise ordinances.',
+  'I will keep all MEHKO areas clean, sanitary, in good repair, and free of vermin (cockroaches, rodents, flies) at all times.',
+  'I understand the MEHKO is subject to one routine inspection per year plus additional inspections on complaint or foodborne illness notification.',
+  'I will not serve alcohol or allow alcohol to be consumed on the MEHKO premises without the appropriate ABC license.',
+  'My advertisements will include DEHQ as the permit issuer, my permit number, and the statement "Made in a Home Kitchen." I will not use the word "catering" in any advertising.',
+  'If any food employee or household resident experiences acute gastrointestinal illness or is diagnosed with a transmissible illness, I will notify DEHQ for guidance before resuming operations.',
+  'Food handlers experiencing sneezing, coughing, or runny nose will not work with exposed food, clean equipment, utensils, or linens.',
+  'I and any food handlers will wash hands before food preparation, after restroom use, after touching body parts or animals, and after any other contaminating activity. Restroom handwashing sinks will be supplied with warm water, soap, and single-use paper towels.',
+  'Food handlers will keep fingernails trimmed, filed, and clean; will wear hair restraints during food preparation; and will wear clean outer clothing.',
+  'Food handlers with open or draining wounds will not handle food, food-related items, clean equipment, utensils, or linens unless the wound is fully covered.',
+  'I will verify raw-animal-origin foods are cooked to their minimum required internal temperatures using a calibrated probe thermometer.',
+  'All potentially hazardous food will be hot-held at or above 135°F or cold-held at or below 41°F.',
+  'All food will be purchased from approved sources (licensed county, state, or federal suppliers), properly labeled, and stored to prevent contamination.',
+  'Food orders and payments may be accepted via internet, mail, or phone. All food will be delivered directly (in person) to the customer. Sales records will be available for inspection upon request.',
+  'In the event of water outage or failed water test results (private well only), the MEHKO will immediately cease all food preparation and service until water is restored or retested to acceptable levels.',
+  'In the event of septic failure or plumbing blockage/backup, the MEHKO will immediately cease food preparation and service until repairs are completed and all affected areas are cleaned and sanitized.',
+  'Fats, oils, and greases will not be disposed of in drains or sewer. I will dispose of them in sealed containers with household waste.',
+  'As the MEHKO owner I hold a valid ANSI-approved Food Safety Manager Certification. Any other food handlers will obtain a San Diego County approved food handler card within 10 days of starting work.',
+  'I will immediately discontinue operation if any of the following occur: loss of hot or cold running water, plumbing or sewage back-up, pest infestation, loss of electricity, loss of toilet or handwashing facilities, lapse of health permit, insufficient refrigeration, loss of food-contact sanitizer, loss of potable water, fire or fire hazard, or any imminent health hazard.',
+];
+
+function _fmtHHMM12(hhmm) {
+  if (!hhmm) return '';
+  const [h, m] = hhmm.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = ((h + 11) % 12) + 1;
+  return m === 0 ? `${h12}:00 ${period}` : `${h12}:${String(m).padStart(2,'0')} ${period}`;
+}
+
+function _scheduleDays(scheduleKey) {
+  // Which days of the week the operator intends to be open.
+  if (scheduleKey === 'weekends') return ['Fri', 'Sat', 'Sun'];
+  if (scheduleKey === '3-4-days') return ['Thu', 'Fri', 'Sat', 'Sun'];
+  if (scheduleKey === 'daily')    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return [];
+}
+
+async function generateSanDiegoDEHQSOP(d) {
+  const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+
+  const sd = d.sd || {};
+  const openDays  = _scheduleDays(d.schedule);
+  const hoursStr  = `${_fmtHHMM12(sd.hoursStart || '17:00')}–${_fmtHHMM12(sd.hoursEnd || '21:00')}`;
+  const mealsPerDay = sd.mealsPerDay || 15;
+  const sanitizer = SD_SANITIZERS[sd.sanitizer || 'chlorine-100'];
+  const pickupDesc = SD_PICKUP_DESC[sd.pickupLoc || 'porch'];
+  const isDelivery = (sd.pickupLoc || 'porch') === 'delivery';
+  const sewageType = sd.sewage === 'septic' ? 'Private septic system' : 'Public sewer system';
+  const waterType  = d.water === 'well' ? 'Private well (full-panel potability testing performed by state-certified lab; results attached)' : 'Public water system (municipal)';
+  const dba        = sd.dba && sd.dba !== d.kitchen ? sd.dba : (d.kitchen || '');
+  const today      = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const pdfDoc = await PDFDocument.create();
+  pdfDoc.setTitle(`${d.kitchen || 'MEHKO Applicant'} — DEHQ MEHKO SOP`);
+  pdfDoc.setAuthor('Stoveside');
+  pdfDoc.setSubject('San Diego DEHQ MEHKO Standard Operating Procedures');
+  pdfDoc.setCreator('Stoveside (stoveside.co)');
+  pdfDoc.setCreationDate(new Date());
+
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold    = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontItalic  = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+
+  const CORAL = rgb(1, 107 / 255, 74 / 255);
+  const INK   = rgb(26 / 255, 18 / 255, 8 / 255);
+  const MUTED = rgb(0.42, 0.35, 0.28);
+  const RULE  = rgb(0.85, 0.82, 0.75);
+
+  const PAGE_W = 612, PAGE_H = 792, MARGIN_X = 54;
+  const MAX_W = PAGE_W - MARGIN_X * 2;
+  const BODY_SIZE = 10.5;
+  const BODY_LH = 13.5;
+
+  function wrapLines(text, font, size, maxWidth) {
+    const out = [];
+    const paragraphs = String(text).split(/\n/);
+    for (const para of paragraphs) {
+      if (!para.trim()) { out.push(''); continue; }
+      const words = para.split(/\s+/);
+      let cur = '';
+      for (const word of words) {
+        const trial = cur ? cur + ' ' + word : word;
+        if (font.widthOfTextAtSize(trial, size) > maxWidth && cur) {
+          out.push(cur); cur = word;
+        } else cur = trial;
+      }
+      if (cur) out.push(cur);
+    }
+    return out;
+  }
+
+  let page, y;
+  function newPage() {
+    page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+    page.drawText('SAN DIEGO COUNTY · MEHKO STANDARD OPERATING PROCEDURES', {
+      x: MARGIN_X, y: PAGE_H - 44, size: 8, font: fontBold, color: CORAL,
+    });
+    page.drawText(`${d.kitchen || 'Applicant'} · ${today}`, {
+      x: MARGIN_X, y: PAGE_H - 58, size: 9, font: fontItalic, color: MUTED,
+    });
+    page.drawLine({
+      start: { x: MARGIN_X, y: PAGE_H - 66 },
+      end:   { x: PAGE_W - MARGIN_X, y: PAGE_H - 66 },
+      thickness: 0.5, color: RULE,
+    });
+    y = PAGE_H - 90;
+  }
+  function ensureSpace(needed) {
+    if (y - needed < 70) {
+      drawFooter();
+      newPage();
+    }
+  }
+  function drawFooter() {
+    page.drawLine({ start: { x: MARGIN_X, y: 48 }, end: { x: PAGE_W - MARGIN_X, y: 48 }, thickness: 0.5, color: RULE });
+    page.drawText('Prepared with Stoveside · stoveside.co · Accompanies DEHQ MEHKO SOP form submission', {
+      x: MARGIN_X, y: 34, size: 8, font: fontRegular, color: MUTED,
+    });
+  }
+  function drawText(text, opts = {}) {
+    const { size = BODY_SIZE, font = fontRegular, color = INK, indent = 0, lineHeight = BODY_LH } = opts;
+    const lines = wrapLines(text, font, size, MAX_W - indent);
+    ensureSpace(lines.length * lineHeight + 4);
+    for (const line of lines) {
+      page.drawText(line, { x: MARGIN_X + indent, y, size, font, color });
+      y -= lineHeight;
+    }
+    y -= 2;
+  }
+  function drawSectionHeader(n, title) {
+    ensureSpace(36);
+    y -= 6;
+    page.drawText(`SECTION ${n}`, { x: MARGIN_X, y, size: 8, font: fontBold, color: CORAL });
+    y -= 14;
+    page.drawText(title, { x: MARGIN_X, y, size: 14, font: fontBold, color: INK });
+    y -= 18;
+  }
+  function drawField(label, value) {
+    ensureSpace(28);
+    page.drawText(label.toUpperCase(), { x: MARGIN_X, y, size: 7.5, font: fontBold, color: MUTED });
+    y -= 11;
+    const lines = wrapLines(value || '—', fontRegular, BODY_SIZE, MAX_W);
+    for (const line of lines) {
+      page.drawText(line, { x: MARGIN_X, y, size: BODY_SIZE, font: fontRegular, color: INK });
+      y -= BODY_LH;
+    }
+    y -= 4;
+  }
+
+  // ====== PAGE 1 — COVER + OWNER INFO ======
+  newPage();
+  y = PAGE_H - 110;
+  page.drawText('Microenterprise Home Kitchen', { x: MARGIN_X, y, size: 26, font: fontBold, color: INK });
+  y -= 30;
+  page.drawText('Operation — Standard Operating', { x: MARGIN_X, y, size: 26, font: fontBold, color: INK });
+  y -= 30;
+  page.drawText('Procedures (MEHKO SOP)', { x: MARGIN_X, y, size: 26, font: fontBold, color: CORAL });
+  y -= 28;
+  page.drawText('San Diego County DEHQ submission', { x: MARGIN_X, y, size: 13, font: fontItalic, color: MUTED });
+  y -= 26;
+  page.drawLine({ start: { x: MARGIN_X, y }, end: { x: PAGE_W - MARGIN_X, y }, thickness: 0.5, color: RULE });
+  y -= 24;
+
+  drawSectionHeader(1, 'MEHKO Owner Information');
+  drawField('Name of Business (DBA)', dba);
+  drawField('Owner\u2019s Name', d.name || '—');
+  drawField('Phone Number', d.phone || '—');
+  drawField('Owner\u2019s Address (residence / MEHKO location)', d.address || '—');
+  drawField('Email', d.email || '—');
+  drawField('Website', sd.website || '(none)');
+  drawField('Food Employees', 'None. Owner is the sole food handler. No additional employees planned at this time.');
+
+  // ====== PROPOSED HOURS OF OPERATION ======
+  drawSectionHeader(2, 'Proposed Hours of Operation');
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const daysLine = dayNames.map(n => {
+    const open = openDays.includes(n);
+    return `${n}: ${open ? hoursStr : 'Closed'}`;
+  }).join('   ');
+  drawText(daysLine, { size: 10 });
+  drawField('Proposed number of meals per cooking day', `Up to ${mealsPerDay} meals/day on operating days (not to exceed the DEHQ 30/day ceiling).`);
+  drawField('Weekly meal tracking', 'A daily meal log is maintained; cumulative weekly totals are reviewed before each cooking day to ensure the 90 meals/week ceiling is not exceeded. Sales records retained for DEHQ inspection.');
+  drawField('How food will be advertised',
+    sd.website
+      ? `Internet — listings at ${sd.website} and on stoveside.co. All advertisements will include DEHQ as the permit issuer, the permit number once issued, and the statement "Made in a Home Kitchen."`
+      : 'Internet — listings on stoveside.co. All advertisements will include DEHQ as the permit issuer, the permit number once issued, and the statement "Made in a Home Kitchen."'
+  );
+
+  // ====== GENERAL REQUIREMENTS ACKNOWLEDGEMENTS ======
+  drawSectionHeader(3, 'General Requirements — Acknowledgements');
+  drawText('The applicant has read, understood, and hereby affirms each of the following operational requirements. Initials shall be affixed on the official DEHQ SOP form; the statements below mirror the applicant\u2019s commitments:', { size: 10, color: MUTED });
+  y -= 2;
+  SD_ACKNOWLEDGEMENTS.forEach((stmt, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    ensureSpace(BODY_LH * 3);
+    page.drawText(n, { x: MARGIN_X, y, size: 9, font: fontBold, color: CORAL });
+    const lines = wrapLines(stmt, fontRegular, BODY_SIZE, MAX_W - 28);
+    let yy = y;
+    for (const line of lines) {
+      page.drawText(line, { x: MARGIN_X + 28, y: yy, size: BODY_SIZE, font: fontRegular, color: INK });
+      yy -= BODY_LH;
+    }
+    y = yy - 4;
+  });
+
+  // ====== WAREWASHING ======
+  drawSectionHeader(4, 'Warewashing');
+  drawField('Cleaning & sanitizing method', 'Three-step process using the kitchen\u2019s utility sink or dishwasher/sink combination: wash in hot soapy water, rinse in clean hot water, then sanitize using the sanitizer noted below. All multi-use utensils and equipment air-dry on a clean drying rack. Cutting boards, knives, and prep surfaces are sanitized between handling raw proteins and ready-to-eat foods.');
+  drawField('Sanitizer used', sanitizer);
+  drawField('How sanitizer concentration is tested', 'Commercial test strips appropriate to the sanitizer in use, kept in the kitchen and checked at the start of each cooking session and any time the sanitizer solution is remade.');
+
+  // ====== FOOD SERVICE / DELIVERY ======
+  drawSectionHeader(5, 'Food Service & Delivery');
+  drawField('Service locations on premises', 'Food is packaged in the kitchen and handed to customers at the pickup location described below. No dining is offered at the MEHKO residence.');
+  drawField('Storage locations', 'Dry goods: pantry and kitchen cabinets, in sealed containers, off the floor. Cold food: primary refrigerator in the kitchen. Cookware, utensils, and linens: kitchen drawers, cabinets, and a dedicated equipment shelf. A separate storage area is used for MEHKO inventory to avoid co-mingling with household food.');
+  drawField('Customer pickup', `Yes. ${pickupDesc}`);
+  drawField('Operator delivery',
+    isDelivery
+      ? 'Yes. The operator personally delivers food directly to the customer, in person only, within 30 minutes of preparation. No third-party services, US Mail, UPS, or FedEx are used.'
+      : 'Not offered at this time. All food is picked up directly by the customer.'
+  );
+  if (isDelivery) {
+    drawField('Maximum delivery distance & time', '5-mile radius; under 30 minutes door-to-door in all cases.');
+    drawField('Hot/cold holding during transport', 'Hot foods held in insulated thermal bags with pre-heated hot packs (maintained at or above 135°F). Cold foods held in insulated cooler bags with ice packs (maintained at or below 41°F). Probe thermometer checks prior to departure.');
+    drawField('Packaging for transport', 'Food is packaged in food-grade, single-use containers with tamper-evident lids. Each order is sealed with a dated label showing preparation time.');
+  }
+
+  // ====== POTABLE WATER ======
+  drawSectionHeader(6, 'Potable Water Source');
+  drawField('Water source', waterType);
+  if (d.water === 'well') {
+    drawField('Testing', 'Initial full-panel test (total coliform + inorganic chemistry / metals / nitrates) completed by a state-certified lab. Results demonstrate absence of coliform and all constituents at or below maximum contaminant levels. Lab report attached to this packet. Annual renewal testing (total coliform) will be performed prior to each permit renewal.');
+  }
+
+  // ====== WASTEWATER / REFUSE ======
+  drawSectionHeader(7, 'Wastewater & Refuse');
+  drawField('Wastewater disposal', sewageType);
+  if (sd.sewage === 'septic') {
+    drawField('Septic sizing', 'The existing septic system is sized for the residence\u2019s normal household wastewater flow. The MEHKO is not expected to materially increase wastewater volume beyond normal household use. If any modifications become necessary, DEHQ Land & Water Quality (858-565-5173) will be contacted prior to changes.');
+  }
+  drawField('Refuse storage on premises', 'Refuse is stored in sealed, lidded containers in the residence\u2019s standard trash area outside the kitchen. Refuse is removed from food-prep areas at the end of each cooking session.');
+  drawField('Refuse pickup frequency', 'Weekly municipal waste and recycling pickup at the curbside.');
+  drawField('Fats, oils & greases', 'Fats, oils, and greases are allowed to cool and solidify, then placed in sealed disposable containers with household solid waste. None are disposed of in drains or sewer.');
+
+  // ====== SAFETY ======
+  drawSectionHeader(8, 'Safety');
+  drawField('Ventilation', 'Existing range hood exhaust above the primary cooktop, supplemented by operable screened windows in the kitchen to remove gases, odors, steam, heat, vapors, and smoke.');
+  drawField('Fire extinguisher', 'At minimum one 10-BC-rated (or higher) fire extinguisher mounted within the kitchen on an accessible wall, within 30 feet of the primary cooktop. Annually inspected.');
+
+  // ====== TRAINING / LICENSING ======
+  drawSectionHeader(9, 'Training & Licensing');
+  drawField('Food Safety Manager Certification', 'The owner holds a valid ANSI-approved Food Safety Manager Certification, submitted as part of this application packet. Renewal before expiration (every 5 years).');
+  drawField('Food Handler Cards', 'No additional food handlers are planned. If any person other than the owner is engaged in preparation, storage, or service, that individual will obtain a San Diego County approved Food Handler Card within 10 days of starting.');
+
+  // ====== PROPOSED MENU ======
+  drawSectionHeader(10, 'Proposed Menu');
+  drawField('Menu category', CUISINE_LABELS[d.cuisine] || '—');
+  const dishes = Array.isArray(d.dishes) ? d.dishes.filter(Boolean) : [];
+  if (dishes.length) {
+    dishes.forEach((dish, i) => {
+      drawField(`Sample dish ${i + 1}`, dish);
+    });
+  }
+  drawText('The operator reserves the right to add, remove, or modify menu items subject to the preparation and safety procedures described in this document. Seasonal menu variations follow the same protocols. A current menu is maintained on file and on the Stoveside storefront.', { color: MUTED });
+
+  // ====== OBLIGATION TO CLOSE ======
+  drawSectionHeader(11, 'Obligation to Close');
+  drawText('The MEHKO will immediately discontinue operation and close for public safety if any of the following conditions exist: loss of hot (minimum 100°F) or cold running water, plumbing backup or sewage overflow, cockroach/rodent/fly infestation, loss of electricity, loss of functioning toilet facilities, loss of functioning employee handwashing facilities, lapse of a valid health permit, insufficient refrigeration, loss of food-contact sanitizer, loss of potable water, fire or fire hazard, or any condition that poses an imminent health hazard to the public.');
+
+  // ====== ACKNOWLEDGEMENT + SIGNATURE ======
+  drawSectionHeader(12, 'Acknowledgement');
+  drawText('I understand and agree that any changes to my Standard Operating Procedures, including the menu, require prior approval from DEHQ. I understand that approval to operate this MEHKO is based on my adherence to the California Retail Food Code and all information provided in this document. Failure to operate in accordance with these procedures may result in permit suspension or revocation. It is my responsibility to obtain approvals or licenses from any other applicable agencies, cities, landlord(s), or homeowner\u2019s association prior to operation. I consent to any information provided in this document being considered a public record subject to disclosure under the California Public Records Act.');
+
+  y -= 8;
+  ensureSpace(90);
+  // Signature block
+  page.drawLine({ start: { x: MARGIN_X, y }, end: { x: MARGIN_X + 280, y }, thickness: 0.6, color: INK });
+  page.drawText('Signature', { x: MARGIN_X, y: y - 12, size: 9, font: fontRegular, color: MUTED });
+  page.drawLine({ start: { x: MARGIN_X + 320, y }, end: { x: PAGE_W - MARGIN_X, y }, thickness: 0.6, color: INK });
+  page.drawText('Date', { x: MARGIN_X + 320, y: y - 12, size: 9, font: fontRegular, color: MUTED });
+  y -= 48;
+  ensureSpace(40);
+  page.drawText('Print Name:', { x: MARGIN_X, y, size: 10, font: fontBold, color: INK });
+  page.drawText(d.name || '_______________________________', { x: MARGIN_X + 75, y, size: 10, font: fontRegular, color: INK });
+  y -= 18;
+  page.drawText('Title:', { x: MARGIN_X, y, size: 10, font: fontBold, color: INK });
+  page.drawText('MEHKO Owner / Operator', { x: MARGIN_X + 40, y, size: 10, font: fontRegular, color: INK });
+
+  drawFooter();
+
+  // ====== FINAL NOTE (may push to a new page) ======
+  newPage();
+  drawSectionHeader(0, 'How to use this document');
+  drawText('This document is a completed Standard Operating Procedures write-up for your San Diego County DEHQ MEHKO permit application. Submit it together with:');
+  y -= 4;
+  const submitList = [
+    'The official DEHQ MEHKO SOP form (mehkosop.pdf) with your initials in the "Initials" column for each acknowledgement and your signature on the final page.',
+    'A copy of your current ANSI-approved Food Safety Manager Certification.',
+    'Your proposed menu document (the sample dishes are included above).',
+    d.water === 'well' ? 'Your state-certified lab results for private well water testing.' : null,
+    'The DEHQ permit fee, payable at submission.',
+  ].filter(Boolean);
+  submitList.forEach((item, i) => {
+    const n = String(i + 1) + '.';
+    const lines = wrapLines(item, fontRegular, BODY_SIZE, MAX_W - 24);
+    ensureSpace(lines.length * BODY_LH);
+    page.drawText(n, { x: MARGIN_X, y, size: BODY_SIZE, font: fontBold, color: CORAL });
+    let yy = y;
+    for (const line of lines) {
+      page.drawText(line, { x: MARGIN_X + 22, y: yy, size: BODY_SIZE, font: fontRegular, color: INK });
+      yy -= BODY_LH;
+    }
+    y = yy - 4;
+  });
+  y -= 6;
+  drawText('Submission options:', { font: fontBold });
+  drawText('In person or by mail — San Diego County DEHQ, Food & Housing Division, 5500 Overland Ave, Suite 170, San Diego, CA 92123. Phone: (858) 505-6900.');
+  drawText('Online — via www.sdcdehq.org (search for MEHKO application portal).', { indent: 0 });
+  y -= 8;
+  drawText('After review, DEHQ will schedule an in-home inspection. Approval typically takes 2–4 weeks from a complete submission.', { color: MUTED });
+
+  drawFooter();
+
+  // ====== DOWNLOAD ======
+  const bytes = await pdfDoc.save();
+  const safeName = (d.kitchen || 'mehko')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'mehko';
+  const filename = `stoveside-dehq-sop-${safeName}.pdf`;
   const blob = new Blob([bytes], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
