@@ -4,7 +4,10 @@
   "outputDirectory": "public",
   "rewrites": [
     { "source": "/app", "destination": "/app.html" },
-    { "source": "/app/(.*)", "destination": "/app.html" }
+    { "source": "/app/(.*)", "destination": "/app.html" },
+    { "source": "/k/:slug", "destination": "/kitchen.html?slug=:slug" },
+    { "source": "/cuisine/:name", "destination": "/cuisine.html?c=:name" },
+    { "source": "/neighborhood/:name", "destination": "/neighborhood.html?n=:name" }
   ],
   "headers": [
     {
