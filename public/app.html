@@ -1127,8 +1127,19 @@ hr.editorial::before {
     <div class="hero-block">
       <div class="eyebrow">Cooking Tonight</div>
       <h1 class="hero-title">Real food, from the <em>kitchen next door</em>.</h1>
-      <p class="hero-sub">Every cook below holds a MEHKO permit from San Diego County. Order direct, pick up warm.</p>
+      <p class="hero-sub">Every cook below holds a MEHKO permit from California. Order direct, pick up warm.</p>
     </div>
+
+<div id="discoverWelcome"></div>
+
+<div id="nbhdStrip" style="display:none; padding: 10px 14px; margin-bottom: 14px; border-radius: 14px; background: var(--bg-soft, #EDE5D8); display:flex; justify-content:space-between; align-items:center;">
+  <div>
+    <div style="font-family:'DM Mono', monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color: var(--ink-50, rgba(26,18,8,.55));">Pickup area</div>
+    <div style="font-weight:600; font-size:15px;" id="nbhdStripLabel">—</div>
+  </div>
+  <button class="link-btn" onclick="changeNeighborhood()">Change</button>
+</div>
+
 <div class="feed-label">
   <span>🌶️ Open for Pre-Orders</span>
   <span style="color: var(--coral); font-weight: 600;">Tonight</span>
@@ -1728,6 +1739,73 @@ hr.editorial::before {
       <input type="date" id="promoEnds" />
     </div>
     <button class="btn-primary" onclick="savePromo()">Save promo</button>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                  CUSTOMER ONBOARDING MODAL                            -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="onboardOverlay" onclick="skipOnboarding()"></div>
+<div class="sheet" id="onboardSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="padding-top: 24px;">
+    <div class="eyebrow">Welcome to Stoveside</div>
+    <h2 class="sheet-title" id="onboardTitle">Where are you eating from?</h2>
+    <p class="text-muted" id="onboardSub" style="margin-bottom: 16px; font-size: 14px;">
+      We'll use this to show you kitchens you can actually pick up from tonight. You can change it anytime.
+    </p>
+
+    <div id="onboardStep1">
+      <div id="onboardNbhdChips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 14px;"></div>
+      <div class="field">
+        <label>Or type your neighborhood</label>
+        <input type="text" id="onboardNbhdInput" placeholder="North Park, Noe Valley, Eastlake…" />
+      </div>
+      <button class="btn-primary" onclick="onboardNext()">Continue</button>
+      <div style="text-align:center; margin-top:10px;">
+        <button type="button" class="link-btn" onclick="skipOnboarding()">Skip for now</button>
+      </div>
+    </div>
+
+    <div id="onboardStep2" style="display:none;">
+      <div class="field">
+        <label>Phone (optional)</label>
+        <input type="tel" id="onboardPhone" placeholder="(555) 123-4567" autocomplete="tel" />
+        <div class="field-hint">We'll text you when your pickup's ready. That's it — no promos, no spam.</div>
+      </div>
+      <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; color: var(--ink-70); margin-bottom: 16px;">
+        <input type="checkbox" id="onboardSms" checked style="margin-top: 3px;" />
+        <span>OK to text me when my order is ready for pickup.</span>
+      </label>
+      <button class="btn-primary" onclick="finishOnboarding()">Start browsing</button>
+      <div style="text-align:center; margin-top:10px;">
+        <button type="button" class="link-btn" onclick="finishOnboarding(true)">Skip phone</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================================== -->
+<!--                    REVIEW SUBMISSION MODAL                            -->
+<!-- ==================================================================== -->
+<div class="modal-overlay" id="reviewOverlay" onclick="closeReviewModal()"></div>
+<div class="sheet" id="reviewSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="padding-top: 24px;">
+    <div class="eyebrow">How was it?</div>
+    <h2 class="sheet-title" id="reviewSheetTitle">Leave a review</h2>
+    <p class="text-muted" id="reviewSheetSub" style="margin-bottom: 14px; font-size: 14px;">
+      A one-line review helps other neighbors find a great cook. Be kind, be specific.
+    </p>
+    <div id="reviewStars" style="display:flex; gap:6px; font-size:32px; margin-bottom: 14px; user-select:none;"></div>
+    <div class="field">
+      <label>Your review (optional)</label>
+      <textarea id="reviewBody" rows="3" placeholder="The birria tacos were worth the drive."></textarea>
+    </div>
+    <button class="btn-primary" id="reviewSubmitBtn" onclick="submitReviewModal()">Post review</button>
+    <div style="text-align:center; margin-top:10px;">
+      <button type="button" class="link-btn" onclick="closeReviewModal()">Maybe later</button>
+    </div>
   </div>
 </div>
 
@@ -2599,6 +2677,8 @@ const auth = {
     updateAuthUI();
     // If the user was mid-wizard when they signed in, pick up where they left off.
     try { await restoreWizardAfterAuth(); } catch (e) { console.error('[restoreWizardAfterAuth]', e); }
+    // New consumers without a kitchen get the 2-step onboarding on first sign-in.
+    try { await maybeShowCustomerOnboarding(); } catch (e) { console.error('[onboarding]', e); }
   },
   async clearSession() {
     state.user = null; state.profile = null; state.myKitchen = null;
@@ -2734,7 +2814,20 @@ function navTo(page) {
 
 /* ---------- Discover feed ---------- */
 async function renderDiscover() {
-  const cooks = await db.listCooks();
+  renderDiscoverWelcome();
+  const allCooks = await db.listCooks();
+  const nbhd = currentPreferredNeighborhood();
+  const filtered = nbhd
+    ? allCooks.filter(c => (c.neighborhood || '').toLowerCase().includes(nbhd.toLowerCase()))
+    : allCooks;
+  // If nbhd filter removed everything, fall back to the full list so the page isn't empty.
+  const cooks = filtered.length ? filtered : allCooks;
+  if (!cooks.length) {
+    document.getElementById('heroCook').innerHTML = '';
+    document.getElementById('gridCooks').innerHTML = '';
+    document.getElementById('listCooks').innerHTML = '<div class="empty" style="padding:40px 20px; text-align:center; color: var(--ink-50, rgba(26,18,8,.55));">No kitchens are live yet. Check back soon.</div>';
+    return;
+  }
   const hero = cooks.find(c => c.isHero) || cooks[0];
   const rest = cooks.filter(c => c.id !== hero.id);
 
@@ -2949,22 +3042,39 @@ async function renderMyOrders() {
       </div>`;
     return;
   }
-  el.innerHTML = state.orders.map(o => `
+  // Check which orders the user has already reviewed so we don't re-prompt.
+  let reviewedOrderIds = new Set();
+  if (SUPABASE_ENABLED && state.user) {
+    try {
+      const { data } = await sb.from('reviews').select('order_id').eq('customer_id', state.user.id);
+      reviewedOrderIds = new Set((data || []).map(r => r.order_id).filter(Boolean));
+    } catch (_) { /* non-fatal */ }
+  }
+
+  el.innerHTML = state.orders.map(o => {
+    const canReview = (o.status === 'picked_up' || o.status === 'done') && !reviewedOrderIds.has(o.id);
+    const statusLabel = o.status === 'picked_up' ? '✓ Picked up' : o.status === 'ready' ? '● Ready to pick up' : o.status === 'confirmed' ? '● Confirmed' : o.status === 'cancelled' ? '○ Cancelled' : o.status;
+    return `
     <div class="order-card">
       <div class="order-head">
         <div>
-          <div class="order-name">${o.cookName}</div>
-          <div style="font-size:12px; color:var(--muted); font-style:italic; font-family: 'Fraunces', serif;">by ${o.chef} · ${o.neighborhood}</div>
+          <div class="order-name">${_esc(o.cookName)}</div>
+          <div style="font-size:12px; color:var(--muted); font-style:italic; font-family: 'Fraunces', serif;">by ${_esc(o.chef)} · ${_esc(o.neighborhood)}</div>
         </div>
-        <div class="order-time">Pickup ${o.pickup}</div>
+        <div class="order-time">Pickup ${_esc(o.pickup)}</div>
       </div>
-      <div class="order-items">${o.items.map(i => `${i.qty}× ${i.name}`).join(' · ')}</div>
+      <div class="order-items">${o.items.map(i => `${i.qty}× ${_esc(i.name)}`).join(' · ')}</div>
       <div class="order-footer">
         <div class="order-total">$${o.total}</div>
-        <div class="order-status ready">● ${o.status === 'confirmed' ? 'Ready to pick up' : o.status}</div>
+        <div class="order-status ${o.status}">${statusLabel}</div>
       </div>
+      ${canReview ? `
+        <div style="display:flex; gap:8px; margin-top:12px; padding-top:12px; border-top: 1px solid var(--ink-10, rgba(26,18,8,.08));">
+          <button class="btn-primary" style="flex:1; max-width:240px; height:38px; font-size:13px;" onclick="openReviewModal({kitchenId:'${o.cookId}', orderId:'${o.id}', kitchenName:'${_esc(o.cookName).replace(/'/g, "\\'")}'})">How was it? Leave a review</button>
+        </div>
+      ` : ''}
     </div>
-  `).join('');
+  `;}).join('');
 }
 
 /* ---------- Permit wizard ---------- */
@@ -4722,6 +4832,220 @@ async function adminSetStatus(id, status) {
   await renderAdmin();
 }
 
+/* ======================================================================
+   CUSTOMER ONBOARDING
+   ====================================================================== */
+let _onboardData = { neighborhood: null, phone: null, sms_opt_in: true };
+
+async function maybeShowCustomerOnboarding() {
+  // Only for signed-in consumers who haven't completed onboarding and don't own a kitchen.
+  if (!state.user || state.myKitchen) return;
+  if (state.profile && state.profile.onboarded_at) return;
+  if (store.get('ss_onboarded') === '1') return;
+  await openCustomerOnboarding();
+}
+
+async function openCustomerOnboarding() {
+  _onboardData = { neighborhood: state.profile?.preferred_neighborhood || null, phone: state.profile?.phone || null, sms_opt_in: state.profile?.sms_opt_in !== false };
+  document.getElementById('onboardStep1').style.display = 'block';
+  document.getElementById('onboardStep2').style.display = 'none';
+  document.getElementById('onboardTitle').textContent = 'Where are you eating from?';
+
+  // Populate neighborhood chips from live kitchens
+  const chipsHost = document.getElementById('onboardNbhdChips');
+  let cooks = state.cooksCache;
+  if (!cooks || !cooks.length) { try { cooks = await db.listCooks(); } catch (_) { cooks = []; } }
+  const nbhds = [...new Set((cooks || []).map(c => c.neighborhood).filter(Boolean))].slice(0, 8);
+  chipsHost.innerHTML = nbhds.length
+    ? nbhds.map(n => `<button class="chip" data-nbhd="${_esc(n)}" onclick="pickOnboardNbhd(this)">${_esc(n)}</button>`).join('')
+    : '<span class="text-muted" style="font-size:13px;">No neighborhoods yet — type yours below.</span>';
+  document.getElementById('onboardNbhdInput').value = _onboardData.neighborhood || '';
+  document.getElementById('onboardOverlay').classList.add('open');
+  document.getElementById('onboardSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function pickOnboardNbhd(el) {
+  document.querySelectorAll('#onboardNbhdChips .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  _onboardData.neighborhood = el.dataset.nbhd;
+  document.getElementById('onboardNbhdInput').value = el.dataset.nbhd;
+}
+
+function onboardNext() {
+  const typed = (document.getElementById('onboardNbhdInput').value || '').trim();
+  _onboardData.neighborhood = typed || _onboardData.neighborhood;
+  if (!_onboardData.neighborhood) { toast('Pick a neighborhood, or skip'); return; }
+  document.getElementById('onboardStep1').style.display = 'none';
+  document.getElementById('onboardStep2').style.display = 'block';
+  document.getElementById('onboardTitle').textContent = 'One more thing.';
+  document.getElementById('onboardPhone').value = _onboardData.phone || '';
+}
+
+async function finishOnboarding(skipPhone) {
+  if (!skipPhone) {
+    _onboardData.phone = (document.getElementById('onboardPhone').value || '').trim() || null;
+    _onboardData.sms_opt_in = document.getElementById('onboardSms').checked;
+  } else {
+    _onboardData.phone = null;
+    _onboardData.sms_opt_in = false;
+  }
+  await persistCustomerOnboarding(_onboardData);
+  closeOnboardingSheet();
+  await renderDiscover();
+  toast('Welcome in. Showing kitchens near ' + _onboardData.neighborhood + '.');
+}
+
+function skipOnboarding() {
+  store.set('ss_onboarded', '1');
+  closeOnboardingSheet();
+}
+
+function closeOnboardingSheet() {
+  document.getElementById('onboardOverlay').classList.remove('open');
+  document.getElementById('onboardSheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function persistCustomerOnboarding(data) {
+  store.set('ss_onboarded', '1');
+  if (data.neighborhood) store.set('ss_pref_nbhd', data.neighborhood);
+  if (!SUPABASE_ENABLED || !state.user) return;
+  const patch = {
+    preferred_neighborhood: data.neighborhood || null,
+    phone: data.phone || null,
+    sms_opt_in: !!data.sms_opt_in,
+    onboarded_at: new Date().toISOString(),
+  };
+  try {
+    const { data: row } = await sb.from('profiles').update(patch).eq('id', state.user.id).select().single();
+    if (row) state.profile = row;
+  } catch (e) { console.error('[persistCustomerOnboarding]', e); }
+}
+
+function currentPreferredNeighborhood() {
+  return state.profile?.preferred_neighborhood || store.get('ss_pref_nbhd') || null;
+}
+
+async function changeNeighborhood() {
+  await openCustomerOnboarding();
+}
+
+/* ======================================================================
+   POST-ORDER REVIEW MODAL
+   ====================================================================== */
+let _reviewCtx = { kitchenId: null, orderId: null, rating: 5 };
+
+function openReviewModal({ kitchenId, orderId, kitchenName }) {
+  _reviewCtx = { kitchenId, orderId, rating: 5 };
+  document.getElementById('reviewSheetTitle').textContent = kitchenName ? `How was ${kitchenName}?` : 'Leave a review';
+  document.getElementById('reviewBody').value = '';
+  _renderReviewStars();
+  document.getElementById('reviewOverlay').classList.add('open');
+  document.getElementById('reviewSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReviewModal() {
+  document.getElementById('reviewOverlay').classList.remove('open');
+  document.getElementById('reviewSheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _renderReviewStars() {
+  const host = document.getElementById('reviewStars');
+  host.innerHTML = [1,2,3,4,5].map(n => `<span style="cursor:pointer; color:${n <= _reviewCtx.rating ? '#E8943A' : '#ddd'};" onclick="setReviewStars(${n})">★</span>`).join('');
+}
+function setReviewStars(n) { _reviewCtx.rating = n; _renderReviewStars(); }
+async function submitReviewModal() {
+  if (!state.user) { openAuthSheet('Sign in to leave a review'); return; }
+  const body = document.getElementById('reviewBody').value.trim();
+  const btn = document.getElementById('reviewSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Posting…';
+  const { error } = await db.submitReview({ kitchenId: _reviewCtx.kitchenId, orderId: _reviewCtx.orderId, rating: _reviewCtx.rating, body });
+  btn.disabled = false; btn.textContent = 'Post review';
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('duplicate') || msg.includes('unique')) toast('You\u2019ve already reviewed this order');
+    else toast(error.message || 'Could not post');
+    return;
+  }
+  closeReviewModal();
+  toast('Thanks — review posted.');
+  if (state.page === 'orders') renderMyOrders();
+}
+
+/* ======================================================================
+   DEEP LINKS (?openKitchen, ?messageKitchen, ?orderFromSlug, ?nbhd)
+   ====================================================================== */
+async function handleDeepLinks() {
+  const params = new URLSearchParams(window.location.search);
+  const kid = params.get('openKitchen');
+  const mid = params.get('messageKitchen');
+  const slug = params.get('orderFromSlug');
+  const nbhd = params.get('nbhd');
+  const openId = kid || mid;
+
+  if (nbhd) {
+    store.set('ss_pref_nbhd', nbhd);
+    if (state.profile && state.user) {
+      try { await sb.from('profiles').update({ preferred_neighborhood: nbhd }).eq('id', state.user.id); state.profile.preferred_neighborhood = nbhd; } catch (_) {}
+    }
+  }
+
+  if (slug && SUPABASE_ENABLED) {
+    try {
+      const { data } = await sb.from('kitchens').select('id').eq('slug', slug).maybeSingle();
+      if (data && data.id) { navTo('discover'); setTimeout(() => openCook(data.id), 200); }
+    } catch (_) {}
+  } else if (openId) {
+    navTo('discover');
+    setTimeout(() => openCook(openId), 200);
+  }
+
+  // Clean the URL so refresh doesn't re-fire
+  if (kid || mid || slug || nbhd) {
+    const url = new URL(window.location.href);
+    ['openKitchen','messageKitchen','orderFromSlug','nbhd'].forEach(k => url.searchParams.delete(k));
+    window.history.replaceState({}, document.title, url.pathname + (url.search || '') + url.hash);
+  }
+}
+
+/* ======================================================================
+   DISCOVER WELCOME STATE
+   ====================================================================== */
+function renderDiscoverWelcome() {
+  const host = document.getElementById('discoverWelcome');
+  const strip = document.getElementById('nbhdStrip');
+  if (!host || !strip) return;
+  const nbhd = currentPreferredNeighborhood();
+  if (state.user && nbhd) {
+    host.innerHTML = '';
+    strip.style.display = 'flex';
+    document.getElementById('nbhdStripLabel').textContent = nbhd;
+    return;
+  }
+  strip.style.display = 'none';
+  if (!state.user) {
+    host.innerHTML = `
+      <div style="background:#fff; border:1px solid var(--ink-10, rgba(26,18,8,.08)); border-radius:18px; padding:16px; margin-bottom:18px;">
+        <div class="eyebrow" style="color: var(--coral);">New here?</div>
+        <div style="font-family:'Fraunces',serif; font-weight:800; font-size:22px; margin:4px 0 6px;">Eat homemade food from a <em style="color:var(--coral);">real kitchen near you</em>.</div>
+        <div class="text-muted" style="font-size:14px; margin-bottom:12px;">Every cook here holds a MEHKO permit. Pickup only, no middlemen, no markup.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn-primary" style="max-width:260px;" onclick="openAuthSheet('Make an account to order', { mode: 'signup' })">Make an account</button>
+          <button class="btn-ghost" onclick="openAuthSheet('Sign in')">I have one</button>
+        </div>
+      </div>`;
+  } else {
+    host.innerHTML = `
+      <div style="background:#fff; border:1px solid var(--ink-10, rgba(26,18,8,.08)); border-radius:18px; padding:16px; margin-bottom:18px;">
+        <div class="eyebrow">Welcome</div>
+        <div style="font-family:'Fraunces',serif; font-weight:800; font-size:22px; margin:4px 0 6px;">Where do you want to pick up?</div>
+        <div class="text-muted" style="font-size:14px; margin-bottom:12px;">Set a neighborhood and we'll surface the kitchens you can actually grab dinner from.</div>
+        <button class="btn-primary" style="max-width:240px;" onclick="openCustomerOnboarding()">Set my neighborhood</button>
+      </div>`;
+  }
+}
+
 /* ---------- Auth sheet ---------- */
 let _authMode = 'signin'; // 'signin' | 'signup'
 
@@ -4733,6 +5057,22 @@ function openAuthSheet(title, opts = {}) {
   document.getElementById('authPassword').value = '';
   const nameEl = document.getElementById('authName');
   if (nameEl) nameEl.value = state.wizardData?.fullName || '';
+
+  // Context-aware subline: different pitch for consumers vs cooks
+  const subEl = document.getElementById('authSub');
+  if (subEl) {
+    const role = opts.role || state.role;
+    if (role === 'consumer') {
+      subEl.innerHTML = 'Save your favorite cooks, message them direct, and get a text when your food\u2019s ready.';
+    } else if (role === 'new-cook') {
+      subEl.innerHTML = 'Saves your permit progress so you can finish from your phone later.';
+    } else if (role === 'cook') {
+      subEl.innerHTML = 'Sign in to manage orders, menu, and hours.';
+    } else {
+      subEl.innerHTML = 'Pick whatever\u2019s easiest. Your permits, orders, and kitchen stay in sync either way.';
+    }
+  }
+
   switchAuthTab(opts.mode || 'signin');
   document.getElementById('authOverlay').classList.add('open');
   document.getElementById('authSheet').classList.add('open');
@@ -4995,6 +5335,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setRole('new-cook');
     setTimeout(() => openExpress(), 300);
   }
+
+  // Consume customer deep-links from public kitchen pages and SEO pages.
+  await handleDeepLinks();
 });
 </script>
 
